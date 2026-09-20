@@ -1068,12 +1068,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     private fun setupBottomNavigation() {
         val menu = b.bottomNavigation.menu
 
-        menu.findItem(R.id.bottom_home).icon = NavTarget.HOME.icon?.toDrawable()
-        menu.findItem(R.id.bottom_grades).icon = NavTarget.GRADES.icon?.toDrawable()
-        menu.findItem(R.id.bottom_timetable).icon = NavTarget.TIMETABLE.icon?.toDrawable()
-        menu.findItem(R.id.bottom_homework).icon = NavTarget.HOMEWORK.icon?.toDrawable()
-        menu.findItem(R.id.bottom_messages).icon = NavTarget.MESSAGES.icon?.toDrawable()
-
         b.bottomNavigation.setOnItemSelectedListener { item ->
             if (updatingBottomNavigation)
                 return@setOnItemSelectedListener true
