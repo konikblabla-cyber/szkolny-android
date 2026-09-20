@@ -8,9 +8,14 @@ on:
       - jarvis-ui-build
   workflow_dispatch:
 
+concurrency:
+  group: szkolny-jarvis-apk
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: read
 
@@ -32,7 +37,7 @@ jobs:
       - name: Build unofficial debug APK
         run: |
           chmod +x ./gradlew
-          ./gradlew assembleUnofficialDebug --stacktrace
+          ./gradlew --no-daemon --max-workers=2 assembleUnofficialDebug --stacktrace
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
