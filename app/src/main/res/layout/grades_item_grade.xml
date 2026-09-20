@@ -7,15 +7,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginHorizontal="20dp"
+    android:layout_marginVertical="2dp"
     android:background="?selectableItemBackground"
+    android:minHeight="52dp"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingVertical="4dp">
 
     <pl.szczodrzynski.edziennik.ui.grades.GradeView
         android:id="@+id/gradeName"
-        android:layout_width="35dp"
-        android:layout_height="35dp"
+        android:layout_width="38dp"
+        android:layout_height="38dp"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
         android:background="@drawable/bg_circle"
