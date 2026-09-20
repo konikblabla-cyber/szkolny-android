@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Compatibility style kept for legacy statistics layouts. -->
+    <style name="NavView.TextView.Subtitle" parent="TextAppearance.Material3.BodySmall">
+        <item name="android:textColor">?colorOnSurfaceVariant</item>
+    </style>
+</resources>
