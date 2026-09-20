@@ -14,7 +14,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/colorSurface_6dp"
+        android:background="?colorSurfaceContainer"
         android:orientation="horizontal">
 
         <TextView
@@ -45,8 +45,8 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:background="@drawable/shadow_top" />
+        android:layout_height="1dp"
+        android:background="?colorOutlineVariant" />
 
     <ProgressBar
         android:id="@+id/progress"
