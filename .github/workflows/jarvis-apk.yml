@@ -1,5 +1,6 @@
 name: Jarvis UI APK
 # Build trigger for the customized APK
+# Automated build refreshed
 
 on:
   push:
