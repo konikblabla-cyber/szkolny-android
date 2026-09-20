@@ -63,6 +63,7 @@ import pl.szczodrzynski.edziennik.data.api.szkolny.response.Update
 import pl.szczodrzynski.edziennik.data.db.entity.Message
 import pl.szczodrzynski.edziennik.data.db.entity.Profile
 import pl.szczodrzynski.edziennik.data.enums.FeatureType
+import pl.szczodrzynski.edziennik.data.enums.MetadataType
 import pl.szczodrzynski.edziennik.data.enums.NavTarget
 import pl.szczodrzynski.edziennik.data.enums.NavTargetLocation
 import pl.szczodrzynski.edziennik.databinding.ActivitySzkolnyBinding
@@ -101,6 +102,7 @@ import pl.szczodrzynski.edziennik.utils.PausedNavigationData
 import pl.szczodrzynski.edziennik.utils.Utils
 import pl.szczodrzynski.edziennik.utils.appManagerIntentList
 import pl.szczodrzynski.edziennik.utils.models.Date
+import pl.szczodrzynski.edziennik.utils.models.UnreadCounter
 import pl.szczodrzynski.navlib.NavView
 import pl.szczodrzynski.navlib.bottomsheet.NavBottomSheet
 import pl.szczodrzynski.navlib.bottomsheet.items.BottomSheetPrimaryItem
@@ -294,6 +296,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
         app.db.metadataDao().unreadCounts.observe(this) { unreadCounters ->
             drawer.setUnreadCounterList(unreadCounters)
+            updateBottomNavigationBadges(unreadCounters)
         }
 
         swipeRefreshLayout.setOnRefreshListener { launch { syncCurrentFeature() } }
@@ -1133,6 +1136,29 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             app.profile.hasUIFeature(FeatureType.HOMEWORK)
         b.bottomNavigation.menu.findItem(R.id.bottom_messages).isVisible =
             app.profile.hasUIFeature(FeatureType.MESSAGES_INBOX)
+    }
+
+    private fun updateBottomBadge(itemId: Int, count: Int) {
+        val badge = b.bottomNavigation.getOrCreateBadge(itemId)
+        if (count <= 0) {
+            badge.isVisible = false
+            return
+        }
+        badge.isVisible = true
+        badge.number = count
+        badge.maxCharacterCount = 3
+        badge.backgroundColor = R.attr.colorError.resolveAttr(this)
+        badge.badgeTextColor = R.attr.colorOnError.resolveAttr(this)
+    }
+
+    private fun updateBottomNavigationBadges(counters: List<UnreadCounter>) {
+        val profileCounters = counters.filter { it.profileId == App.profileId }
+        fun count(type: MetadataType): Int =
+            profileCounters.filter { it.thingType == type }.sumOf { it.count }
+
+        updateBottomBadge(R.id.bottom_grades, count(MetadataType.GRADE))
+        updateBottomBadge(R.id.bottom_homework, count(MetadataType.HOMEWORK))
+        updateBottomBadge(R.id.bottom_messages, count(MetadataType.MESSAGE))
     }
 
     fun reloadTarget() = navigate()
