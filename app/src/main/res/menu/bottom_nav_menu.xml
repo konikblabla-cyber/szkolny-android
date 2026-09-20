@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/bottom_home"
+        android:title="@string/menu_home_page" />
+    <item
+        android:id="@+id/bottom_grades"
+        android:title="@string/menu_grades" />
+    <item
+        android:id="@+id/bottom_timetable"
+        android:title="@string/menu_timetable" />
+    <item
+        android:id="@+id/bottom_homework"
+        android:title="@string/menu_homework" />
+    <item
+        android:id="@+id/bottom_messages"
+        android:title="@string/menu_messages" />
+</menu>
