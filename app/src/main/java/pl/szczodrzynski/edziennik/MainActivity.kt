@@ -1112,13 +1112,13 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     private fun updateBottomNavigationVisibility() {
         b.bottomNavigation.menu.findItem(R.id.bottom_home).isVisible = true
         b.bottomNavigation.menu.findItem(R.id.bottom_grades).isVisible =
-            app.profile.hasUIFeature(NavTarget.GRADES.featureType)
+            app.profile.hasUIFeature(FeatureType.GRADES)
         b.bottomNavigation.menu.findItem(R.id.bottom_timetable).isVisible =
-            app.profile.hasUIFeature(NavTarget.TIMETABLE.featureType)
+            app.profile.hasUIFeature(FeatureType.TIMETABLE)
         b.bottomNavigation.menu.findItem(R.id.bottom_homework).isVisible =
-            app.profile.hasUIFeature(NavTarget.HOMEWORK.featureType)
+            app.profile.hasUIFeature(FeatureType.HOMEWORK)
         b.bottomNavigation.menu.findItem(R.id.bottom_messages).isVisible =
-            app.profile.hasUIFeature(NavTarget.MESSAGES.featureType)
+            app.profile.hasUIFeature(FeatureType.MESSAGES_INBOX)
     }
 
     fun reloadTarget() = navigate()
