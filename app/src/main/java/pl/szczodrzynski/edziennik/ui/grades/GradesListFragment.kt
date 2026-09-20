@@ -86,7 +86,7 @@ class GradesListFragment : BaseFragment<GradesListFragmentBinding, MainActivity>
                 val termIds = grades.map { it.comment }.toSet().toMutableList()
                 val termNames: MutableMap<String, String> = mutableMapOf()
                 // deserialize to a map of termId to (orderKey, termName)
-                val terms = app.profile.getStudentData("termNames", null)
+                val terms = app.profile.studentData.get("termNames")?.takeIf { !it.isJsonNull }?.asString
                     ?.let { app.gson.fromJson(it, termNames::class.java) }
                     ?.mapValues { (_, value) -> value.split('$', limit = 2) }
                     ?.mapValues { (_, value) -> Pair(value[0].toIntOrNull() ?: 0, value[1]) }
