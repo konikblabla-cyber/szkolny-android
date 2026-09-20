@@ -19,6 +19,8 @@ import pl.szczodrzynski.edziennik.core.manager.GradesManager.Companion.YEAR_1_AV
 import pl.szczodrzynski.edziennik.core.manager.GradesManager.Companion.YEAR_1_SEM_2_AVG
 import pl.szczodrzynski.edziennik.core.manager.GradesManager.Companion.YEAR_1_SEM_2_SEM
 import pl.szczodrzynski.edziennik.core.manager.GradesManager.Companion.YEAR_ALL_GRADES
+import pl.szczodrzynski.edziennik.core.manager.GradesManager.Companion.UNIVERSITY_AVERAGE_MODE_ECTS
+import pl.szczodrzynski.edziennik.core.manager.GradesManager.Companion.UNIVERSITY_AVERAGE_MODE_SIMPLE
 import pl.szczodrzynski.edziennik.databinding.DialogConfigGradesBinding
 import pl.szczodrzynski.edziennik.ext.join
 import pl.szczodrzynski.edziennik.ext.onChange
