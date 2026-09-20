@@ -71,6 +71,11 @@ private static def getLastTag(Repository repo, Git git, Ref head) {
         revCount++
     }
 
+    // Forks and fresh branches may not contain any reachable git tag.
+    // Keep the build configuration valid in that case instead of dereferencing null.
+    if (commitTags == null || commitTags.length == 0)
+        return [head.getObjectId(), "unreleased", revCount]
+
     return commitTags.last()
 }
 
