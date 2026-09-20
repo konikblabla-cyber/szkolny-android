@@ -10,7 +10,7 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="8dp"
     android:layout_marginBottom="8dp"
-    android:background="?attr/selectableItemBackground">
+    android:background="@drawable/message_item_background">
 
     <ImageView
         android:id="@+id/messageProfileBackground"
