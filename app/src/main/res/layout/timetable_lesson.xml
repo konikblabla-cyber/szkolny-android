@@ -34,6 +34,10 @@
             android:paddingLeft="8dp"
             android:paddingTop="8dp"
             app:cardBackgroundColor="?colorSurfaceContainerHigh"
+            app:cardCornerRadius="22dp"
+            app:cardElevation="0dp"
+            app:strokeColor="?colorOutlineVariant"
+            app:strokeWidth="1dp"
             tools:layout_height="90dp">
 
             <LinearLayout
