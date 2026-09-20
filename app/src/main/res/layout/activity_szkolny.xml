@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/rootFrame"
     android:layout_width="match_parent"
@@ -22,10 +23,34 @@
             <FrameLayout
                 android:id="@+id/fragment"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:paddingBottom="88dp">
 
-                <include layout="@layout/fragment_loading" />
+                <include
+                    layout="@layout/fragment_loading"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
             </FrameLayout>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     </pl.szczodrzynski.navlib.NavView>
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="?colorSurfaceContainer"
+        android:elevation="10dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="4dp"
+        app:itemActiveIndicatorStyle="@style/BottomNavigationActiveIndicator"
+        app:itemIconSize="24dp"
+        app:itemIconTint="@color/bottom_nav_item_colors"
+        app:itemRippleColor="@drawable/bottom_nav_ripple"
+        app:itemTextAppearanceActive="@style/TextAppearance.Material3.LabelMedium"
+        app:itemTextAppearanceInactive="@style/TextAppearance.Material3.LabelMedium"
+        app:itemTextColor="@color/bottom_nav_item_colors"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_nav_menu" />
+
 </FrameLayout>
