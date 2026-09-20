@@ -1,0 +1,37 @@
+name: Build Aximo APK
+
+on:
+  push:
+    branches:
+      - develop
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Aximo feature branch
+        uses: actions/checkout@v4
+        with:
+          ref: feature/modern-diary-ui
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Build debug APK
+        run: |
+          chmod +x ./gradlew
+          ./gradlew assembleDebug --stacktrace
+
+      - name: Upload Aximo APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Aximo-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
