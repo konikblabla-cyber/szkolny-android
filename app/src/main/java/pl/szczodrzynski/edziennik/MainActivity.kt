@@ -1068,6 +1068,26 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     private fun setupBottomNavigation() {
         val menu = b.bottomNavigation.menu
 
+        // Explicitly assign the vector icons here as well as in the menu.
+        // This avoids theme/resource tint differences that can otherwise make
+        // the icons disappear on some Material 3 configurations.
+        menu.findItem(R.id.bottom_home).icon =
+            ContextCompat.getDrawable(this, R.drawable.ic_bottom_home)
+        menu.findItem(R.id.bottom_grades).icon =
+            ContextCompat.getDrawable(this, R.drawable.ic_bottom_grades)
+        menu.findItem(R.id.bottom_timetable).icon =
+            ContextCompat.getDrawable(this, R.drawable.ic_bottom_timetable)
+        menu.findItem(R.id.bottom_homework).icon =
+            ContextCompat.getDrawable(this, R.drawable.ic_bottom_homework)
+        menu.findItem(R.id.bottom_messages).icon =
+            ContextCompat.getDrawable(this, R.drawable.ic_bottom_messages)
+
+        b.bottomNavigation.itemIconTintList =
+            ContextCompat.getColorStateList(this, R.color.bottom_nav_item_colors)
+
+        b.bottomNavigation.itemTextColor =
+            ContextCompat.getColorStateList(this, R.color.bottom_nav_item_colors)
+
         b.bottomNavigation.setOnItemSelectedListener { item ->
             if (updatingBottomNavigation)
                 return@setOnItemSelectedListener true
