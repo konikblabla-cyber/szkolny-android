@@ -145,6 +145,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     private val navBackStack = mutableListOf<Pair<NavTarget, Bundle?>>()
     private var navLoading = true
 
+    private var updatingBottomNavigation = false
+
     /*     ____           _____                _
           / __ \         / ____|              | |
          | |  | |_ __   | |     _ __ ___  __ _| |_ ___
@@ -170,8 +172,10 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
         setContentView(b.root)
 
-        mainSnackbar.setCoordinator(b.navView.coordinator, b.navView.bottomBar)
-        errorSnackbar.setCoordinator(b.navView.coordinator, b.navView.bottomBar)
+        setupBottomNavigation()
+
+        mainSnackbar.setCoordinator(b.navView.coordinator, b.bottomNavigation)
+        errorSnackbar.setCoordinator(b.navView.coordinator, b.bottomNavigation)
 
         val versionBadge = app.buildManager.versionBadge
         navView.nightlyText.isVisible = versionBadge != null
@@ -969,6 +973,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         if (drawer.getSelection() != navTarget.id)
             drawer.setSelection(navTarget.id, fireOnClick = false)
         navView.toolbar.setTitle(navTarget.titleRes ?: navTarget.nameRes)
+        updateBottomNavigationVisibility()
+        updateBottomNavigation(navTarget)
         navView.bottomBar.fabEnable = false
         navView.bottomBar.fabExtended = false
         navView.bottomBar.setFabOnClickListener(null)
@@ -1057,6 +1063,62 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             setTaskDescription(taskDesc)
         }
         return
+    }
+
+    private fun setupBottomNavigation() {
+        val menu = b.bottomNavigation.menu
+
+        menu.findItem(R.id.bottom_home).icon = NavTarget.HOME.icon?.toDrawable()
+        menu.findItem(R.id.bottom_grades).icon = NavTarget.GRADES.icon?.toDrawable()
+        menu.findItem(R.id.bottom_timetable).icon = NavTarget.TIMETABLE.icon?.toDrawable()
+        menu.findItem(R.id.bottom_homework).icon = NavTarget.HOMEWORK.icon?.toDrawable()
+        menu.findItem(R.id.bottom_messages).icon = NavTarget.MESSAGES.icon?.toDrawable()
+
+        b.bottomNavigation.setOnItemSelectedListener { item ->
+            if (updatingBottomNavigation)
+                return@setOnItemSelectedListener true
+
+            val target = when (item.itemId) {
+                R.id.bottom_home -> NavTarget.HOME
+                R.id.bottom_grades -> NavTarget.GRADES
+                R.id.bottom_timetable -> NavTarget.TIMETABLE
+                R.id.bottom_homework -> NavTarget.HOMEWORK
+                R.id.bottom_messages -> NavTarget.MESSAGES
+                else -> return@setOnItemSelectedListener false
+            }
+
+            navigate(navTarget = target)
+        }
+    }
+
+    private fun updateBottomNavigation(target: NavTarget) {
+        val itemId = when (target) {
+            NavTarget.HOME -> R.id.bottom_home
+            NavTarget.GRADES -> R.id.bottom_grades
+            NavTarget.TIMETABLE -> R.id.bottom_timetable
+            NavTarget.HOMEWORK -> R.id.bottom_homework
+            NavTarget.MESSAGES -> R.id.bottom_messages
+            else -> null
+        } ?: return
+
+        if (b.bottomNavigation.selectedItemId == itemId)
+            return
+
+        updatingBottomNavigation = true
+        b.bottomNavigation.selectedItemId = itemId
+        updatingBottomNavigation = false
+    }
+
+    private fun updateBottomNavigationVisibility() {
+        b.bottomNavigation.menu.findItem(R.id.bottom_home).isVisible = true
+        b.bottomNavigation.menu.findItem(R.id.bottom_grades).isVisible =
+            app.profile.hasUIFeature(NavTarget.GRADES.featureType)
+        b.bottomNavigation.menu.findItem(R.id.bottom_timetable).isVisible =
+            app.profile.hasUIFeature(NavTarget.TIMETABLE.featureType)
+        b.bottomNavigation.menu.findItem(R.id.bottom_homework).isVisible =
+            app.profile.hasUIFeature(NavTarget.HOMEWORK.featureType)
+        b.bottomNavigation.menu.findItem(R.id.bottom_messages).isVisible =
+            app.profile.hasUIFeature(NavTarget.MESSAGES.featureType)
     }
 
     fun reloadTarget() = navigate()
