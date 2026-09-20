@@ -8,10 +8,10 @@
         <item name="android:textColorSecondary">?android:textColorHint</item>
         <item name="android:textViewStyle">@style/AppStyle.TextView</item>
 
-        <item name="nvStatusBarBackground">#ff00ff</item>
+        <item name="nvStatusBarBackground">?android:colorBackground</item>
         <item name="nvActionBarBackground">?colorSurfaceContainerHigh</item>
-        <item name="nvBottomBarBackground">#ff00ff</item>
-        <item name="nvNavigationBarBackground">#ff00ff</item>
+        <item name="nvBottomBarBackground">?colorSurfaceContainer</item>
+        <item name="nvNavigationBarBackground">?android:colorBackground</item>
 
         <item name="materialButtonSecondaryStyle">
             @style/Widget.Material3.Button.TonalButton
