@@ -1,0 +1,40 @@
+name: Jarvis UI APK
+
+on:
+  push:
+    branches:
+      - jarvis-ui-build
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build unofficial debug APK
+        run: |
+          chmod +x ./gradlew
+          ./gradlew assembleUnofficialDebug --stacktrace
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: szkolny-jarvis-debug
+          path: app/build/outputs/apk/unofficial/debug/*.apk
+          if-no-files-found: error
