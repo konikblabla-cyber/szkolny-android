@@ -41,3 +41,5 @@ jobs:
           if-no-files-found: error
 
 # rebuild after Aximo appearance updates
+
+# rebuild after dialog compatibility fix
