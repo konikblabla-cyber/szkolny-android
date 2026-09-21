@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="home_my_day_title">Mój dzień</string>
+    <string name="home_my_day_subtitle">Lekcje, oceny, zadania i najważniejsze informacje w jednym miejscu</string>
+</resources>
