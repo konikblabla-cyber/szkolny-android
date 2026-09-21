@@ -1,7 +1,5 @@
 name: Build Aximo APK
 
-# Aximo release build trigger
-
 on:
   push:
     branches:
@@ -23,8 +21,8 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      - name: Setup Android SDK
-        uses: android-actions/setup-android@v3
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
 
       - name: Build debug APK
         run: |
