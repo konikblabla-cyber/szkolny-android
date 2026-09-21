@@ -303,6 +303,22 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
             }
         }
 
+        // Subtelny „living UI”: dashboard delikatnie pracuje, bez ciężkich efektów.
+        b.nowCard.animate().scaleX(1.008f).scaleY(1.008f).setDuration(1400L).withEndAction {
+            if (isAdded) b.nowCard.animate().scaleX(1f).scaleY(1f).setDuration(1400L).start()
+        }.start()
+        val glowViews = listOf(b.quickPlan, b.quickHomework, b.quickGrades, b.quickTomorrow, b.quickMessages)
+        glowViews.forEachIndexed { index, view ->
+            view.animate()
+                .translationY(-2f)
+                .alpha(0.94f)
+                .setStartDelay(500L + index * 120L)
+                .setDuration(650L)
+                .withEndAction {
+                    view.animate().translationY(0f).alpha(1f).setDuration(650L).start()
+                }.start()
+        }
+
         countdownHandler.removeCallbacks(countdownRefresh)
         countdownHandler.post(countdownRefresh)
 
