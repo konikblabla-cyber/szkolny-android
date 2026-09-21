@@ -5,13 +5,18 @@
 <resources>
 
     <style name="AppTheme.M3" parent="Theme.Material3.DynamicColors.DayNight.NoActionBar">
-        <item name="android:textColorSecondary">?android:textColorHint</item>
+        <!-- Aximo readability layer: calm surfaces, clearer text and consistent controls. -->
+        <item name="android:fontFamily">sans</item>
+        <item name="android:textColorPrimary">?colorOnSurface</item>
+        <item name="android:textColorSecondary">?colorOnSurfaceVariant</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:windowActionModeOverlay">true</item>
         <item name="android:textViewStyle">@style/AppStyle.TextView</item>
 
-        <item name="nvStatusBarBackground">#ff00ff</item>
+        <item name="nvStatusBarBackground">?colorSurface</item>
         <item name="nvActionBarBackground">?colorSurfaceContainerHigh</item>
-        <item name="nvBottomBarBackground">#ff00ff</item>
-        <item name="nvNavigationBarBackground">#ff00ff</item>
+        <item name="nvBottomBarBackground">?colorSurfaceContainer</item>
+        <item name="nvNavigationBarBackground">?colorSurface</item>
 
         <item name="materialButtonSecondaryStyle">
             @style/Widget.Material3.Button.TonalButton
@@ -136,52 +141,53 @@
     </style>
 
     <style name="AppTheme.M3.Blue">
-        <item name="colorPrimary">@color/app_blue_primary</item>
-        <item name="colorOnPrimary">@color/app_blue_onPrimary</item>
-        <item name="colorPrimaryContainer">@color/app_blue_primaryContainer</item>
-        <item name="colorOnPrimaryContainer">@color/app_blue_onPrimaryContainer</item>
-        <item name="colorSecondary">@color/app_blue_secondary</item>
-        <item name="colorOnSecondary">@color/app_blue_onSecondary</item>
-        <item name="colorSecondaryContainer">@color/app_blue_secondaryContainer</item>
-        <item name="colorOnSecondaryContainer">@color/app_blue_onSecondaryContainer</item>
-        <item name="colorTertiary">@color/app_blue_tertiary</item>
-        <item name="colorOnTertiary">@color/app_blue_onTertiary</item>
-        <item name="colorTertiaryContainer">@color/app_blue_tertiaryContainer</item>
-        <item name="colorOnTertiaryContainer">@color/app_blue_onTertiaryContainer</item>
-        <item name="colorError">@color/app_blue_error</item>
-        <item name="colorOnError">@color/app_blue_onError</item>
-        <item name="colorErrorContainer">@color/app_blue_errorContainer</item>
-        <item name="colorOnErrorContainer">@color/app_blue_onErrorContainer</item>
-        <item name="android:colorBackground">@color/app_blue_background</item>
-        <item name="colorOnBackground">@color/app_blue_onBackground</item>
-        <item name="colorSurface">@color/app_blue_surface</item>
-        <item name="colorOnSurface">@color/app_blue_onSurface</item>
-        <item name="colorSurfaceVariant">@color/app_blue_surfaceVariant</item>
-        <item name="colorOnSurfaceVariant">@color/app_blue_onSurfaceVariant</item>
-        <item name="colorOutline">@color/app_blue_outline</item>
-        <item name="colorOutlineVariant">@color/app_blue_outlineVariant</item>
-        <item name="colorSurfaceInverse">@color/app_blue_inverseSurface</item>
-        <item name="colorOnSurfaceInverse">@color/app_blue_inverseOnSurface</item>
-        <item name="colorPrimaryInverse">@color/app_blue_inversePrimary</item>
-        <item name="colorPrimaryFixed">@color/app_blue_primaryFixed</item>
-        <item name="colorOnPrimaryFixed">@color/app_blue_onPrimaryFixed</item>
-        <item name="colorPrimaryFixedDim">@color/app_blue_primaryFixedDim</item>
-        <item name="colorOnPrimaryFixedVariant">@color/app_blue_onPrimaryFixedVariant</item>
-        <item name="colorSecondaryFixed">@color/app_blue_secondaryFixed</item>
-        <item name="colorOnSecondaryFixed">@color/app_blue_onSecondaryFixed</item>
-        <item name="colorSecondaryFixedDim">@color/app_blue_secondaryFixedDim</item>
-        <item name="colorOnSecondaryFixedVariant">@color/app_blue_onSecondaryFixedVariant</item>
-        <item name="colorTertiaryFixed">@color/app_blue_tertiaryFixed</item>
-        <item name="colorOnTertiaryFixed">@color/app_blue_onTertiaryFixed</item>
-        <item name="colorTertiaryFixedDim">@color/app_blue_tertiaryFixedDim</item>
-        <item name="colorOnTertiaryFixedVariant">@color/app_blue_onTertiaryFixedVariant</item>
-        <item name="colorSurfaceDim">@color/app_blue_surfaceDim</item>
-        <item name="colorSurfaceBright">@color/app_blue_surfaceBright</item>
-        <item name="colorSurfaceContainerLowest">@color/app_blue_surfaceContainerLowest</item>
-        <item name="colorSurfaceContainerLow">@color/app_blue_surfaceContainerLow</item>
-        <item name="colorSurfaceContainer">@color/app_blue_surfaceContainer</item>
-        <item name="colorSurfaceContainerHigh">@color/app_blue_surfaceContainerHigh</item>
-        <item name="colorSurfaceContainerHighest">@color/app_blue_surfaceContainerHighest</item>
+        <!-- Aximo: vivid, friendly palette with strong contrast and colorful surfaces. -->
+        <item name="colorPrimary">#7657FF</item>
+        <item name="colorOnPrimary">#FFFFFF</item>
+        <item name="colorPrimaryContainer">#E8DEFF</item>
+        <item name="colorOnPrimaryContainer">#21005D</item>
+        <item name="colorSecondary">#FF5C9A</item>
+        <item name="colorOnSecondary">#FFFFFF</item>
+        <item name="colorSecondaryContainer">#FFD9E7</item>
+        <item name="colorOnSecondaryContainer">#3B0A20</item>
+        <item name="colorTertiary">#00A99D</item>
+        <item name="colorOnTertiary">#FFFFFF</item>
+        <item name="colorTertiaryContainer">#9FF7EE</item>
+        <item name="colorOnTertiaryContainer">#00201D</item>
+        <item name="colorError">#C62828</item>
+        <item name="colorOnError">#FFFFFF</item>
+        <item name="colorErrorContainer">#FFDAD6</item>
+        <item name="colorOnErrorContainer">#410002</item>
+        <item name="android:colorBackground">#FAF8FF</item>
+        <item name="colorOnBackground">#1B1820</item>
+        <item name="colorSurface">#FAF8FF</item>
+        <item name="colorOnSurface">#1B1820</item>
+        <item name="colorSurfaceVariant">#E8E0F0</item>
+        <item name="colorOnSurfaceVariant">#4C4654</item>
+        <item name="colorOutline">#817889</item>
+        <item name="colorOutlineVariant">#CEC5D6</item>
+        <item name="colorSurfaceInverse">#302D35</item>
+        <item name="colorOnSurfaceInverse">#F6EFF8</item>
+        <item name="colorPrimaryInverse">#D0BCFF</item>
+        <item name="colorPrimaryFixed">#E8DEFF</item>
+        <item name="colorOnPrimaryFixed">#21005D</item>
+        <item name="colorPrimaryFixedDim">#D0BCFF</item>
+        <item name="colorOnPrimaryFixedVariant">#543B8F</item>
+        <item name="colorSecondaryFixed">#FFD9E7</item>
+        <item name="colorOnSecondaryFixed">#3B0A20</item>
+        <item name="colorSecondaryFixedDim">#FFB0C8</item>
+        <item name="colorOnSecondaryFixedVariant">#7A294C</item>
+        <item name="colorTertiaryFixed">#9FF7EE</item>
+        <item name="colorOnTertiaryFixed">#00201D</item>
+        <item name="colorTertiaryFixedDim">#78DAD1</item>
+        <item name="colorOnTertiaryFixedVariant">#006A63</item>
+        <item name="colorSurfaceDim">#DCD7DF</item>
+        <item name="colorSurfaceBright">#FAF8FF</item>
+        <item name="colorSurfaceContainerLowest">#FFFFFF</item>
+        <item name="colorSurfaceContainerLow">#F5F0FA</item>
+        <item name="colorSurfaceContainer">#EFE9F4</item>
+        <item name="colorSurfaceContainerHigh">#E9E3EE</item>
+        <item name="colorSurfaceContainerHighest">#E3DDE8</item>
     </style>
 
     <style name="AppTheme.M3.Purple">
