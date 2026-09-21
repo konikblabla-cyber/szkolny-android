@@ -71,7 +71,7 @@ private static def getLastTag(Repository repo, Git git, Ref head) {
         revCount++
     }
 
-    return commitTags.last()
+    return commitTags ? commitTags.last() : [null, "dev", revCount]
 }
 
 private def buildGitInfo() {
