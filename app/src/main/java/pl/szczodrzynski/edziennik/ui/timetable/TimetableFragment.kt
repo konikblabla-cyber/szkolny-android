@@ -223,7 +223,10 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
 
         val selectedDate = arguments?.getString("timetableDate", "")
             ?.let { if (it.isBlank()) null else Date.fromY_m_d(it) }
-        savedPageSelection = items.indexOfFirst { it == (selectedDate ?: today) }
+        val openTomorrow = arguments?.getBoolean("aximoTomorrow", false) == true
+        val requestedDate = selectedDate ?: if (openTomorrow) today.clone().stepForward(0, 0, 1) else today
+        savedPageSelection = items.indexOfFirst { it == requestedDate }.takeIf { it >= 0 }
+            ?: items.indexOfFirst { it == today }
 
         super.onViewReady(savedInstanceState)
     }
