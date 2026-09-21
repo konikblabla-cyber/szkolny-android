@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_aximo_styles_title">Style Aximo</string>
+    <string name="settings_aximo_styles_subtitle">Wybierz jeden z 20 ciemnych, przygaszonych stylów wyglądu.</string>
+    <string name="settings_aximo_styles_current">Aktualny styl</string>
+</resources>
