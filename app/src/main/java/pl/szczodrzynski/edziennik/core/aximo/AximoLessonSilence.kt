@@ -1,0 +1,168 @@
+package pl.szczodrzynski.edziennik.core.aximo
+
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
+import android.app.NotificationManager
+import android.media.AudioManager
+import android.os.Build
+import pl.szczodrzynski.edziennik.App
+import pl.szczodrzynski.edziennik.data.db.entity.Lesson
+import pl.szczodrzynski.edziennik.utils.models.Date
+
+/**
+ * Aximo school-mode audio automation.
+ *
+ * For each school day, Aximo uses ONE continuous silent window:
+ * 10 minutes before the first lesson starts -> 10 minutes after the last
+ * lesson ends. The phone therefore stays silent through every lesson and
+ * every break between lessons, then returns to the ringer mode that was
+ * active before school mode started.
+ */
+object AximoLessonSilence {
+    const val ACTION_START = "pl.szczodrzynski.edziennik.aximo.SILENCE_START"
+    const val ACTION_END = "pl.szczodrzynski.edziennik.aximo.SILENCE_END"
+    const val EXTRA_PROFILE = "profile_id"
+    const val EXTRA_LESSON_ID = "lesson_id"
+
+    private const val PREFS = "aximo_lesson_silence"
+    private const val ACTIVE = "active_count"
+    private const val PREVIOUS_MODE = "previous_ringer_mode"
+
+    fun scheduleTodayAndTomorrow(context: Context, profileId: Int) {
+        val app = context.applicationContext as App
+        val alarm = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val today = Date.getToday()
+
+        for (offset in 0..2) {
+            val date = today.clone().stepForward(0, 0, offset)
+            val lessons = try {
+                app.db.timetableDao().getAllForDateNow(profileId, date)
+            } catch (_: Exception) {
+                emptyList()
+            }
+
+            val validLessons = lessons
+                .filter {
+                    it.type != Lesson.TYPE_CANCELLED &&
+                    it.type != Lesson.TYPE_NO_LESSONS
+                }
+                .mapNotNull { lesson ->
+                    val start = lesson.displayStartTime ?: return@mapNotNull null
+                    val end = lesson.displayEndTime ?: return@mapNotNull null
+                    Triple(lesson, date.getAsCalendar(start).timeInMillis, date.getAsCalendar(end).timeInMillis)
+                }
+                .sortedBy { it.second }
+
+            if (validLessons.isEmpty()) continue
+
+            val dayOfWeek = java.util.Calendar.getInstance().apply {
+                timeInMillis = validLessons.first().second
+            }.get(java.util.Calendar.DAY_OF_WEEK)
+            if (dayOfWeek == java.util.Calendar.SATURDAY ||
+                dayOfWeek == java.util.Calendar.SUNDAY
+            ) continue
+
+            // One school-wide silence window for the whole day.
+            val first = validLessons.first()
+            val last = validLessons.maxByOrNull { it.third } ?: continue
+
+            val silenceStart = first.second - 10 * 60 * 1000L
+            val silenceEnd = last.third + 10 * 60 * 1000L
+
+            val now = System.currentTimeMillis()
+            if (silenceEnd <= now) continue
+
+            // If the app/device was restarted during the school window, enter
+            // silent mode immediately instead of waiting for a missed alarm.
+            if (silenceStart <= now && now < silenceEnd) {
+                onStart(context)
+            } else {
+                setAlarm(alarm, context, ACTION_START, silenceStart, profileId, 0L, offset * 2)
+            }
+            setAlarm(alarm, context, ACTION_END, silenceEnd, profileId, 0L, offset * 2 + 1)
+        }
+    }
+
+    private fun setAlarm(
+        alarm: AlarmManager,
+        context: Context,
+        action: String,
+        at: Long,
+        profileId: Int,
+        lessonId: Long,
+        kind: Int,
+    ) {
+        if (at <= System.currentTimeMillis()) return
+
+        val intent = Intent(context, AximoLessonSilenceReceiver::class.java)
+            .setAction(action)
+            .putExtra(EXTRA_PROFILE, profileId)
+            .putExtra(EXTRA_LESSON_ID, lessonId)
+
+        val requestCode = (1000 + kind + profileId * 10).coerceAtLeast(1)
+        val pending = PendingIntent.getBroadcast(
+            context,
+            requestCode,
+            intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+                !alarm.canScheduleExactAlarms()
+            ) {
+                alarm.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, at, pending)
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarm.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, at, pending)
+            } else {
+                alarm.setExact(AlarmManager.RTC_WAKEUP, at, pending)
+            }
+        } catch (_: SecurityException) {
+            alarm.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, at, pending)
+        }
+    }
+
+    fun onStart(context: Context) {
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        if (prefs.getInt(ACTIVE, 0) != 0) return
+
+        val audio = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            val notificationManager =
+                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            if (!notificationManager.isNotificationPolicyAccessGranted) return
+        }
+
+        val previousMode = audio.ringerMode
+        try {
+            audio.ringerMode = AudioManager.RINGER_MODE_SILENT
+        } catch (_: SecurityException) {
+            return
+        }
+
+        prefs.edit()
+            .putInt(PREVIOUS_MODE, previousMode)
+            .putInt(ACTIVE, 1)
+            .apply()
+    }
+    fun onEnd(context: Context) {
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        val active = (prefs.getInt(ACTIVE, 0) - 1).coerceAtLeast(0)
+        prefs.edit().putInt(ACTIVE, active).apply()
+
+        if (active != 0) return
+
+        val audio = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        val previous = prefs.getInt(PREVIOUS_MODE, AudioManager.RINGER_MODE_NORMAL)
+
+        // Respect a manual change made by the user while school mode was active.
+        if (audio.ringerMode == AudioManager.RINGER_MODE_SILENT) {
+            audio.ringerMode = previous
+        }
+
+        prefs.edit().remove(PREVIOUS_MODE).apply()
+    }
+}
