@@ -5,6 +5,9 @@
 package pl.szczodrzynski.edziennik.ui.grades
 
 import android.os.Bundle
+import android.widget.EditText
+import android.widget.LinearLayout
+import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,10 +18,12 @@ import kotlinx.coroutines.withContext
 import pl.szczodrzynski.edziennik.App
 import pl.szczodrzynski.edziennik.MainActivity
 import pl.szczodrzynski.edziennik.R
+import pl.szczodrzynski.edziennik.core.aximo.AximoGoalCalculator
 import pl.szczodrzynski.edziennik.core.manager.GradesManager
+import pl.szczodrzynski.edziennik.core.manager.GradesManager.Companion.UNIVERSITY_AVERAGE_MODE_ECTS
+import pl.szczodrzynski.edziennik.core.manager.GradesManager.Companion.UNIVERSITY_AVERAGE_MODE_SIMPLE
 import pl.szczodrzynski.edziennik.data.db.entity.Grade
 import pl.szczodrzynski.edziennik.data.db.entity.Grade.Companion.TYPE_NO_GRADE
-import pl.szczodrzynski.edziennik.data.db.enums.MetadataType
 import pl.szczodrzynski.edziennik.data.db.full.GradeFull
 import pl.szczodrzynski.edziennik.data.enums.FeatureType
 import pl.szczodrzynski.edziennik.data.enums.MetadataType
@@ -35,9 +40,6 @@ import pl.szczodrzynski.edziennik.ui.grades.models.GradesSemester
 import pl.szczodrzynski.edziennik.ui.grades.models.GradesStats
 import pl.szczodrzynski.edziennik.ui.grades.models.GradesSubject
 import pl.szczodrzynski.edziennik.utils.TextInputDropDown
-import pl.szczodrzynski.edziennik.utils.managers.GradesManager
-import pl.szczodrzynski.edziennik.utils.managers.GradesManager.Companion.UNIVERSITY_AVERAGE_MODE_ECTS
-import pl.szczodrzynski.edziennik.utils.managers.GradesManager.Companion.UNIVERSITY_AVERAGE_MODE_SIMPLE
 import pl.szczodrzynski.navlib.bottomsheet.items.BottomSheetPrimaryItem
 import kotlin.math.max
 
@@ -49,6 +51,13 @@ class GradesListFragment : BaseFragment<GradesListFragmentBinding, MainActivity>
     override fun getMarkAsReadType() = MetadataType.GRADE
     override fun getSyncParams() = FeatureType.GRADES to null
     override fun getBottomSheetItems() = listOf(
+        BottomSheetPrimaryItem(true)
+            .withTitle("🎯 Kalkulator celu")
+            .withIcon(CommunityMaterial.Icon.cmd_calculator)
+            .withOnClickListener {
+                activity.bottomSheet.close()
+                showGoalCalculator()
+            },
         BottomSheetPrimaryItem(true)
             .withTitle(R.string.menu_grades_config)
             .withIcon(CommunityMaterial.Icon.cmd_cog_outline)
@@ -65,6 +74,7 @@ class GradesListFragment : BaseFragment<GradesListFragmentBinding, MainActivity>
     private val dontCountGrades
         get() = manager.dontCountGrades
     private var expandSubjectId = 0L
+    private var latestGrades: List<GradeFull> = emptyList()
 
     override suspend fun onViewReady(savedInstanceState: Bundle?) {
         expandSubjectId = arguments?.getLong("gradesSubjectId") ?: 0L
@@ -75,6 +85,7 @@ class GradesListFragment : BaseFragment<GradesListFragmentBinding, MainActivity>
         app.db.gradeDao().getAllOrderBy(App.profileId, app.gradesManager.getOrderByString()).observe(viewLifecycleOwner, Observer { grades -> this@GradesListFragment.launch {
             if (!isAdded) return@launch
 
+            latestGrades = grades
             grades.forEach {
                 it.filterNotes()
             }
@@ -86,13 +97,7 @@ class GradesListFragment : BaseFragment<GradesListFragmentBinding, MainActivity>
 
             if (manager.isUniversity) {
                 val termIds = grades.map { it.comment }.toSet().toMutableList()
-                val termNames: MutableMap<String, String> = mutableMapOf()
-                // deserialize to a map of termId to (orderKey, termName)
-                val terms = app.profile.getStudentData("termNames", null)
-                    ?.let { app.gson.fromJson(it, termNames::class.java) }
-                    ?.mapValues { (_, value) -> value.split('$', limit = 2) }
-                    ?.mapValues { (_, value) -> Pair(value[0].toIntOrNull() ?: 0, value[1]) }
-                    ?: mapOf()
+                val terms: Map<String, Pair<Int, String>> = emptyMap()
                 // sort by order key
                 termIds.sortByDescending { termId -> terms[termId]?.first ?: 0 }
                 // populate the dropdown
@@ -164,6 +169,94 @@ class GradesListFragment : BaseFragment<GradesListFragmentBinding, MainActivity>
                     "finalOtherSemester" to otherSemester?.finalGrade?.value
             ))
         }
+    }
+
+    private fun showGoalCalculator() {
+        val subjects = latestGrades.filter { it.type == Grade.TYPE_NORMAL && it.value in 1f..6f && it.subjectId != 0L }
+            .groupBy { it.subjectId }
+            .mapValues { (_, values) -> values.firstOrNull()?.subjectLongName ?: "Przedmiot" }
+            .toList().sortedBy { it.second.lowercase() }
+
+        if (subjects.isEmpty()) {
+            AlertDialog.Builder(activity).setTitle("Kalkulator celu")
+                .setMessage("Brak wystarczających ocen do obliczeń.")
+                .setPositiveButton("OK", null).show()
+            return
+        }
+
+        AlertDialog.Builder(activity)
+            .setTitle("Wybierz przedmiot")
+            .setSingleChoiceItems(subjects.map { it.second }.toTypedArray(), 0) { dialog, which ->
+                dialog.dismiss()
+                showGoalInputs(subjects[which].first, subjects[which].second)
+            }.setNegativeButton("Anuluj", null).show()
+    }
+
+    private fun showGoalInputs(subjectId: Long, subjectName: String) {
+        val layout = LinearLayout(activity).apply {
+            orientation = LinearLayout.VERTICAL
+            setPadding(48, 8, 48, 0)
+        }
+        val targetInput = EditText(activity).apply {
+            hint = "Cel, np. 5,00"
+            inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
+            setText("5,00")
+            selectAll()
+        }
+        val weightInput = EditText(activity).apply {
+            hint = "Waga przyszłej oceny"
+            inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
+            setText("1")
+        }
+        layout.addView(targetInput)
+        layout.addView(weightInput)
+
+        val dialog = AlertDialog.Builder(activity)
+            .setTitle("Cel: $subjectName")
+            .setMessage("Aximo automatycznie wykorzysta obecne oceny i ich wagi.")
+            .setView(layout).setPositiveButton("Oblicz", null)
+            .setNegativeButton("Anuluj", null).create()
+
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                val target = targetInput.text.toString().replace(',', '.').toFloatOrNull()
+                val weight = weightInput.text.toString().replace(',', '.').toFloatOrNull()
+                if (target == null || target !in 1f..6f || weight == null || weight <= 0f) {
+                    targetInput.error = "Podaj cel 1,00–6,00 i dodatnią wagę."
+                    return@setOnClickListener
+                }
+
+                val entries = latestGrades
+                    .filter { it.subjectId == subjectId && it.type == Grade.TYPE_NORMAL && it.value in 1f..6f }
+                    .map { AximoGoalCalculator.GradeEntry(it.value, manager.getGradeWeight(dontCountEnabled, dontCountGrades, it)) }
+
+                val plan = AximoGoalCalculator.planGrades(
+                    entries, target,
+                    AximoGoalCalculator.GradeLimits(futureGradeWeight = weight)
+                )
+                dialog.dismiss()
+
+                val current = plan.currentAverage?.let { String.format("%.2f", it) } ?: "—"
+                val achieved = plan.achievedAverage?.let { String.format("%.2f", it) } ?: "—"
+                val gradesText = plan.counts.entries.joinToString(", ") { entry -> entry.key.toString() + ": " + entry.value + "×" }
+
+                val message = if (plan.requiredFutureGrades == 0 && plan.possible) {
+                    "Cel jest już osiągnięty."
+                } else if (plan.possible) {
+                    "Potrzebne nowe oceny: " + plan.requiredFutureGrades +
+                        "\nProponowany zestaw: " + gradesText +
+                        "\nŚrednia po nich: " + achieved
+                } else {
+                    "Tego celu nie da się osiągnąć przy maksymalnie 60 kolejnych ocenach."
+                }
+
+                AlertDialog.Builder(activity)
+                    .setTitle("🎯 $subjectName")
+                    .setMessage("Obecna średnia: $current\nCel: " + String.format("%.2f", plan.target) + "\n\n" + message)
+                    .setPositiveButton("OK", null).show()
+            }
+        }
+        dialog.show()
     }
 
     private fun expandSubject(adapter: GradesAdapter) {
