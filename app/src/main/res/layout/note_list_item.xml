@@ -2,12 +2,17 @@
   ~ Copyright (c) Kuba Szczodrzyński 2021-10-23.
   -->
 
-<FrameLayout
+<com.google.android.material.card.MaterialCardView
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="?selectableItemBackground">
+    android:layout_marginHorizontal="4dp"
+    android:layout_marginVertical="3dp"
+    app:cardBackgroundColor="?colorSurfaceContainer"
+    app:cardElevation="0dp"
+    app:shapeAppearance="?shapeAppearanceCornerMedium">
 
     <LinearLayout
         android:id="@+id/colorLayout"
@@ -55,4 +60,4 @@
             android:textAppearance="?textAppearanceBodySmall"
             tools:text="Jakub Szczodrzyński • 23 października" />
     </LinearLayout>
-</FrameLayout>
+</com.google.android.material.card.MaterialCardView>
