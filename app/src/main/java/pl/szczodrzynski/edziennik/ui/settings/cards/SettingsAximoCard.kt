@@ -9,6 +9,7 @@ import com.mikepenz.iconics.typeface.library.community.material.CommunityMateria
 import pl.szczodrzynski.edziennik.R
 import pl.szczodrzynski.edziennik.ui.base.dialog.SimpleDialog
 import pl.szczodrzynski.edziennik.ui.dialogs.settings.BellSyncConfigDialog
+import pl.szczodrzynski.edziennik.ui.home.HomeConfigDialog
 import pl.szczodrzynski.edziennik.ui.dialogs.settings.ThemeChooserDialog
 import pl.szczodrzynski.edziennik.ui.dialogs.settings.TimetableConfigDialog
 import pl.szczodrzynski.edziennik.ui.settings.SettingsCard
@@ -23,6 +24,14 @@ class SettingsAximoCard(util: SettingsUtil) : SettingsCard(util) {
     )
 
     override fun getItems(card: MaterialAboutCard) = listOf(
+        util.createActionItem(
+            text = R.string.settings_aximo_home_text,
+            subText = R.string.settings_aximo_home_subtext,
+            icon = CommunityMaterial.Icon.cmd_view_dashboard_outline
+        ) {
+            HomeConfigDialog(activity, reloadOnDismiss = true).show()
+        },
+
         util.createActionItem(
             text = R.string.settings_theme_theme_text,
             subText = app.uiManager.themeColor.nameRes,
