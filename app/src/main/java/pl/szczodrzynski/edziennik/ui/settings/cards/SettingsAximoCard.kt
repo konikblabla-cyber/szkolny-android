@@ -9,7 +9,6 @@ import com.mikepenz.iconics.typeface.library.community.material.CommunityMateria
 import pl.szczodrzynski.edziennik.R
 import pl.szczodrzynski.edziennik.ui.base.dialog.SimpleDialog
 import pl.szczodrzynski.edziennik.ui.dialogs.settings.BellSyncConfigDialog
-import pl.szczodrzynski.edziennik.ui.dialogs.settings.QuietHoursConfigDialog
 import pl.szczodrzynski.edziennik.ui.dialogs.settings.ThemeChooserDialog
 import pl.szczodrzynski.edziennik.ui.dialogs.settings.TimetableConfigDialog
 import pl.szczodrzynski.edziennik.ui.settings.SettingsCard
@@ -98,34 +97,24 @@ class SettingsAximoCard(util: SettingsUtil) : SettingsCard(util) {
 
         util.createActionItem(
             text = R.string.menu_timetable_config,
-            icon = CommunityMaterial.Icon3.cmd_calendar_clock
+            icon = CommunityMaterial.Icon.cmd_cog_outline
         ) {
             TimetableConfigDialog(activity).show()
         },
 
         util.createActionItem(
             text = R.string.settings_register_bell_sync_text,
-            icon = CommunityMaterial.Icon.cmd_bell_sync_outline
+            icon = CommunityMaterial.Icon.cmd_bell_sleep_outline
         ) {
             BellSyncConfigDialog(activity).show()
         },
 
-        util.createPropertyActionItem(
+        util.createPropertyItem(
             text = R.string.settings_sync_quiet_hours_text,
-            subText = R.string.settings_sync_quiet_hours_subtext_disabled,
             icon = CommunityMaterial.Icon.cmd_bell_sleep_outline,
-            value = configGlobal.sync.quietDuringLessons,
-            onChange = { _, value ->
-                configGlobal.sync.quietDuringLessons = value
-                util.refresh()
-            },
-            onClick = { item ->
-                QuietHoursConfigDialog(activity, onChangeListener = {
-                    item.subTextChecked = R.string.settings_sync_quiet_hours_subtext_disabled
-                    item.isChecked = configGlobal.sync.quietDuringLessons
-                    util.refresh()
-                }).show()
-            }
-        )
+            value = configGlobal.sync.quietDuringLessons
+        ) { _, value ->
+            configGlobal.sync.quietDuringLessons = value
+        }
     )
 }
