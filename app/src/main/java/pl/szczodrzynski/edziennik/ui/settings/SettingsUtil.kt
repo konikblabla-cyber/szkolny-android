@@ -93,6 +93,21 @@ class SettingsUtil(
         return item
     }
 
+    fun createActionItem(
+        text: CharSequence,
+        subText: CharSequence? = null,
+        icon: IIcon,
+        onClick: (item: MaterialAboutActionItem) -> Unit
+    ): MaterialAboutActionItem {
+        val item = MaterialAboutActionItem.Builder()
+            .text(text)
+            .subText(subText ?: "")
+            .icon(icon.toDrawable(activity, null))
+            .build()
+        item.setOnClickAction { onClick(item) }
+        return item
+    }
+
     fun createPropertyItem(
         text: Int,
         subText: Int? = null,
