@@ -14,7 +14,11 @@ class AximoAppearanceDialog(activity: AppCompatActivity) : SimpleDialog<Int>(act
             style.title to index
         }.toMap(),
         default = (activity.application as App).config.ui.aximoAppearanceStyle
-    )
+    ) { selected ->
+        val app = activity.application as App
+        app.config.ui.aximoAppearanceStyle = selected
+        activity.recreate()
+    }
     positive(R.string.ok)
     negative(R.string.cancel)
 })
