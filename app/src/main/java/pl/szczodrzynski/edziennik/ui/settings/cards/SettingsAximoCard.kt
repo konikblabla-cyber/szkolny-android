@@ -27,7 +27,7 @@ class SettingsAximoCard(util: SettingsUtil) : SettingsCard(util) {
         util.createActionItem(
             text = R.string.settings_aximo_home_text,
             subText = R.string.settings_aximo_home_subtext,
-            icon = CommunityMaterial.Icon.cmd_view_dashboard_outline
+            icon = CommunityMaterial.Icon.cmd_card_bulleted_settings_outline
         ) {
             HomeConfigDialog(activity, reloadOnDismiss = true).show()
         },
