@@ -111,6 +111,10 @@
     <!-- TEXT VIEW STYLES -->
     <style name="AppStyle.TextView" parent="">
         <item name="android:textAppearance">?textAppearanceBodyMedium</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:lineSpacingExtra">2dp</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
     </style>
 
     <!-- BUTTON STYLES -->
@@ -197,14 +201,19 @@
         <item name="android:textColor">?colorPrimary</item>
     </style>
 
-    <style name="AppStyle.M3.TitleLarge" parent="TextAppearance.Material3.TitleLarge" />
+    <style name="AppStyle.M3.TitleLarge" parent="TextAppearance.Material3.TitleLarge">
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">?colorOnSurface</item>
+    </style>
 
     <style name="AppStyle.M3.TitleMedium" parent="TextAppearance.Material3.TitleMedium">
-        <item name="android:textColor">?colorPrimary</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">?colorOnSurface</item>
     </style>
 
     <style name="AppStyle.M3.TitleSmall" parent="TextAppearance.Material3.TitleSmall">
-        <item name="android:textColor">?colorPrimary</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
+        <item name="android:textColor">?colorOnSurfaceVariant</item>
     </style>
 
     <style name="AppStyle.M3.LabelLarge" parent="TextAppearance.Material3.LabelLarge">
