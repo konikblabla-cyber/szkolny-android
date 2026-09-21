@@ -19,11 +19,11 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    compileSdkVersion setup.compileSdk
+    compileSdkVersion 34
 
     defaultConfig {
-        minSdkVersion setup.minSdk
-        targetSdkVersion setup.targetSdk
+        minSdkVersion 19
+        targetSdkVersion 34
         consumerProguardFiles 'consumer-proguard-rules.pro'
 
         resValue "string", "NavLibFont_version", "${versionName}"
