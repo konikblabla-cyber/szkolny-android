@@ -11,16 +11,21 @@ import android.view.animation.Animation
 import android.view.animation.Transformation
 import android.widget.LinearLayout
 import android.widget.TextView
+import android.widget.EditText
 import androidx.core.graphics.ColorUtils
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
+import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import pl.szczodrzynski.edziennik.App
+import pl.szczodrzynski.edziennik.core.aximo.AximoGoalCalculator
 import pl.szczodrzynski.edziennik.MainActivity
+import com.mikepenz.iconics.typeface.library.community.material.CommunityMaterial
+import pl.szczodrzynski.navlib.bottomsheet.items.BottomSheetPrimaryItem
 import pl.szczodrzynski.edziennik.R
 import pl.szczodrzynski.edziennik.data.db.entity.Attendance
 import pl.szczodrzynski.edziennik.data.db.full.AttendanceFull
@@ -44,6 +49,17 @@ class AttendanceSummaryFragment : BaseFragment<AttendanceSummaryFragmentBinding,
     }
 
     override fun getScrollingView() = b.scrollView
+
+    override fun getBottomSheetItems() = listOf(
+        BottomSheetPrimaryItem(true)
+            .withTitle("🎯 Cel frekwencji")
+            .withIcon(CommunityMaterial.Icon.cmd_calculator)
+            .withOnClickListener {
+                activity.bottomSheet.close()
+                showAttendanceGoalCalculator()
+            }
+    )
+
 
     private val manager
         get() = app.attendanceManager
@@ -127,6 +143,68 @@ class AttendanceSummaryFragment : BaseFragment<AttendanceSummaryFragmentBinding,
                 adapter.notifyDataSetChanged()
             }
         }
+    }
+
+    private fun showAttendanceGoalCalculator() {
+        val periodAttendance = when (periodSelection) {
+            1 -> attendance.filter { it.semester == 1 }
+            2 -> attendance.filter { it.semester == 2 }
+            else -> attendance
+        }
+
+        val counted = periodAttendance.filter { it.isCounted && it.baseType != Attendance.TYPE_UNKNOWN }
+        val present = counted.count {
+            it.baseType == Attendance.TYPE_PRESENT ||
+            it.baseType == Attendance.TYPE_PRESENT_CUSTOM ||
+            it.baseType == Attendance.TYPE_BELATED ||
+            it.baseType == Attendance.TYPE_BELATED_EXCUSED ||
+            it.baseType == Attendance.TYPE_RELEASED
+        }
+        val current = if (counted.isEmpty()) 0f else present * 100f / counted.size
+
+        val input = EditText(activity).apply {
+            hint = "Cel, np. 90"
+            inputType = android.text.InputType.TYPE_CLASS_NUMBER or android.text.InputType.TYPE_NUMBER_FLAG_DECIMAL
+            setText("90")
+            selectAll()
+        }
+
+        val dialog = AlertDialog.Builder(activity)
+            .setTitle("🎯 Cel frekwencji")
+            .setMessage("Obecnie: " + String.format("%.1f", current) + "% (" + present + "/" + counted.size + ")")
+            .setView(input).setPositiveButton("Oblicz", null)
+            .setNegativeButton("Anuluj", null).create()
+
+        dialog.setOnShowListener {
+            dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener {
+                val target = input.text.toString().replace(',', '.').toFloatOrNull()
+                if (target == null || target !in 0f..100f) {
+                    input.error = "Podaj wartość 0–100%."
+                    return@setOnClickListener
+                }
+
+                val plan = AximoGoalCalculator.planAttendance(counted.size, present, target)
+                dialog.dismiss()
+
+                val result = if (plan.requiredAdditionalPresences > 0) {
+                    "Potrzebujesz jeszcze " + plan.requiredAdditionalPresences +
+                        " obecności bez kolejnych nieobecności."
+                } else {
+                    "Cel jest już osiągnięty. Możesz mieć jeszcze " +
+                        plan.maxAdditionalAbsences + " dodatkowych nieobecności."
+                }
+
+                AlertDialog.Builder(activity)
+                    .setTitle("🎯 Frekwencja")
+                    .setMessage(
+                        "Aktualnie: " + String.format("%.1f", plan.currentPercent) +
+                        "%\nCel: " + String.format("%.1f", plan.targetPercent) +
+                        "%\n\n" + result
+                    )
+                    .setPositiveButton("OK", null).show()
+            }
+        }
+        dialog.show()
     }
 
     private fun expandSubject(adapter: AttendanceAdapter) {
