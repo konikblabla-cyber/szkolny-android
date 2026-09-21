@@ -38,5 +38,5 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: Aximo-debug-apk
-          path: "**/build/outputs/apk/debug/*.apk"
+          path: "app/build/outputs/apk/unofficial/debug/app-unofficial-debug.apk"
           if-no-files-found: error
