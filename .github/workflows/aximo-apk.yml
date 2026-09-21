@@ -29,9 +29,14 @@ jobs:
           chmod +x ./gradlew
           ./gradlew assembleDebug --stacktrace
 
+      - name: Locate APK
+        run: |
+          echo "APK files:"
+          find . -type f -name "*.apk" -print
+
       - name: Upload Aximo APK
         uses: actions/upload-artifact@v4
         with:
           name: Aximo-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
+          path: "**/build/outputs/apk/debug/*.apk"
           if-no-files-found: error
