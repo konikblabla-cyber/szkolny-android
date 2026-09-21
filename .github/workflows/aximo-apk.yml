@@ -1,5 +1,7 @@
 name: Build Aximo APK
 
+# Aximo release build trigger
+
 on:
   push:
     branches:
