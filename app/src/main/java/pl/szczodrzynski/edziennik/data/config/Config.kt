@@ -73,6 +73,7 @@ class Config(app: App) : BaseConfig<Config>(app, profileId = null) {
         var themeMode by config<Theme.Mode>(Theme.Mode.DAYNIGHT)
         var themeNightMode by config<Boolean?>(null)
         var themeBlackMode by config<Boolean>(false)
+        var aximoAppearanceStyle by config<Int>(19)
 
         var language by config<String?>(null)
 
