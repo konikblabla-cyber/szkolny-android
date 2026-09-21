@@ -38,11 +38,11 @@ class AximoBottomNavigation @JvmOverloads constructor(
     )
 
     private val quickItems = listOf(
+        allItems[0], // Start
         allItems[1], // Plan
         allItems[2], // Oceny
         allItems[3], // Zadania
-        allItems[4], // Wiadomości
-        allItems[5], // Frekwencja
+        allItems[9], // Ustawienia — zawsze widoczne
     )
     private val center = TextView(context)
     private val menuViews = mutableListOf<TextView>()
@@ -59,7 +59,7 @@ class AximoBottomNavigation @JvmOverloads constructor(
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER
             setPadding(dp(8), dp(5), dp(8), dp(5))
-            background = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, intArrayOf(0xFFF6F0FF.toInt(), 0xFFFFF0F7.toInt(), 0xFFEFFFFC.toInt())).apply { cornerRadius = dp(30).toFloat(); setStroke(dp(1), 0xFFE0D4EA.toInt()) }
+            background = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, intArrayOf(0xFF1C1728.toInt(), 0xFF211A30.toInt(), 0xFF18242A.toInt())).apply { cornerRadius = dp(30).toFloat(); setStroke(dp(1), 0xFF3D3454.toInt()) }
             elevation = 10f
         }
 
@@ -68,7 +68,7 @@ class AximoBottomNavigation @JvmOverloads constructor(
                 gravity = Gravity.CENTER
                 text = iconGlyph(item.icon) + "\n" + item.label
                 textSize = if (index == 0) 10.5f else 9.5f
-                setTextColor(0xFF3C3448.toInt())
+                setTextColor(0xFFEDE8F6.toInt())
                 setPadding(dp(4), dp(4), dp(4), dp(4))
                 background = roundedBackground(Color.TRANSPARENT, Color.TRANSPARENT, 0, 18)
                 contentDescription = item.label
@@ -96,7 +96,7 @@ class AximoBottomNavigation @JvmOverloads constructor(
             gravity = Gravity.CENTER
             setTextColor(Color.WHITE)
             elevation = 24f
-            background = GradientDrawable(GradientDrawable.Orientation.TL_BR, intArrayOf(0xFF7657FF.toInt(), 0xFFE84F9B.toInt(), 0xFF00A99D.toInt())).apply { shape = GradientDrawable.OVAL; setStroke(dp(2), 0xFFFFFFFF.toInt()) }
+            background = GradientDrawable(GradientDrawable.Orientation.TL_BR, intArrayOf(0xFF7657FF.toInt(), 0xFFE84F9B.toInt(), 0xFF22B8A7.toInt())).apply { shape = GradientDrawable.OVAL; setStroke(dp(2), 0xFFFFFFFF.toInt()) }
             contentDescription = "Aximo — Start. Przytrzymaj, aby otworzyć pełne menu."
         }
         addView(
@@ -111,12 +111,12 @@ class AximoBottomNavigation @JvmOverloads constructor(
                 text = iconGlyph(item.icon) + "\n" + item.label
                 textSize = 10f
                 gravity = Gravity.CENTER
-                setTextColor(0xFF49454F.toInt())
+                setTextColor(0xFFE2DCEC.toInt())
                 alpha = 0f
                 scaleX = .55f
                 scaleY = .55f
                 elevation = 18f
-                background = GradientDrawable(GradientDrawable.Orientation.TL_BR, intArrayOf(0xFFFCF9FF.toInt(), 0xFFFFF5FA.toInt())).apply { cornerRadius = dp(22).toFloat(); setStroke(dp(1), 0xFFE7DDEA.toInt()) }
+                background = GradientDrawable(GradientDrawable.Orientation.TL_BR, intArrayOf(0xFF252034.toInt(), 0xFF1A2630.toInt())).apply { cornerRadius = dp(22).toFloat(); setStroke(dp(1), 0xFF403654.toInt()) }
                 contentDescription = item.label
                 visibility = View.INVISIBLE
             }
@@ -234,12 +234,12 @@ class AximoBottomNavigation @JvmOverloads constructor(
         menuViews.forEachIndexed { i, view ->
             val active = i == index
             view.background = roundedBackground(
-                if (active) 0xFF7657FF.toInt() else 0xFFFCF9FF.toInt(),
-                if (active) 0xFFFFA9D0.toInt() else 0xFFE7DDEA.toInt(),
+                if (active) 0xFF7657FF.toInt() else 0xFF252034.toInt(),
+                if (active) 0xFFFFA9D0.toInt() else 0xFF403654.toInt(),
                 1,
                 22
             )
-            view.setTextColor(if (active) Color.WHITE else 0xFF3C3448.toInt())
+            view.setTextColor(if (active) Color.WHITE else 0xFFEDE8F6.toInt())
             view.scaleX = if (active) 1.12f else 1f
             view.scaleY = if (active) 1.12f else 1f
         }
