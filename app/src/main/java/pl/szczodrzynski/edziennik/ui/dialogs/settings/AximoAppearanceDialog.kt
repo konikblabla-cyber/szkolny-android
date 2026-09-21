@@ -14,7 +14,7 @@ class AximoAppearanceDialog(activity: AppCompatActivity) : SimpleDialog<Int>(act
             AximoAppearanceStyle.entries.mapIndexed { index, style ->
                 style.title to index
             }.toMap(),
-            default = App.config.ui.aximoAppearanceStyle
+            default = (activity.application as App).config.ui.aximoAppearanceStyle
         )
         positive(R.string.ok)
         negative(R.string.cancel)
@@ -22,8 +22,9 @@ class AximoAppearanceDialog(activity: AppCompatActivity) : SimpleDialog<Int>(act
 
     override suspend fun onPositiveClick(): Boolean {
         val selected = getSingleSelection() ?: return DISMISS
-        if (App.config.ui.aximoAppearanceStyle != selected) {
-            App.config.ui.aximoAppearanceStyle = selected
+        val app = activity.application as App
+        if (app.config.ui.aximoAppearanceStyle != selected) {
+            app.config.ui.aximoAppearanceStyle = selected
             activity.recreate()
         }
         return DISMISS
