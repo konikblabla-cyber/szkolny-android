@@ -11,7 +11,9 @@ import android.view.View
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
+import pl.szczodrzynski.edziennik.App
 import pl.szczodrzynski.edziennik.MainActivity
+import pl.szczodrzynski.edziennik.ui.aximo.AximoAppearanceStyle
 import pl.szczodrzynski.edziennik.data.enums.NavTarget
 import kotlin.math.cos
 import kotlin.math.sin
@@ -49,6 +51,8 @@ class AximoBottomNavigation @JvmOverloads constructor(
     private var open = false
     private var selected = -1
     private var holdRunnable: Runnable? = null
+    private val appearance: AximoAppearanceStyle
+        get() = AximoAppearanceStyle.fromOrdinal(App.config.ui.aximoAppearanceStyle)
 
     init {
         clipChildren = false
@@ -59,7 +63,7 @@ class AximoBottomNavigation @JvmOverloads constructor(
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER
             setPadding(dp(8), dp(5), dp(8), dp(5))
-            background = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, intArrayOf(0xFF1C1728.toInt(), 0xFF211A30.toInt(), 0xFF18242A.toInt())).apply { cornerRadius = dp(30).toFloat(); setStroke(dp(1), 0xFF3D3454.toInt()) }
+            background = GradientDrawable(GradientDrawable.Orientation.LEFT_RIGHT, intArrayOf(appearance.surface, appearance.surfaceAlt, appearance.surface)).apply { cornerRadius = dp(30).toFloat(); setStroke(dp(1), appearance.accentSoft) }
             elevation = 10f
         }
 
@@ -96,7 +100,7 @@ class AximoBottomNavigation @JvmOverloads constructor(
             gravity = Gravity.CENTER
             setTextColor(Color.WHITE)
             elevation = 24f
-            background = GradientDrawable(GradientDrawable.Orientation.TL_BR, intArrayOf(0xFF7657FF.toInt(), 0xFFE84F9B.toInt(), 0xFF22B8A7.toInt())).apply { shape = GradientDrawable.OVAL; setStroke(dp(2), 0xFFFFFFFF.toInt()) }
+            background = GradientDrawable(GradientDrawable.Orientation.TL_BR, intArrayOf(appearance.accent, appearance.accentSoft, appearance.surfaceAlt)).apply { shape = GradientDrawable.OVAL; setStroke(dp(2), 0xFFFFFFFF.toInt()) }
             contentDescription = "Aximo — Start. Przytrzymaj, aby otworzyć pełne menu."
         }
         addView(
@@ -116,7 +120,7 @@ class AximoBottomNavigation @JvmOverloads constructor(
                 scaleX = .55f
                 scaleY = .55f
                 elevation = 18f
-                background = GradientDrawable(GradientDrawable.Orientation.TL_BR, intArrayOf(0xFF252034.toInt(), 0xFF1A2630.toInt())).apply { cornerRadius = dp(22).toFloat(); setStroke(dp(1), 0xFF403654.toInt()) }
+                background = GradientDrawable(GradientDrawable.Orientation.TL_BR, intArrayOf(appearance.surfaceAlt, appearance.surface)).apply { cornerRadius = dp(22).toFloat(); setStroke(dp(1), appearance.accentSoft) }
                 contentDescription = item.label
                 visibility = View.INVISIBLE
             }
@@ -234,8 +238,8 @@ class AximoBottomNavigation @JvmOverloads constructor(
         menuViews.forEachIndexed { i, view ->
             val active = i == index
             view.background = roundedBackground(
-                if (active) 0xFF7657FF.toInt() else 0xFF252034.toInt(),
-                if (active) 0xFFFFA9D0.toInt() else 0xFF403654.toInt(),
+                if (active) appearance.accent else appearance.surfaceAlt,
+                if (active) appearance.accent else appearance.accentSoft,
                 1,
                 22
             )
