@@ -12,6 +12,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.Gravity
+import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -24,6 +25,8 @@ import com.danimahardhika.cafebar.CafeBar
 import com.danimahardhika.cafebar.CafeBarTheme
 import com.jetradarmobile.snowfall.SnowfallView
 import com.mikepenz.iconics.typeface.library.community.material.CommunityMaterial
+import com.mikepenz.iconics.IconicsDrawable
+import com.mikepenz.iconics.utils.sizeDp
 import com.mikepenz.materialdrawer.model.DividerDrawerItem
 import com.mikepenz.materialdrawer.model.ExpandableDrawerItem
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem
@@ -42,6 +45,8 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import pl.droidsonroids.gif.GifDrawable
+import pl.szczodrzynski.edziennik.core.aximo.AximoLessonSilence
+import pl.szczodrzynski.edziennik.core.aximo.AximoLessonNotifications
 import pl.szczodrzynski.edziennik.core.manager.AvailabilityManager.Error.Type
 import pl.szczodrzynski.edziennik.core.manager.UserActionManager
 import pl.szczodrzynski.edziennik.core.work.AppManagerDetectedEvent
@@ -133,6 +138,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     var onBeforeNavigate: (() -> Boolean)? = null
     private var pausedNavigationData: PausedNavigationData? = null
 
+    private var aximoPermissionDialogShown = false
+
     val app: App by lazy {
         applicationContext as App
     }
@@ -170,6 +177,33 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
         setContentView(b.root)
 
+        // Aximo keeps the bottom navigation visible so the main sections are always one tap away.
+        // Aximo uses its own modern bottom navigation overlay.\n        // Hide NavLib's legacy bottom bar to avoid two navigation bars at once.\n        b.navView.bottomBar.visibility = View.GONE
+
+        // Room database reads used by lesson automation must never run on the main/UI thread.
+        AximoLessonNotifications.ensureChannel(this)
+        launch(Dispatchers.IO) {
+            try {
+                AximoLessonSilence.scheduleTodayAndTomorrow(this@MainActivity, App.profileId)
+                AximoLessonNotifications.scheduleTodayAndTomorrow(this@MainActivity, App.profileId)
+            } catch (e: Exception) {
+                Timber.w(e, "Aximo lesson automation scheduling failed")
+            }
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+        ) {
+            requestPermissions(
+                arrayOf(android.Manifest.permission.POST_NOTIFICATIONS),
+                47002
+            )
+        }
+
+        // Android does not provide a runtime dialog for Notification Policy Access.
+        // Show a one-tap explanation instead of making the user search through settings.
+        maybeAskForAximoMuteAccess()
+
         mainSnackbar.setCoordinator(b.navView.coordinator, b.navView.bottomBar)
         errorSnackbar.setCoordinator(b.navView.coordinator, b.navView.bottomBar)
 
@@ -200,15 +234,40 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
             toolbar.apply {
                 enable = true
-                enableMenuControls = true
+                enableMenuControls = false
             }
 
             bottomBar.apply {
-                enable = false
+                enable = true
                 enableMenuControls = false
                 fabEnable = false
                 fabExtended = false
                 fabGravity = Gravity.END
+
+                menu.clear()
+
+                fun addBottomItem(target: NavTarget, title: String) {
+                    menu.add(0, target.id, android.view.Menu.NONE, title).apply {
+                        icon = target.icon?.let {
+                            IconicsDrawable(context).apply {
+                                icon = it
+                                sizeDp = 24
+                            }
+                        }
+                        setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS)
+                    }
+                }
+
+                addBottomItem(NavTarget.HOME, "Start")
+                addBottomItem(NavTarget.GRADES, "Oceny")
+                addBottomItem(NavTarget.TIMETABLE, "Plan")
+                addBottomItem(NavTarget.HOMEWORK, "Zadania")
+                addBottomItem(NavTarget.MESSAGES, "Wiadomości")
+
+                setOnMenuItemClickListener { item ->
+                    navigate(navTarget = NavTarget.getById(item.itemId))
+                    true
+                }
             }
 
             bottomSheet.apply {
@@ -413,6 +472,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
                 continue
             bottomSheet += target.toBottomSheetItem(this)
         }
+        bottomSheet += NavTarget.SETTINGS.toBottomSheetItem(this)
     }
 
     private var profileSettingClickListener = { itemId: Int, _: View? ->
@@ -693,6 +753,13 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         val intentProfileId = extras.getIntOrNull("profileId").takePositive()
         var intentNavTarget = extras.getEnum<NavTarget>("fragmentId")
 
+        if (extras?.getString("action") == "aximoOpenTimetable") {
+            extras.remove("action")
+            extras.remove("fragmentId")
+            navigate(navTarget = NavTarget.TIMETABLE)
+            return
+        }
+
         if (extras?.containsKey("action") == true) {
             val handled = when (extras.getString("action")) {
                 "updateRequest" -> {
@@ -799,6 +866,37 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         finish()
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
         startActivity(intent)
+    }
+
+    private fun maybeAskForAximoMuteAccess() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M || aximoPermissionDialogShown) return
+
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
+        if (notificationManager.isNotificationPolicyAccessGranted) return
+
+        aximoPermissionDialogShown = true
+
+        androidx.appcompat.app.AlertDialog.Builder(this)
+            .setTitle("Aximo – automatyczne wyciszanie")
+            .setMessage(
+                "Aximo może automatycznie wyciszać telefon na cały dzień szkolny i przywracać dźwięk po ostatniej lekcji. " +
+                    "Android wymaga jednak jednorazowego zezwolenia na zmianę trybu dźwięku. " +
+                    "Po kliknięciu „Zezwól” przejdziesz bezpośrednio do właściwego ekranu systemowego."
+            )
+            .setNegativeButton("Później", null)
+            .setPositiveButton("Zezwól") { _, _ ->
+                try {
+                    startActivity(Intent(Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS))
+                } catch (_: Exception) {
+                    Toast.makeText(
+                        this,
+                        "Android nie udostępnił ekranu uprawnień.",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+            .show()
     }
 
     override fun onStart() {
