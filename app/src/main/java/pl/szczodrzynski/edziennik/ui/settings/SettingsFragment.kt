@@ -47,6 +47,7 @@ class SettingsFragment : MaterialAboutFragment() {
         return MaterialAboutList(
             SettingsProfileCard(util).card,
             SettingsThemeCard(util).card,
+            SettingsAximoCard(util).card,
             SettingsSyncCard(util).card,
             SettingsRegisterCard(util).card,
             SettingsAboutCard(util).card,
