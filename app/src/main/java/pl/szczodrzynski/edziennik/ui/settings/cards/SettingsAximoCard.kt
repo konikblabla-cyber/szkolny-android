@@ -11,6 +11,7 @@ import pl.szczodrzynski.edziennik.ui.base.dialog.SimpleDialog
 import pl.szczodrzynski.edziennik.ui.dialogs.settings.BellSyncConfigDialog
 import pl.szczodrzynski.edziennik.ui.home.HomeConfigDialog
 import pl.szczodrzynski.edziennik.ui.dialogs.settings.ThemeChooserDialog
+import pl.szczodrzynski.edziennik.ui.dialogs.settings.AximoAppearanceDialog
 import pl.szczodrzynski.edziennik.ui.dialogs.settings.TimetableConfigDialog
 import pl.szczodrzynski.edziennik.ui.settings.SettingsCard
 import pl.szczodrzynski.edziennik.ui.settings.SettingsUtil
@@ -30,6 +31,14 @@ class SettingsAximoCard(util: SettingsUtil) : SettingsCard(util) {
             icon = CommunityMaterial.Icon.cmd_card_bulleted_settings_outline
         ) {
             HomeConfigDialog(activity, reloadOnDismiss = true).show()
+        },
+
+        util.createActionItem(
+            text = R.string.settings_aximo_styles_title,
+            subText = R.string.settings_aximo_styles_subtitle,
+            icon = CommunityMaterial.Icon3.cmd_palette_swatch_outline
+        ) {
+            AximoAppearanceDialog(activity).show()
         },
 
         util.createActionItem(
