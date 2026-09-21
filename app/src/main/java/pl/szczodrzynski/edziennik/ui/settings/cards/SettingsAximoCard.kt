@@ -17,7 +17,7 @@ import pl.szczodrzynski.edziennik.ui.settings.SettingsUtil
 class SettingsAximoCard(util: SettingsUtil) : SettingsCard(util) {
 
     override fun buildCard() = util.createCard(
-        R.string.settings_card_theme_title,
+        R.string.settings_card_aximo_title,
         items = ::getItems,
         itemsMore = { emptyList() },
     )
