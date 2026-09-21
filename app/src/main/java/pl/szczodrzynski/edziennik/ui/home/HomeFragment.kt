@@ -5,6 +5,8 @@
 package pl.szczodrzynski.edziennik.ui.home
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.widget.Toast
 import androidx.core.view.AccessibilityDelegateCompat
@@ -121,13 +123,196 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
     private val manager
         get() = app.permissionManager
 
+    private val countdownHandler = Handler(Looper.getMainLooper())
+    private val countdownRefresh = object : Runnable {
+        override fun run() {
+            refreshCountdown()
+            countdownHandler.postDelayed(this, 30_000L)
+        }
+    }
+
+    private fun refreshCountdown() {
+        if (!isAdded) return
+        launch(Dispatchers.IO) {
+            try {
+                val today = pl.szczodrzynski.edziennik.utils.models.Date.getToday()
+                val now = System.currentTimeMillis()
+                val lessons = app.db.timetableDao().getAllForDateNow(App.profileId, today)
+                    .filter {
+                        it.type != pl.szczodrzynski.edziennik.data.db.entity.Lesson.TYPE_CANCELLED &&
+                        it.type != pl.szczodrzynski.edziennik.data.db.entity.Lesson.TYPE_NO_LESSONS
+                    }
+                val current = lessons.firstOrNull {
+                    val start = it.displayStartTime?.let { t -> today.getAsCalendar(t).timeInMillis } ?: Long.MAX_VALUE
+                    val end = it.displayEndTime?.let { t -> today.getAsCalendar(t).timeInMillis } ?: Long.MIN_VALUE
+                    now in start..end
+                }
+                val next = lessons.firstOrNull {
+                    val start = it.displayStartTime?.let { t -> today.getAsCalendar(t).timeInMillis } ?: Long.MAX_VALUE
+                    start > now
+                }
+                activity.runOnUiThread {
+                    if (current != null) {
+                        val end = current.displayEndTime?.let { today.getAsCalendar(it).timeInMillis } ?: now
+                        val minutes = ((end - now).coerceAtLeast(0L) / 60_000L).toInt()
+                        b.nowLessonCountdown.text = "Koniec za ${minutes} min"
+                    } else if (next != null) {
+                        val start = next.displayStartTime?.let { today.getAsCalendar(it).timeInMillis } ?: now
+                        val minutes = ((start - now).coerceAtLeast(0L) / 60_000L).toInt()
+                        b.nowLessonCountdown.text = if (minutes == 0) "Zaczyna się za chwilę" else "Start za ${minutes} min"
+                    } else {
+                        b.nowLessonCountdown.text = "Brak kolejnej lekcji"
+                    }
+                }
+            } catch (_: Exception) {
+            }
+        }
+    }
+
+
     override suspend fun onViewReady(savedInstanceState: Bundle?) {
         if (!manager.isNotificationPermissionGranted) {
             manager.requestNotificationsPermission(activity, 0, false){}
         }
+        launch(Dispatchers.IO) {
+            try {
+                val today = pl.szczodrzynski.edziennik.utils.models.Date.getToday()
+                val lessons = app.db.timetableDao()
+                    .getAllForDateNow(App.profileId, today)
+                    .filter { it.type != pl.szczodrzynski.edziennik.data.db.entity.Lesson.TYPE_CANCELLED &&
+                            it.type != pl.szczodrzynski.edziennik.data.db.entity.Lesson.TYPE_NO_LESSONS }
+                val now = System.currentTimeMillis()
+                val current = lessons.firstOrNull { lesson ->
+                    val start = lesson.displayStartTime?.let { today.getAsCalendar(it).timeInMillis } ?: Long.MAX_VALUE
+                    val end = lesson.displayEndTime?.let { today.getAsCalendar(it).timeInMillis } ?: Long.MIN_VALUE
+                    now in start..end
+                }
+                val next = lessons.firstOrNull { lesson ->
+                    val start = lesson.displayStartTime?.let { today.getAsCalendar(it).timeInMillis } ?: Long.MAX_VALUE
+                    start > now
+                }
+                val shown = current ?: next
+                activity.runOnUiThread {
+                    b.homeDate.text = today.formattedString
+                    b.todayLessonsCount.text = lessons.size.toString()
+                    val homework = try {
+                        app.db.eventDao().getAllByDateNow(App.profileId, today)
+                            .count { it.type == pl.szczodrzynski.edziennik.data.db.entity.Event.TYPE_HOMEWORK && !it.isDone }
+                    } catch (_: Exception) { 0 }
+                    b.todayTasksCount.text = homework.toString()
+                    val attendance = try {
+                        val entries = app.db.attendanceDao().getAllByDateNow(App.profileId, today)
+                            .filter { it.isCounted }
+                        if (entries.isEmpty()) "—" else {
+                            val present = entries.count {
+                                it.baseType == pl.szczodrzynski.edziennik.data.db.entity.Attendance.TYPE_PRESENT ||
+                                it.baseType == pl.szczodrzynski.edziennik.data.db.entity.Attendance.TYPE_PRESENT_CUSTOM ||
+                                it.baseType == pl.szczodrzynski.edziennik.data.db.entity.Attendance.TYPE_BELATED ||
+                                it.baseType == pl.szczodrzynski.edziennik.data.db.entity.Attendance.TYPE_BELATED_EXCUSED
+                            }
+                            (present * 100 / entries.size).toString() + "%"
+                        }
+                    } catch (_: Exception) { "—" }
+                    b.todayAttendance.text = attendance
+                    b.nowLesson.text = when {
+                        current != null -> current.displaySubjectName ?: "Lekcja"
+                        next != null -> "Następna: " + (next.displaySubjectName ?: "Lekcja")
+                        else -> "Brak kolejnej lekcji"
+                    }
+                    b.nowLessonDetails.text = shown?.let { lesson ->
+                        listOfNotNull(
+                            lesson.displayStartTime?.stringHM?.let { "🕐 $it" },
+                            lesson.displayEndTime?.stringHM?.let { "- $it" },
+                            lesson.displayClassroom?.takeIf { it.isNotBlank() }?.let { "📍 $it" },
+                            lesson.displayTeacherName?.takeIf { it.isNotBlank() }?.let { "• $it" }
+                        ).joinToString("  ")
+                    } ?: "Na dziś nie ma już lekcji."
+                    b.nowLessonCountdown.text = when {
+                        current != null -> {
+                            val end = current.displayEndTime?.let { today.getAsCalendar(it).timeInMillis } ?: now
+                            val minutes = ((end - now).coerceAtLeast(0L) / 60000L).toInt()
+                            "Koniec za ${minutes} min"
+                        }
+                        next != null -> {
+                            val start = next.displayStartTime?.let { today.getAsCalendar(it).timeInMillis } ?: now
+                            val minutes = ((start - now).coerceAtLeast(0L) / 60000L).toInt()
+                            if (minutes == 0) "Zaczyna się za chwilę" else "Start za ${minutes} min"
+                        }
+                        else -> "Brak kolejnej lekcji"
+                    }
+                    b.focusStatusText.text = when {
+                        current != null -> "Lekcja trwa — Aximo pilnuje wyciszenia"
+                        next != null -> "Automatyczne wyciszenie jest gotowe"
+                        else -> "Dzisiaj jesteś już po lekcjach"
+                    }
+                    b.focusStatusDetails.text = when {
+                        current != null -> "Telefon zostanie przywrócony po ostatniej lekcji"
+                        next != null -> "Aximo wyciszy telefon 10 min przed lekcją"
+                        else -> "Dźwięk pozostanie normalnie włączony"
+                    }
+                }
+            } catch (_: Exception) {
+                // Dashboard enhancements must never break the original home screen.
+            }
+        }
 
         b.configureCards.onClick {
             HomeConfigDialog(activity, reloadOnDismiss = true).show()
+        }
+
+        // Delikatne wejście elementów dashboardu — bardziej „premium”, bez ciężkich animacji.
+        val entranceViews = listOf(
+            b.homeGreeting,
+            b.homeDate,
+            b.nowCard,
+            b.todaySummaryCard,
+            b.focusStatusCard,
+            b.quickActions,
+            b.configHint
+        )
+        entranceViews.forEachIndexed { index, view ->
+            view.alpha = 0f
+            view.translationY = dpForHome(12)
+            view.animate()
+                .alpha(1f)
+                .translationY(0f)
+                .setStartDelay((index * 45L).coerceAtMost(260L))
+                .setDuration(260L)
+                .start()
+        }
+
+        listOf(
+            b.quickPlan,
+            b.quickHomework,
+            b.quickGrades,
+            b.quickTomorrow,
+            b.quickMessages,
+            b.configureCards
+        ).forEach { view ->
+            view.setOnTouchListener { v, event ->
+                when (event.actionMasked) {
+                    android.view.MotionEvent.ACTION_DOWN -> {
+                        v.animate().scaleX(.96f).scaleY(.96f).setDuration(70).start()
+                    }
+                    android.view.MotionEvent.ACTION_UP,
+                    android.view.MotionEvent.ACTION_CANCEL -> {
+                        v.animate().scaleX(1f).scaleY(1f).setDuration(100).start()
+                    }
+                }
+                false
+            }
+        }
+
+        countdownHandler.removeCallbacks(countdownRefresh)
+        countdownHandler.post(countdownRefresh)
+
+        b.quickPlan.onClick { activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.TIMETABLE) }
+        b.quickHomework.onClick { activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.HOMEWORK) }
+        b.quickGrades.onClick { activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.GRADES) }
+        b.quickMessages.onClick { activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.MESSAGES) }
+        b.quickTomorrow.onClick {
+            activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.TIMETABLE,
+                args = android.os.Bundle().apply { putBoolean("aximoTomorrow", true) })
         }
 
         val cards = app.profile.config.ui.homeCards.filter { it.profileId == app.profile.id }.toMutableList()
@@ -213,4 +398,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
         })
         itemTouchHelper.attachToRecyclerView(b.list)
     }
+    private fun dpForHome(value: Int): Float =
+        value * resources.displayMetrics.density
+
 }
