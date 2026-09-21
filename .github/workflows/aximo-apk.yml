@@ -39,3 +39,5 @@ jobs:
           name: Aximo-debug-apk
           path: "app/build/outputs/apk/unofficial/debug/app-unofficial-debug.apk"
           if-no-files-found: error
+
+# rebuild after Aximo appearance updates
