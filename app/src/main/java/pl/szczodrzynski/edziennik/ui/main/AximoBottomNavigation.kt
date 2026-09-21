@@ -52,7 +52,7 @@ class AximoBottomNavigation @JvmOverloads constructor(
     private var selected = -1
     private var holdRunnable: Runnable? = null
     private val appearance: AximoAppearanceStyle
-        get() = AximoAppearanceStyle.fromOrdinal(App.config.ui.aximoAppearanceStyle)
+        get() = AximoAppearanceStyle.fromOrdinal((context.applicationContext as App).config.ui.aximoAppearanceStyle)
 
     init {
         clipChildren = false
