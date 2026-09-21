@@ -10,6 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.viewbinding.ViewBinding
 import com.applandeo.materialcalendarview.EventDay
+import com.applandeo.materialcalendarview.listeners.OnDayClickListener
 import com.mikepenz.iconics.typeface.library.community.material.CommunityMaterial
 import eu.szkolny.font.SzkolnyFont
 import kotlinx.coroutines.Dispatchers
@@ -145,16 +146,22 @@ class AgendaFragment : BaseFragment<ViewBinding, MainActivity>(
         }
 
         b.agendaCalendarView.setEvents(dayList)
-        b.agendaCalendarView.setOnDayClickListener { day -> this@AgendaFragment.launch {
-            val date = Date.fromCalendar(day.calendar)
+        b.agendaCalendarView.setOnDayClickListener(object : OnDayClickListener {
+            override fun onDayClick(day: EventDay) {
+                this@AgendaFragment.launch {
+                    val date = Date.fromCalendar(day.calendar)
 
-            if (date.value in unreadEventDates) {
-                withContext(Dispatchers.Default) { app.db.eventDao().setSeenByDate(app.profileId, date, true) }
-                unreadEventDates.remove(date.value)
+                    if (date.value in unreadEventDates) {
+                        withContext(Dispatchers.Default) {
+                            app.db.eventDao().setSeenByDate(app.profileId, date, true)
+                        }
+                        unreadEventDates.remove(date.value)
+                    }
+
+                    DayDialog(activity, app.profileId, date).show()
+                }
             }
-
-            DayDialog(activity, app.profileId, date).show()
-        }}
+        })
 
         b.progressBar.visibility = View.GONE
     }
