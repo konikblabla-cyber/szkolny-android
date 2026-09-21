@@ -1,9 +1,6 @@
 name: Build Aximo APK
 
 on:
-  push:
-    branches:
-      - develop
   workflow_dispatch:
 
 jobs:
