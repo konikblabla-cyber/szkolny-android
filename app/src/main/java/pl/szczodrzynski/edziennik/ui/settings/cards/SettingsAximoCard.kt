@@ -36,7 +36,7 @@ class SettingsAximoCard(util: SettingsUtil) : SettingsCard(util) {
         util.createActionItem(
             text = R.string.settings_aximo_styles_title,
             subText = R.string.settings_aximo_styles_subtitle,
-            icon = CommunityMaterial.Icon3.cmd_palette_swatch_outline
+            icon = CommunityMaterial.Icon3.cmd_palette_outline
         ) {
             AximoAppearanceDialog(activity).show()
         },
