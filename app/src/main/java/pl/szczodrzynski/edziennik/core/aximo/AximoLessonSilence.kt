@@ -38,12 +38,16 @@ object AximoLessonSilence {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return
 
         val packageName = context.packageName
-        val candidates = listOf(
-            Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS),
-            Intent("android.settings.NOTIFICATION_POLICY_ACCESS_DETAIL_SETTINGS")
-                .setData(android.net.Uri.parse("package:$packageName")),
-            Intent(android.provider.Settings.ACTION_SETTINGS)
-        )
+        val candidates = buildList {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                add(
+                    Intent("android.settings.NOTIFICATION_POLICY_ACCESS_DETAIL_SETTINGS")
+                        .setData(android.net.Uri.parse("package:$packageName"))
+                )
+            }
+            add(Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS))
+            add(Intent(android.provider.Settings.ACTION_SETTINGS))
+        }
 
         for (intent in candidates) {
             try {
