@@ -45,11 +45,14 @@ object AximoLessonSilence {
         // Aximo's own entry directly so the user can see the switch immediately.
         val intents = mutableListOf<Intent>()
 
-        // The public SDK used by this project exposes the universal
-        // notification-policy access screen. Android/OEM Settings decide
-        // whether they show Aximo as an individual switch on that page.
-        // Do not reference newer detail-page constants here because this
-        // project intentionally supports an older compile SDK.
+        // First try the app-specific DND access page. We use the action
+        // string directly so this stays compatible with the project's compile SDK
+        // while still working on newer Android versions.
+        intents += Intent("android.settings.NOTIFICATION_POLICY_ACCESS_DETAIL_SETTINGS")
+            .setData(android.net.Uri.parse("package:$packageName"))
+            .addFlags(flags)
+
+        // Fallback for Android/OEM versions that do not expose the detail page.
         intents += Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
             .addFlags(flags)
 
