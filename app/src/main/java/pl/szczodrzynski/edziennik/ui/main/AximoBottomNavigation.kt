@@ -144,8 +144,6 @@ class AximoBottomNavigation @JvmOverloads constructor(
             if (item.target == target) {
                 applyActive(view)
             } else {
-                applyActive(view)
-            } else {
                 view.background = roundedBackground(Color.TRANSPARENT, Color.TRANSPARENT, 0, 18)
                 view.setTextColor(appearance.text)
                 view.compoundDrawables.forEach { it?.setTint(appearance.text) }
