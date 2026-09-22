@@ -45,7 +45,7 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
         }
         b.silencePermissionCard.setOnClickListener {
             if (AximoLessonSilence.hasNotificationPolicyAccess(requireContext())) {
-                Toast.makeText(activity, "Dostęp do trybu Nie przeszkadzać jest już przyznany.", Toast.LENGTH_SHORT).show()
+                Toast.makeText(activity, "Dodatkowy dostęp „Nie przeszkadzać” jest już przyznany.", Toast.LENGTH_SHORT).show()
             } else {
                 AximoLessonSilence.openNotificationPolicyAccessSettings(activity)
             }
@@ -75,7 +75,7 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
         b.silencePermissionValue.text = if (granted)
             "Przyznany • tryb szkolny może działać automatycznie"
         else
-            "Wymagany • dotknij, aby nadać dostęp w Androidzie"
+            "Opcjonalny • podstawowe wyciszanie działa bez niego"
         b.silencePermissionValue.setTextColor(
             requireContext().getColor(if (granted) R.color.aximo_success else R.color.aximo_muted)
         )
