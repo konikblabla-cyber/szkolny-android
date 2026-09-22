@@ -18,7 +18,7 @@ class ProfileManagerFragment : BaseFragment<FragmentProfileManagerBinding, MainA
         }
         b.aboutCard.setOnClickListener {
             // Stage 12 will replace this with the dedicated About screen.
-            activity.navigate(navTarget = NavTarget.FEEDBACK)
+            activity.navigate(navTarget = NavTarget.ABOUT)
         }
         b.syncCard.setOnClickListener {
             b.syncStatus.text = "✓ Synchronizacja uruchomiona"
