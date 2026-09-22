@@ -54,6 +54,11 @@ object AximoLessonNotifications {
             }
         }
         val newCodes = mutableSetOf<String>()
+        if (!app.config.sync.lessonNotificationsEnabled) {
+            prefs.edit().putStringSet(SCHEDULED_REQUEST_CODES, emptySet()).apply()
+            return
+        }
+        val reminderMinutes = app.config.sync.lessonNotificationMinutes.coerceIn(1, 30)
         val today = Date.getToday()
 
         for (offset in 0..2) {
@@ -64,7 +69,7 @@ object AximoLessonNotifications {
                 .filter { it.type != Lesson.TYPE_CANCELLED && it.type != Lesson.TYPE_NO_LESSONS }
                 .forEach { lesson ->
                     val start = lesson.displayStartTime ?: return@forEach
-                    val notifyAt = date.getAsCalendar(start).timeInMillis - 10 * MINUTE
+                    val notifyAt = date.getAsCalendar(start).timeInMillis - reminderMinutes * MINUTE
                     if (notifyAt <= System.currentTimeMillis()) return@forEach
 
                     val intent = Intent(context, AximoLessonSilenceReceiver::class.java)
