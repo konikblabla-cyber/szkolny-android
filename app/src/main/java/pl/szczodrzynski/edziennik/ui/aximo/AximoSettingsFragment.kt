@@ -13,6 +13,12 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
     inflater = FragmentAximoSettingsBinding::inflate,
 ) {
     override suspend fun onViewReady(savedInstanceState: Bundle?) {
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU &&
+            requireContext().checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED
+        ) {
+            requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 47002)
+        }
+
         b.backButton.setOnClickListener { activity.onBackPressedDispatcher.onBackPressed() }
         b.profileCard.setOnClickListener { activity.navigate(navTarget = NavTarget.PROFILE_MANAGER) }
         b.notificationsCard.setOnClickListener { activity.navigate(navTarget = NavTarget.NOTIFICATION_SETTINGS) }
