@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+ android:layout_width="match_parent" android:layout_height="wrap_content"
+ android:layout_marginTop="12dp" android:padding="16dp"
+ android:orientation="horizontal" android:background="@drawable/aximo_notification_bg_4">
+ <View android:layout_width="4dp" android:layout_height="match_parent" android:layout_marginEnd="12dp" android:background="@drawable/aximo_notification_accent_4"/>
+ <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+  <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="horizontal">
+   <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Język polski" android:textColor="#FFFFFF" android:textSize="16sp" android:textStyle="bold"/>
+   <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="09:50" android:textColor="#AEBBD2" android:textSize="12sp"/>
+  </LinearLayout>
+  <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="Zaczyna się za 1 godzinę" android:textColor="#F3F5FA" android:textSize="14sp"/>
+  <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="7dp" android:text="s. 8" android:textColor="#AEBBD2" android:textSize="12sp"/>
+ </LinearLayout>
+</LinearLayout>
