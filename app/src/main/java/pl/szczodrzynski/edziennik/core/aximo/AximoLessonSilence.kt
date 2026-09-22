@@ -45,18 +45,13 @@ object AximoLessonSilence {
         // Aximo's own entry directly so the user can see the switch immediately.
         val intents = mutableListOf<Intent>()
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            // Android 12+ expects the target package in the URI for the
-            // app-specific DND access page. The old EXTRA-only form is ignored
-            // by several Android/OEM Settings implementations.
-            intents += Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_DETAIL_SETTINGS)
-                .setData(android.net.Uri.parse("package:$packageName"))
-                .putExtra(android.provider.Settings.EXTRA_NOTIFICATION_POLICY_PACKAGE, packageName)
-                .addFlags(flags)
-        }
-
-        // Standard list of apps allowed to control Do Not Disturb.
+        // The public SDK used by this project exposes the universal
+        // notification-policy access screen. Android/OEM Settings decide
+        // whether they show Aximo as an individual switch on that page.
+        // Do not reference newer detail-page constants here because this
+        // project intentionally supports an older compile SDK.
         intents += Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
+            .putExtra(android.provider.Settings.EXTRA_NOTIFICATION_POLICY_PACKAGE, packageName)
             .addFlags(flags)
 
         // Last resort: open the main Settings screen instead of failing silently.
