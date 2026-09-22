@@ -1,8 +1,8 @@
 package pl.szczodrzynski.edziennik.ui.aximo
 
 import android.os.Bundle
+import android.graphics.Color
 import pl.szczodrzynski.edziennik.MainActivity
-import pl.szczodrzynski.edziennik.R
 import pl.szczodrzynski.edziennik.core.aximo.AximoLessonSilence
 import pl.szczodrzynski.edziennik.data.enums.NavTarget
 import pl.szczodrzynski.edziennik.databinding.FragmentAximoSilenceBinding
@@ -30,6 +30,6 @@ class AximoSilenceFragment : BaseFragment<FragmentAximoSilenceBinding, MainActiv
     private fun updateStatus() {
         val enabled = app.config.sync.automaticSilenceEnabled
         b.statusText.text = if (enabled) "● Aktywny" else "● Wyłączony"
-        b.statusText.setTextColor(requireContext().getColor(if (enabled) R.color.aximo_success else R.color.aximo_muted))
+        b.statusText.setTextColor(Color.parseColor(if (enabled) "#62E59A" else "#8792B0"))
     }
 }
