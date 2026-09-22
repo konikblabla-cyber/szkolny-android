@@ -30,7 +30,7 @@ class AximoBottomNavigation @JvmOverloads constructor(
     private val bottomItems = listOf(
         Item(NavTarget.HOME, "Start"),
         Item(NavTarget.TIMETABLE, "Plan"),
-        Item(NavTarget.MESSAGES, "Powiadomienia"),
+        Item(NavTarget.NOTIFICATIONS, "Powiadomienia"),
         Item(NavTarget.MORE, "Więcej"),
     )
 
