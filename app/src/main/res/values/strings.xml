@@ -1575,4 +1575,6 @@
     <string name="menu_silence">Wyciszanie</string>
     <string name="menu_appearance">Wygląd aplikacji</string>
     <string name="menu_about">O aplikacji</string>
+    <string name="menu_about_aximo">O aplikacji</string>
+    <string name="menu_appearance_aximo">Wygląd aplikacji</string>
 </resources>
