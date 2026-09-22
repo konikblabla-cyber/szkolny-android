@@ -25,10 +25,12 @@ object AximoLessonSilence {
     const val ACTION_END = "pl.szczodrzynski.edziennik.aximo.SILENCE_END"
     const val EXTRA_PROFILE = "profile_id"
     const val EXTRA_LESSON_ID = "lesson_id"
+    const val EXTRA_WINDOW_END = "window_end"
 
     private const val PREFS = "aximo_lesson_silence"
     private const val ACTIVE = "active_count"
     private const val PREVIOUS_MODE = "previous_ringer_mode"
+    private const val ACTIVE_UNTIL = "active_until"
 
     fun scheduleTodayAndTomorrow(context: Context, profileId: Int) {
         val app = context.applicationContext as App
@@ -79,9 +81,9 @@ object AximoLessonSilence {
             if (silenceStart <= now && now < silenceEnd) {
                 onStart(context)
             } else {
-                setAlarm(alarm, context, ACTION_START, silenceStart, profileId, 0L, offset * 2)
+                setAlarm(alarm, context, ACTION_START, silenceStart, profileId, 0L, offset * 2, silenceEnd)
             }
-            setAlarm(alarm, context, ACTION_END, silenceEnd, profileId, 0L, offset * 2 + 1)
+            setAlarm(alarm, context, ACTION_END, silenceEnd, profileId, 0L, offset * 2 + 1, silenceEnd)
         }
     }
 
@@ -93,6 +95,7 @@ object AximoLessonSilence {
         profileId: Int,
         lessonId: Long,
         kind: Int,
+        windowEnd: Long,
     ) {
         if (at <= System.currentTimeMillis()) return
 
@@ -100,6 +103,7 @@ object AximoLessonSilence {
             .setAction(action)
             .putExtra(EXTRA_PROFILE, profileId)
             .putExtra(EXTRA_LESSON_ID, lessonId)
+            .putExtra(EXTRA_WINDOW_END, windowEnd)
 
         val requestCode = (1000 + kind + profileId * 10).coerceAtLeast(1)
         val pending = PendingIntent.getBroadcast(
@@ -124,9 +128,11 @@ object AximoLessonSilence {
         }
     }
 
-    fun onStart(context: Context) {
+    fun onStart(context: Context, windowEnd: Long = 0L) {
         val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-        if (prefs.getInt(ACTIVE, 0) != 0) return
+        val now = System.currentTimeMillis()
+        if (prefs.getInt(ACTIVE, 0) != 0 && prefs.getLong(ACTIVE_UNTIL, 0L) > now) return
+        if (prefs.getLong(ACTIVE_UNTIL, 0L) <= now) prefs.edit().putInt(ACTIVE, 0).remove(ACTIVE_UNTIL).apply()
 
         val audio = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
@@ -146,23 +152,26 @@ object AximoLessonSilence {
         prefs.edit()
             .putInt(PREVIOUS_MODE, previousMode)
             .putInt(ACTIVE, 1)
+            .putLong(ACTIVE_UNTIL, windowEnd)
             .apply()
     }
-    fun onEnd(context: Context) {
+    fun onEnd(context: Context, windowEnd: Long = 0L) {
         val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-        val active = (prefs.getInt(ACTIVE, 0) - 1).coerceAtLeast(0)
-        prefs.edit().putInt(ACTIVE, active).apply()
-
-        if (active != 0) return
+        val storedUntil = prefs.getLong(ACTIVE_UNTIL, 0L)
+        if (maxOf(windowEnd, storedUntil) > System.currentTimeMillis()) return
+        if (prefs.getInt(ACTIVE, 0) == 0) return
 
         val audio = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         val previous = prefs.getInt(PREVIOUS_MODE, AudioManager.RINGER_MODE_NORMAL)
 
-        // Respect a manual change made by the user while school mode was active.
         if (audio.ringerMode == AudioManager.RINGER_MODE_SILENT) {
-            audio.ringerMode = previous
+            try { audio.ringerMode = previous } catch (_: SecurityException) {}
         }
 
-        prefs.edit().remove(PREVIOUS_MODE).apply()
+        prefs.edit()
+            .putInt(ACTIVE, 0)
+            .remove(PREVIOUS_MODE)
+            .remove(ACTIVE_UNTIL)
+            .apply()
     }
 }
