@@ -19,6 +19,8 @@ class SettingsFragment : BaseFragment<AximoSettingsFragmentBinding, MainActivity
         b.appearanceButton.setOnClickListener { activity.navigate(navTarget = NavTarget.APPEARANCE) }
         b.moreButton.setOnClickListener { activity.navigate(navTarget = NavTarget.MORE) }
         b.helpButton.setOnClickListener { activity.navigate(navTarget = NavTarget.HELP) }
+        b.permissionButton.setOnClickListener { AximoLessonSilence.openNotificationPolicyAccessSettings(activity) }
+        updatePermissionUi()
         b.aboutButton.setOnClickListener { activity.navigate(navTarget = NavTarget.ABOUT) }
 
         val silenceAccess = AximoLessonSilence.hasNotificationPolicyAccess(app)
@@ -44,6 +46,27 @@ class SettingsFragment : BaseFragment<AximoSettingsFragmentBinding, MainActivity
             else getString(R.string.aximo_settings_school_subtitle)
         } catch (_: Exception) {
             getString(R.string.aximo_settings_school_subtitle)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (view != null) updatePermissionUi()
+    }
+
+    private fun updatePermissionUi() {
+        val granted = AximoLessonSilence.hasNotificationPolicyAccess(requireContext())
+        b.permissionStatus.text = if (granted) {
+            "✓ Dostęp przyznany — Aximo może automatycznie wyciszać telefon w czasie szkoły."
+        } else {
+            "⚠ Brak dostępu. Android nie pokazuje tu zwykłego okna uprawnień — trzeba włączyć dostęp w ustawieniach systemu."
+        }
+        b.permissionButton.text = if (granted) "Otwórz ustawienia dostępu" else "Nadaj uprawnienie"
+        b.permissionButton.isEnabled = !granted
+        b.schoolModeSwitch.isEnabled = granted
+        if (!granted && app.config.sync.automaticSilenceEnabled) {
+            app.config.sync.automaticSilenceEnabled = false
+            b.schoolModeSwitch.isChecked = false
         }
     }
 }
