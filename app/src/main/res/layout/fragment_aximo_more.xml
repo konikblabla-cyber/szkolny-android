@@ -42,7 +42,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="18dp"
                 android:columnCount="2"
-                android:rowCount="4"
+                android:rowCount="5"
                 android:alignmentMode="alignMargins"
                 android:columnOrderPreserved="false">
 
@@ -89,6 +89,15 @@
                     <TextView style="@style/AximoMoreIcon" android:text="⚙"/>
                     <TextView style="@style/AximoMoreTitle" android:text="Ustawienia"/>
                     <TextView style="@style/AximoMoreSub" android:text="Personalizacja"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/appearanceCard"
+                    style="@style/AximoMoreCard"
+                    android:layout_columnWeight="1">
+                    <TextView style="@style/AximoMoreIcon" android:text="◉"/>
+                    <TextView style="@style/AximoMoreTitle" android:text="Wygląd"/>
+                    <TextView style="@style/AximoMoreSub" android:text="Motyw i kolory"/>
                 </LinearLayout>
 
                 <LinearLayout
