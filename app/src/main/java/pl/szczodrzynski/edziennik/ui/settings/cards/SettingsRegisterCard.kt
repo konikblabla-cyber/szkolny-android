@@ -31,6 +31,7 @@ class SettingsRegisterCard(util: SettingsUtil) : SettingsCard(util) {
         R.string.settings_card_register_title,
         items = ::getItems,
         itemsMore = ::getItemsMore,
+        backgroundColor = util.aximoCardColor(4),
     )
 
     private fun getBellSync() =
