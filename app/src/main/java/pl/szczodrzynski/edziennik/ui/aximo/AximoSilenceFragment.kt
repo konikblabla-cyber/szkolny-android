@@ -18,6 +18,13 @@ class AximoSilenceFragment : BaseFragment<FragmentAximoSilenceBinding, MainActiv
         updateStatus()
         b.backButton.setOnClickListener { activity.onBackPressedDispatcher.onBackPressed() }
         b.schoolModeSwitch.setOnCheckedChangeListener { _, checked ->
+            if (checked && !AximoLessonSilence.hasNotificationPolicyAccess(app)) {
+                b.schoolModeSwitch.isChecked = false
+                app.config.sync.automaticSilenceEnabled = false
+                AximoLessonSilence.openNotificationPolicyAccessSettings(activity)
+                updateStatus()
+                return@setOnCheckedChangeListener
+            }
             app.config.sync.automaticSilenceEnabled = checked
             if (checked) AximoLessonSilence.scheduleTodayAndTomorrow(app, app.profile.id)
             else {
@@ -26,7 +33,13 @@ class AximoSilenceFragment : BaseFragment<FragmentAximoSilenceBinding, MainActiv
             }
             updateStatus()
         }
-        b.settingsButton.setOnClickListener { activity.navigate(navTarget = NavTarget.NOTIFICATION_SETTINGS) }
+        b.settingsButton.setOnClickListener {
+            if (!AximoLessonSilence.hasNotificationPolicyAccess(app)) {
+                AximoLessonSilence.openNotificationPolicyAccessSettings(activity)
+            } else {
+                activity.navigate(navTarget = NavTarget.NOTIFICATION_SETTINGS)
+            }
+        }
     }
 
     private fun updateStatus() {
