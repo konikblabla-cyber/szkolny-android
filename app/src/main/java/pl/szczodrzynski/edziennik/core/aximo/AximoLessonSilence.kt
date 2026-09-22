@@ -37,50 +37,28 @@ object AximoLessonSilence {
     fun openNotificationPolicyAccessSettings(context: Context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return
 
-        val packageName = context.packageName
-        val candidates = buildList {
-            // Android 12+ normally supports a page dedicated to this app.
-            // Try both the package URI and EXTRA_APP_PACKAGE because some OEM
-            // Settings implementations only honor one of them.
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                add(
-                    Intent("android.settings.NOTIFICATION_POLICY_ACCESS_DETAIL_SETTINGS")
-                        .setData(android.net.Uri.parse("package:$packageName"))
-                        .putExtra(android.provider.Settings.EXTRA_APP_PACKAGE, packageName)
-                )
-                add(
-                    Intent("android.settings.NOTIFICATION_POLICY_ACCESS_DETAIL_SETTINGS")
-                        .putExtra(android.provider.Settings.EXTRA_APP_PACKAGE, packageName)
-                )
-            }
+        val intents = listOf(
+            Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS),
+            Intent("android.settings.NOTIFICATION_POLICY_ACCESS_DETAIL_SETTINGS")
+                .setData(android.net.Uri.parse("package:" + context.packageName))
+                .putExtra(android.provider.Settings.EXTRA_APP_PACKAGE, context.packageName),
+            Intent(android.provider.Settings.ACTION_SETTINGS)
+        )
 
-            // Universal Android page: this is the important fallback because
-            // ACCESS_NOTIFICATION_POLICY is a special Settings access, not a
-            // normal runtime permission dialog.
-            add(Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS))
-
-            // Last-resort Settings fallback for OEMs with a different layout.
-            add(Intent(android.provider.Settings.ACTION_SETTINGS))
-        }
-
-        val seen = HashSet<String>()
-        for (intent in candidates) {
+        for (intent in intents) {
             try {
-                val key = intent.action.orEmpty() + "|" + intent.dataString.orEmpty()
-                if (!seen.add(key)) continue
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 if (intent.resolveActivity(context.packageManager) != null) {
                     context.startActivity(intent)
                     return
                 }
             } catch (_: Exception) {
-                // Continue with the next OEM-compatible Settings intent.
+                // Try the next Android/OEM-compatible Settings screen.
             }
         }
 
         android.widget.Toast.makeText(
             context,
-            "Android nie udostępnił ekranu dostępu do trybu „Nie przeszkadzać”. Otwórz Ustawienia telefonu i wyszukaj „Dostęp do trybu Nie przeszkadzać”.",
+            "Nie udało się otworzyć ustawień dostępu. W Ustawieniach telefonu wyszukaj „Nie przeszkadzać” → „Dostęp do trybu Nie przeszkadzać” i włącz Aximo.",
             android.widget.Toast.LENGTH_LONG
         ).show()
     }
