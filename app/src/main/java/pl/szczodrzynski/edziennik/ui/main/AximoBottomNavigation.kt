@@ -141,12 +141,9 @@ class AximoBottomNavigation @JvmOverloads constructor(
         bottomItems.forEachIndexed { index, item ->
             val view = (getChildAt(0) as? LinearLayout)?.getChildAt(index) as? TextView
                 ?: return@forEachIndexed
-            if (index == 3) {
-                view.background = roundedBackground(Color.TRANSPARENT, Color.TRANSPARENT, 0, 20)
-                view.setTextColor(appearance.text)
-                view.compoundDrawables.forEach { it?.setTint(appearance.text) }
-                view.elevation = 0f
-            } else if (item.target == target) {
+            if (item.target == target) {
+                applyActive(view)
+            } else {
                 applyActive(view)
             } else {
                 view.background = roundedBackground(Color.TRANSPARENT, Color.TRANSPARENT, 0, 18)
