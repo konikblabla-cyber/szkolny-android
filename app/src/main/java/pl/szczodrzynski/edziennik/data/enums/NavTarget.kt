@@ -163,7 +163,7 @@ enum class NavTarget(
         location = NavTargetLocation.NOWHERE,
         nameRes = R.string.menu_more,
         titleRes = R.string.menu_more,
-        icon = CommunityMaterial.Icon.cmd_view_grid_outline,
+        icon = CommunityMaterial.Icon.cmd_view_grid,
     ),
     NOTIFICATIONS(
         id = 20,
