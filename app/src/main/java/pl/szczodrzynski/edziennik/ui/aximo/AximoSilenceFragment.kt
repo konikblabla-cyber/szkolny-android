@@ -42,9 +42,34 @@ class AximoSilenceFragment : BaseFragment<FragmentAximoSilenceBinding, MainActiv
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (!isAdded) return
+        val access = AximoLessonSilence.hasNotificationPolicyAccess(app)
+        if (app.config.sync.automaticSilenceEnabled && !access) {
+            app.config.sync.automaticSilenceEnabled = false
+            b.schoolModeSwitch.isChecked = false
+        }
+        updateStatus()
+    }
+
     private fun updateStatus() {
+        val access = AximoLessonSilence.hasNotificationPolicyAccess(app)
         val enabled = app.config.sync.automaticSilenceEnabled
-        b.statusText.text = if (enabled) "● Aktywny" else "● Wyłączony"
-        b.statusText.setTextColor(Color.parseColor(if (enabled) "#62E59A" else "#8792B0"))
+        when {
+            !access -> {
+                b.statusText.text = "● Wymaga uprawnienia"
+                b.statusText.setTextColor(Color.parseColor("#FFB86B"))
+            }
+            enabled -> {
+                b.statusText.text = "● Aktywny"
+                b.statusText.setTextColor(Color.parseColor("#62E59A"))
+            }
+            else -> {
+                b.statusText.text = "● Wyłączony"
+                b.statusText.setTextColor(Color.parseColor("#8792B0"))
+            }
+        }
+        b.settingsButton.text = if (!access) "Nadaj uprawnienie do wyciszania" else "Zmień ustawienia"
     }
 }
