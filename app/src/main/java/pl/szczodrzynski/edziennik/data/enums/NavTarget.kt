@@ -28,6 +28,7 @@ import pl.szczodrzynski.edziennik.ui.messages.list.MessagesFragment
 import pl.szczodrzynski.edziennik.ui.messages.single.MessageFragment
 import pl.szczodrzynski.edziennik.ui.notes.NotesFragment
 import pl.szczodrzynski.edziennik.ui.notifications.NotificationsListFragment
+import pl.szczodrzynski.edziennik.ui.notifications.NotificationSettingsFragment
 import pl.szczodrzynski.edziennik.ui.settings.ProfileManagerFragment
 import pl.szczodrzynski.edziennik.ui.settings.SettingsFragment
 import pl.szczodrzynski.edziennik.ui.settings.contributors.ContributorsFragment
@@ -162,6 +163,14 @@ enum class NavTarget(
         nameRes = R.string.menu_notifications,
         icon = CommunityMaterial.Icon.cmd_bell_ring_outline,
         popTo = HOME,
+    ),
+    NOTIFICATION_SETTINGS(
+        id = 24,
+        fragmentClass = NotificationSettingsFragment::class.java,
+        location = NavTargetLocation.NOWHERE,
+        nameRes = R.string.menu_notification_settings,
+        titleRes = R.string.menu_notification_settings,
+        icon = CommunityMaterial.Icon.cmd_bell_settings_outline,
     ),
     SETTINGS(
         id = 101,
