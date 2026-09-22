@@ -18,12 +18,6 @@ class NotificationSettingsFragment : BaseFragment<NotificationSettingsFragmentBi
     override suspend fun onViewReady(savedInstanceState: Bundle?) {
         b.lessonNotifications.isChecked = app.config.sync.lessonNotificationsEnabled
         updatePermissionUi()
-        if (app.config.sync.lessonNotificationsEnabled &&
-            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-            requireContext().checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
-        ) {
-            requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 47002)
-        }
         b.automaticSilence.isChecked = app.config.sync.automaticSilenceEnabled
         b.lessonNameNotifications.isChecked = app.config.sync.lessonNameNotifications
         b.planChangeNotifications.isChecked = app.config.sync.planChangeNotifications
@@ -53,14 +47,15 @@ class NotificationSettingsFragment : BaseFragment<NotificationSettingsFragmentBi
             // ACCESS_NOTIFICATION_POLICY is optional and must never block activation.
             app.config.sync.automaticSilenceEnabled = checked
             if (checked) {
-                AximoLessonSilence.scheduleTodayAndTomorrow(app, app.profile.id)
                 if (!AximoLessonSilence.hasNotificationPolicyAccess(app)) {
+                    AximoLessonSilence.openNotificationPolicyAccessSettings(activity)
                     android.widget.Toast.makeText(
                         activity,
-                        "Tryb szkolny został włączony. Podstawowe wyciszanie działa bez dodatkowego dostępu Androida.",
-                        android.widget.Toast.LENGTH_SHORT
+                        "Nadaj Aximo dostęp do „Nie przeszkadzać”, aby automatyczne wyciszanie działało pewnie na Androidzie.",
+                        android.widget.Toast.LENGTH_LONG
                     ).show()
                 }
+                AximoLessonSilence.scheduleTodayAndTomorrow(app, app.profile.id)
             } else {
                 AximoLessonSilence.disableAndRestore(app)
             }
@@ -136,11 +131,11 @@ class NotificationSettingsFragment : BaseFragment<NotificationSettingsFragmentBi
     private fun updatePermissionUi() {
         val granted = AximoLessonSilence.hasNotificationPolicyAccess(requireContext())
         b.silencePermissionStatus.text = if (granted) {
-            "✓ Dostęp przyznany — Aximo może automatycznie wyciszać telefon podczas szkoły."
+            "✓ Dostęp przyznany — automatyczne wyciszanie może działać podczas całego dnia szkoły."
         } else {
-            "✓ Podstawowe wyciszanie działa bez tego dostępu. Opcjonalny dostęp „Nie przeszkadzać” rozszerza tryb szkolny."
+            "⚠ Dostęp wymagany przez Androida do pełnego automatycznego wyciszania. Dotknij poniżej i włącz Aximo."
         }
-        b.silencePermissionButton.text = if (granted) "Ustawienia dodatkowego dostępu" else "Opcjonalny dostęp „Nie przeszkadzać”"
+        b.silencePermissionButton.text = if (granted) "Otwórz ustawienia dostępu" else "Nadaj dostęp „Nie przeszkadzać”"
     }
 
     private fun updateMinutes() {
