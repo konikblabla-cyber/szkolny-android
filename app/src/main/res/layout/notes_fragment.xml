@@ -1,13 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (c) Kuba Szczodrzyński 2021-10-27.
-  -->
-
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@drawable/aximo_notes_background">
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -17,12 +14,12 @@
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/noData"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:drawablePadding="16dp"
         android:gravity="center"
-        android:padding="16dp"
+        android:padding="24dp"
         android:text="@string/notes_no_data"
         android:textAppearance="?textAppearanceHeadlineSmall"
         android:visibility="gone"
@@ -33,6 +30,12 @@
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clipToPadding="false"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingTop="14dp"
+        android:paddingBottom="112dp"
+        android:overScrollMode="never"
         android:visibility="gone"
         tools:listitem="@layout/note_list_item"
         tools:visibility="visible" />
