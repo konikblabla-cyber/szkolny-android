@@ -3,6 +3,7 @@ package pl.szczodrzynski.edziennik.ui.aximo
 import android.os.Bundle
 import android.view.View
 import pl.szczodrzynski.edziennik.MainActivity
+import pl.szczodrzynski.edziennik.data.enums.Theme
 import pl.szczodrzynski.edziennik.databinding.FragmentAximoAppearanceBinding
 import pl.szczodrzynski.edziennik.ui.base.fragment.BaseFragment
 
@@ -50,12 +51,26 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
 
     private fun saveTheme(value: String) {
         prefs.edit().putString("theme", value).apply()
+        app.config.ui.themeNightMode = when (value) {
+            "light" -> false
+            "dark" -> true
+            else -> null
+        }
         setTheme(value)
+        requireActivity().recreate()
     }
 
     private fun saveAccent(value: String) {
         prefs.edit().putString("accent", value).apply()
+        app.config.ui.themeColor = when (value) {
+            "blue" -> Theme.BLUE
+            "green" -> Theme.GREEN
+            "cyan" -> Theme.TEAL
+            "orange", "pink" -> Theme.RED
+            else -> Theme.PURPLE
+        }
         setAccent(value)
+        requireActivity().recreate()
     }
 
     private fun saveBackground(value: String) {
