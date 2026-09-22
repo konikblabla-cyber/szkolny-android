@@ -42,7 +42,7 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
 
         val backgrounds = mapOf(
             b.bgDefault to "default", b.bgMountains to "mountains",
-            b.bgSea to "sea", b.bgCity to "city"
+            b.bgSea to "sea", b.bgCity to "city", b.bgAbstract to "abstract", b.bgCustom to "custom"
         )
         backgrounds.forEach { (view, value) ->
             view.setOnClickListener { saveBackground(value) }
@@ -108,8 +108,8 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
     }
 
     private fun setBackground(value: String) {
-        val views: List<View> = listOf(b.bgDefault,b.bgMountains,b.bgSea,b.bgCity)
-        val names = listOf("default","mountains","sea","city")
+        val views: List<View> = listOf(b.bgDefault,b.bgMountains,b.bgSea,b.bgCity,b.bgAbstract,b.bgCustom)
+        val names = listOf("default","mountains","sea","city","abstract","custom")
         views.forEachIndexed { i, v -> v.alpha = if (names[i] == value) 1f else 0.6f }
     }
 }
