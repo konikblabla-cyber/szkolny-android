@@ -148,23 +148,43 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
     private var fabShown = false
     private fun renderAximoPlan(date: Date) {
         if (!isAdded) return
+
         b.aximoPlanDate.text = "${Week.getFullDayName(date.weekDay)}, ${date.stringDm}"
         b.aximoDayStrip.removeAllViews()
 
         for (offset in 0..6) {
             val day = weekStart.clone().stepForward(0, 0, offset)
-            val chip = TextView(requireContext()).apply {
-                layoutParams = LinearLayout.LayoutParams(66.dp, 52.dp).apply { marginEnd = 6.dp }
+            val selected = day == date
+            val chip = LinearLayout(requireContext()).apply {
+                orientation = LinearLayout.VERTICAL
                 gravity = Gravity.CENTER
-                text = "${Week.getFullDayName(day.weekDay).take(2)}\n${day.day}"
-                textSize = 12f
-                setTextColor(if (day == date) 0xFFFFFFFF.toInt() else 0xFFE9EAF5.toInt())
-                setBackgroundResource(if (day == date) R.drawable.aximo_plan_day_selected else R.drawable.aximo_plan_day_chip)
+                layoutParams = LinearLayout.LayoutParams(70.dp, 56.dp).apply { marginEnd = 7.dp }
+                setPadding(4.dp, 5.dp, 4.dp, 5.dp)
+                background = android.graphics.drawable.GradientDrawable().apply {
+                    cornerRadius = 18.dp.toFloat()
+                    setColor(if (selected) 0xFF7346D8.toInt() else 0xFF111B35.toInt())
+                    setStroke(1.dp, if (selected) 0xFFA982FF.toInt() else 0xFF26345A.toInt())
+                }
                 setOnClickListener {
                     val index = items.indexOfFirst { it == day }
                     if (index >= 0) b.viewPager.setCurrentItem(index, true)
                 }
             }
+            val dayName = TextView(requireContext()).apply {
+                text = Week.getFullDayName(day.weekDay).take(2).uppercase()
+                textSize = 10f
+                gravity = Gravity.CENTER
+                setTextColor(if (selected) 0xFFFFFFFF.toInt() else 0xFF8F9DBB.toInt())
+            }
+            val dayNumber = TextView(requireContext()).apply {
+                text = day.day.toString()
+                textSize = 17f
+                gravity = Gravity.CENTER
+                setTypeface(typeface, android.graphics.Typeface.BOLD)
+                setTextColor(if (selected) 0xFFFFFFFF.toInt() else 0xFFE8ECF8.toInt())
+            }
+            chip.addView(dayName, LinearLayout.LayoutParams(-1, 18.dp))
+            chip.addView(dayNumber, LinearLayout.LayoutParams(-1, 24.dp))
             b.aximoDayStrip.addView(chip)
         }
 
@@ -178,31 +198,65 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
         b.aximoPlanCount.text = "${lessons.size} lekcji"
         b.aximoEmptyState.visibility = if (lessons.isEmpty()) View.VISIBLE else View.GONE
 
-        val backgrounds = intArrayOf(
-            R.drawable.aximo_plan_lesson_bg_1, R.drawable.aximo_plan_lesson_bg_2,
-            R.drawable.aximo_plan_lesson_bg_3, R.drawable.aximo_plan_lesson_bg_4,
-            R.drawable.aximo_plan_lesson_bg_5, R.drawable.aximo_plan_lesson_bg_6
+        val accentColors = intArrayOf(
+            0xFF62D99C.toInt(), 0xFF55A8FF.toInt(), 0xFFE36CFF.toInt(),
+            0xFFFFA45B.toInt(), 0xFF46D9E8.toInt(), 0xFF76D46A.toInt()
         )
 
         lessons.forEachIndexed { index, lesson ->
+            val startMillis = lesson.displayStartTime?.let { date.getAsCalendar(it).timeInMillis } ?: 0L
+            val endMillis = lesson.displayEndTime?.let { date.getAsCalendar(it).timeInMillis } ?: (startMillis + 45 * 60_000L)
+            val now = System.currentTimeMillis()
+            val current = now in startMillis until endMillis
+            val accent = accentColors[index % accentColors.size]
+
             val card = LinearLayout(requireContext()).apply {
                 orientation = LinearLayout.HORIZONTAL
                 gravity = Gravity.CENTER_VERTICAL
-                minimumHeight = 78.dp
-                setPadding(14.dp, 10.dp, 14.dp, 10.dp)
-                setBackgroundResource(backgrounds[index % backgrounds.size])
-                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { bottomMargin = 8.dp }
+                minimumHeight = 88.dp
+                setPadding(0, 0, 12.dp, 0)
+                background = android.graphics.drawable.GradientDrawable().apply {
+                    cornerRadius = 20.dp.toFloat()
+                    setColor(if (current) 0xFF171F40.toInt() else 0xFF0D1730.toInt())
+                    setStroke(1.dp, if (current) accent else 0xFF1D2B4D.toInt())
+                }
+                layoutParams = LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = 10.dp }
             }
-            val time = TextView(requireContext()).apply {
-                layoutParams = LinearLayout.LayoutParams(74.dp, ViewGroup.LayoutParams.WRAP_CONTENT)
-                text = "${lesson.displayStartTime ?: "--:--"}\n${lesson.displayEndTime ?: "--:--"}"
+
+            val stripe = View(requireContext()).apply {
+                setBackgroundColor(accent)
+                layoutParams = LinearLayout.LayoutParams(5.dp, -1)
+            }
+            card.addView(stripe)
+
+            val number = TextView(requireContext()).apply {
+                text = "${index + 1}"
+                gravity = Gravity.CENTER
                 textSize = 12f
-                gravity = Gravity.CENTER_VERTICAL
-                setTextColor(0xFFECE8F8.toInt())
+                setTextColor(0xFFE9EDFA.toInt())
+                background = android.graphics.drawable.GradientDrawable().apply {
+                    shape = android.graphics.drawable.GradientDrawable.OVAL
+                    setColor(0xFF182441.toInt())
+                }
+                layoutParams = LinearLayout.LayoutParams(32.dp, 32.dp).apply {
+                    marginStart = 12.dp
+                    marginEnd = 10.dp
+                }
             }
+            card.addView(number)
+
+            val time = TextView(requireContext()).apply {
+                layoutParams = LinearLayout.LayoutParams(58.dp, -2)
+                text = "${lesson.displayStartTime ?: "--:--"}\n${lesson.displayEndTime ?: "--:--"}"
+                textSize = 11f
+                gravity = Gravity.CENTER
+                setTextColor(0xFFB9C4DF.toInt())
+            }
+            card.addView(time)
+
             val details = LinearLayout(requireContext()).apply {
                 orientation = LinearLayout.VERTICAL
-                layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
+                layoutParams = LinearLayout.LayoutParams(0, -2, 1f)
             }
             val subject = TextView(requireContext()).apply {
                 text = lesson.displaySubjectName?.takeIf { it.isNotBlank() } ?: "Lekcja"
@@ -213,17 +267,40 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
             val room = TextView(requireContext()).apply {
                 text = lesson.displayClassroom?.takeIf { it.isNotBlank() }?.let { "Sala $it" } ?: "Sala —"
                 textSize = 12f
-                setTextColor(0xFFCFD2E5.toInt())
-                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = 3.dp }
+                setTextColor(0xFF8F9DBB.toInt())
+                layoutParams = LinearLayout.LayoutParams(-2, -2).apply { topMargin = 4.dp }
             }
             details.addView(subject)
             details.addView(room)
-            card.addView(time)
             card.addView(details)
+
+            if (current) {
+                val badge = TextView(requireContext()).apply {
+                    text = "TERAZ"
+                    textSize = 9f
+                    setTypeface(typeface, android.graphics.Typeface.BOLD)
+                    gravity = Gravity.CENTER
+                    setTextColor(0xFFFFFFFF.toInt())
+                    setPadding(8.dp, 5.dp, 8.dp, 5.dp)
+                    background = android.graphics.drawable.GradientDrawable().apply {
+                        cornerRadius = 12.dp.toFloat()
+                        setColor(accent)
+                    }
+                }
+                card.addView(badge)
+            } else {
+                val chevron = TextView(requireContext()).apply {
+                    text = "›"
+                    textSize = 24f
+                    gravity = Gravity.CENTER
+                    setTextColor(0xFF657493.toInt())
+                    layoutParams = LinearLayout.LayoutParams(24.dp, 40.dp)
+                }
+                card.addView(chevron)
+            }
             b.aximoLessonContainer.addView(card)
         }
     }
-
     private val Int.dp: Int get() = (this * resources.displayMetrics.density).toInt()
 
     private val broadcastReceiver = object : BroadcastReceiver() {
