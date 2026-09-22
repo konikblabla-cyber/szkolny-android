@@ -75,7 +75,7 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
         b.silencePermissionValue.text = if (granted)
             "Przyznany • tryb szkolny może działać automatycznie"
         else
-            "Opcjonalny • podstawowe wyciszanie działa bez niego"
+            "Opcjonalny • zwykłe wyciszanie telefonu działa bez tego"
         b.silencePermissionValue.setTextColor(
             requireContext().getColor(if (granted) R.color.aximo_success else R.color.aximo_muted)
         )
