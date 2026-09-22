@@ -42,6 +42,30 @@ object AximoLessonNotifications {
         )
     }
 
+    fun cancelAll(context: Context) {
+        val alarm = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        val codes = prefs.getStringSet(SCHEDULED_REQUEST_CODES, emptySet())?.toSet().orEmpty()
+
+        codes.forEach { codeString ->
+            codeString.toIntOrNull()?.let { code ->
+                val intent = Intent(context, AximoLessonSilenceReceiver::class.java)
+                    .setAction(ACTION_NOTIFY)
+                PendingIntent.getBroadcast(
+                    context,
+                    code,
+                    intent,
+                    PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
+                )?.let {
+                    alarm.cancel(it)
+                    it.cancel()
+                }
+            }
+        }
+
+        prefs.edit().putStringSet(SCHEDULED_REQUEST_CODES, emptySet()).apply()
+    }
+
     fun scheduleTodayAndTomorrow(context: Context, profileId: Int) {
         val app = context.applicationContext as App
         val alarm = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
