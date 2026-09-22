@@ -79,7 +79,7 @@ object AximoLessonSilence {
             // If the app/device was restarted during the school window, enter
             // silent mode immediately instead of waiting for a missed alarm.
             if (silenceStart <= now && now < silenceEnd) {
-                onStart(context)
+                onStart(context, silenceEnd)
             } else {
                 setAlarm(alarm, context, ACTION_START, silenceStart, profileId, 0L, offset * 2, silenceEnd)
             }
