@@ -21,8 +21,15 @@ class SettingsFragment : BaseFragment<AximoSettingsFragmentBinding, MainActivity
         b.helpButton.setOnClickListener { activity.navigate(navTarget = NavTarget.HELP) }
         b.aboutButton.setOnClickListener { activity.navigate(navTarget = NavTarget.ABOUT) }
 
-        b.schoolModeSwitch.isChecked = app.config.sync.automaticSilenceEnabled
+        val silenceAccess = AximoLessonSilence.hasNotificationPolicyAccess(app)
+        b.schoolModeSwitch.isChecked = app.config.sync.automaticSilenceEnabled && silenceAccess
         b.schoolModeSwitch.setOnCheckedChangeListener { _, checked ->
+            if (checked && !AximoLessonSilence.hasNotificationPolicyAccess(app)) {
+                b.schoolModeSwitch.isChecked = false
+                app.config.sync.automaticSilenceEnabled = false
+                AximoLessonSilence.openNotificationPolicyAccessSettings(activity)
+                return@setOnCheckedChangeListener
+            }
             app.config.sync.automaticSilenceEnabled = checked
             if (checked) {
                 AximoLessonSilence.scheduleTodayAndTomorrow(app, app.profile.id)
