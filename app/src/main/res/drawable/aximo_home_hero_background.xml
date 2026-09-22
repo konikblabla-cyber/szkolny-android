@@ -2,17 +2,15 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
     <item>
         <shape>
-            <gradient android:angle="270" android:startColor="#050A24" android:centerColor="#24115C" android:endColor="#071D2B"/>
+            <gradient android:angle="270" android:startColor="#030722" android:centerColor="#17104B" android:endColor="#071B2A"/>
         </shape>
     </item>
-    <item android:top="170dp">
-        <shape>
-            <gradient android:angle="90" android:startColor="#29135F00" android:centerColor="#8A39B566" android:endColor="#FFEC7B33"/>
-        </shape>
+    <item android:top="70dp" android:bottom="55dp">
+        <bitmap android:src="@drawable/aximo_home_landscape" android:gravity="fill"/>
     </item>
-    <item android:top="250dp">
+    <item android:top="180dp">
         <shape>
-            <gradient android:angle="0" android:startColor="#122C62" android:centerColor="#D76B9B" android:endColor="#173D5A"/>
+            <gradient android:angle="90" android:startColor="#00000000" android:centerColor="#6D2F7655" android:endColor="#000A18CC"/>
         </shape>
     </item>
 </layer-list>
