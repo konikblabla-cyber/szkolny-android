@@ -24,6 +24,7 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
         b.notificationsCard.setOnClickListener { activity.navigate(navTarget = NavTarget.NOTIFICATION_SETTINGS) }
         b.silenceCard.setOnClickListener { activity.navigate(navTarget = NavTarget.SILENCE) }
         b.appearanceCard.setOnClickListener { activity.navigate(navTarget = NavTarget.APPEARANCE) }
+        b.layoutCard.setOnClickListener { activity.navigate(navTarget = NavTarget.MORE) }
         b.helpCard.setOnClickListener { activity.navigate(navTarget = NavTarget.HELP) }
         b.aboutCard.setOnClickListener { activity.navigate(navTarget = NavTarget.ABOUT) }
         b.notificationPermissionCard.setOnClickListener {
