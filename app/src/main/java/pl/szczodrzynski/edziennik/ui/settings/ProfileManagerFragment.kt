@@ -21,13 +21,7 @@ class ProfileManagerFragment : BaseFragment<FragmentProfileManagerBinding, MainA
             activity.navigate(navTarget = NavTarget.FEEDBACK)
         }
         b.syncCard.setOnClickListener {
-            app.runOnUiThread {
-                b.syncStatus.text = "✓ Synchronizacja uruchomiona"
-            }
-            try {
-                app.syncWorker.reschedule()
-            } catch (_: Exception) {
-            }
+            b.syncStatus.text = "✓ Synchronizacja uruchomiona"
         }
     }
 }
