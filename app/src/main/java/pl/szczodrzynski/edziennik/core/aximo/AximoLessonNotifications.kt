@@ -27,6 +27,8 @@ object AximoLessonNotifications {
     private const val ACTION_NEXT = "pl.szczodrzynski.edziennik.aximo.OPEN_NEXT_LESSON"
     private const val REQUEST_BASE = 470000
     private const val MINUTE = 60_000L
+    private const val EXTRA_LESSON_ID = "aximoLessonId"
+    private const val EXTRA_LESSON_START = "aximoLessonStart"
 
     fun ensureChannel(context: Context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
@@ -57,6 +59,8 @@ object AximoLessonNotifications {
                     val intent = Intent(context, AximoLessonSilenceReceiver::class.java)
                         .setAction(ACTION_NOTIFY)
                         .putExtra(AximoLessonSilence.EXTRA_PROFILE, profileId)
+                        .putExtra(EXTRA_LESSON_ID, lesson.id)
+                        .putExtra(EXTRA_LESSON_START, date.getAsCalendar(start).timeInMillis)
 
                     // Include the calendar day so recurring lesson IDs never overwrite each other.
                     val dayKey = date.getAsCalendar(start).let { cal ->
@@ -86,7 +90,7 @@ object AximoLessonNotifications {
         }
     }
 
-    fun show(context: Context, profileId: Int) {
+    fun show(context: Context, profileId: Int, lessonId: Long = -1L, lessonStart: Long = -1L) {
         ensureChannel(context)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
             context.checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
@@ -109,13 +113,23 @@ object AximoLessonNotifications {
         }
 
         val ordered = candidates.sortedBy { it.first }
-        val currentOrNext = ordered.firstOrNull { (startAt, lesson) ->
-            val endAt = lesson.displayEndTime?.let { lesson.date?.getAsCalendar(it)?.timeInMillis } ?: (startAt + 45 * MINUTE)
-            now < endAt
-        }?.second ?: return
-
-        val currentStart = currentOrNext.displayStartTime?.let { currentOrNext.date?.getAsCalendar(it)?.timeInMillis } ?: now
-        val currentEnd = currentOrNext.displayEndTime?.let { currentOrNext.date?.getAsCalendar(it)?.timeInMillis } ?: (currentStart + 45 * MINUTE)
+        val selected = if (lessonId != -1L || lessonStart != -1L) {
+            ordered.firstOrNull { (startAt, lesson) ->
+                (lessonId != -1L && lesson.id == lessonId) ||
+                    (lessonStart != -1L && startAt == lessonStart)
+            }
+        } else {
+            ordered.firstOrNull { (startAt, lesson) ->
+                val endAt = lesson.displayEndTime?.let { lesson.date?.getAsCalendar(it)?.timeInMillis }
+                    ?: (startAt + 45 * MINUTE)
+                now < endAt
+            }
+        }
+        val currentOrNext = selected?.second ?: return
+        val selectedStart = selected.first
+        val currentStart = selectedStart
+        val currentEnd = currentOrNext.displayEndTime?.let { currentOrNext.date?.getAsCalendar(it)?.timeInMillis }
+            ?: (currentStart + 45 * MINUTE)
         val isCurrent = now in currentStart until currentEnd
 
         val minutesToStart = ((currentStart - now) / MINUTE).coerceAtLeast(0)
@@ -124,7 +138,7 @@ object AximoLessonNotifications {
                     else "Za $minutesToStart min: ${currentOrNext.displaySubjectName ?: "Lekcja"}"
 
         val room = currentOrNext.displayClassroom?.takeIf { it.isNotBlank() } ?: "brak sali"
-        val nextEntry = ordered.firstOrNull { it.first >= currentEnd }
+        val nextEntry = ordered.firstOrNull { it.first > currentStart }
         val next = nextEntry?.second
         val nextText = next?.let { nextLesson ->
             val nextStartAt = nextEntry.first
@@ -169,6 +183,7 @@ object AximoLessonNotifications {
             .setWhen(if (isCurrent) now else currentStart)
             .build()
 
-        NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, notification)
+        val notificationId = if (selectedStart > 0L) (selectedStart xor (selectedStart ushr 32)).toInt() else NOTIFICATION_ID
+        NotificationManagerCompat.from(context).notify(notificationId, notification)
     }
 }
