@@ -1572,4 +1572,5 @@
     <string name="theme_green">Zielony</string>
     <string name="aximo_home_subtitle">Twój dzień szkolny w jednym miejscu.</string>
     <string name="menu_notification_settings">Ustawienia powiadomień</string>
+    <string name="menu_silence">Wyciszanie</string>
 </resources>
