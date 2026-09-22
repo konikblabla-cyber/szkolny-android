@@ -32,6 +32,16 @@
     android:id="@+id/automaticSilence" android:layout_width="match_parent" android:layout_height="wrap_content"
     android:layout_marginTop="2dp" android:text="Automatyczne wyciszanie"
     android:textColor="#FFFFFF" android:textSize="15sp"/>
+
+   <LinearLayout android:id="@+id/silencePermissionCard" android:layout_width="match_parent" android:layout_height="wrap_content"
+    android:layout_marginTop="10dp" android:padding="16dp" android:orientation="vertical"
+    android:background="@drawable/aximo_notification_settings_card">
+    <TextView android:id="@+id/silencePermissionStatus" android:layout_width="match_parent" android:layout_height="wrap_content"
+     android:text="Sprawdzanie dostępu do trybu Nie przeszkadzać…" android:textColor="#AEBBD2" android:textSize="13sp"/>
+    <com.google.android.material.button.MaterialButton android:id="@+id/silencePermissionButton"
+     android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp"
+     android:text="Nadaj dostęp do wyciszania" android:textAllCaps="false"/>
+   </LinearLayout>
    <com.google.android.material.materialswitch.MaterialSwitch
     android:id="@+id/lessonNameNotifications" android:layout_width="match_parent" android:layout_height="wrap_content"
     android:layout_marginTop="2dp" android:text="Nazwa lekcji w powiadomieniu"
