@@ -164,7 +164,7 @@ enum class NavTarget(
         location = NavTargetLocation.NOWHERE,
         nameRes = R.string.menu_silence,
         titleRes = R.string.menu_silence,
-        icon = CommunityMaterial.Icon.cmd_volume_high,
+        icon = CommunityMaterial.Icon.cmd_bell_ring_outline,
     ),
     MORE(
         id = 25,
