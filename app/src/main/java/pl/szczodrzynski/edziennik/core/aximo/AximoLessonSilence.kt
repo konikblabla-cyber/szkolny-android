@@ -51,7 +51,6 @@ object AximoLessonSilence {
         // Do not reference newer detail-page constants here because this
         // project intentionally supports an older compile SDK.
         intents += Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
-            .putExtra(android.provider.Settings.EXTRA_NOTIFICATION_POLICY_PACKAGE, packageName)
             .addFlags(flags)
 
         // Last resort: open the main Settings screen instead of failing silently.
