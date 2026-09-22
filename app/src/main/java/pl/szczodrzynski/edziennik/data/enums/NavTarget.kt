@@ -175,7 +175,7 @@ enum class NavTarget(
         location = NavTargetLocation.NOWHERE,
         nameRes = R.string.menu_about,
         titleRes = R.string.menu_about,
-        icon = CommunityMaterial.Icon.cmd_information_outline,
+        icon = CommunityMaterial.Icon2.cmd_help_circle_outline,
     ),
     APPEARANCE(
         id = 27,
@@ -183,7 +183,7 @@ enum class NavTarget(
         location = NavTargetLocation.NOWHERE,
         nameRes = R.string.menu_appearance,
         titleRes = R.string.menu_appearance,
-        icon = CommunityMaterial.Icon.cmd_palette_outline,
+        icon = CommunityMaterial.Icon.cmd_cog_outline,
     ),
     SILENCE(
         id = 26,
