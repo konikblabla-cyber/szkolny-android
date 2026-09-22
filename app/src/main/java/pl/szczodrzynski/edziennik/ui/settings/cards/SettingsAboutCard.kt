@@ -45,7 +45,7 @@ class SettingsAboutCard(util: SettingsUtil) : SettingsCard(util), CoroutineScope
         null,
         items = ::getItems,
         itemsMore = ::getItemsMore,
-        backgroundColor = R.attr.colorPrimaryContainer.resolveAttr(activity)
+        backgroundColor = util.aximoCardColor(5)
     )
 
     private val versionDetailsItem by lazy {
