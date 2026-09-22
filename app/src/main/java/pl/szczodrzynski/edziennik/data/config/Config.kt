@@ -98,6 +98,9 @@ class Config(app: App) : BaseConfig<Config>(app, profileId = null) {
         var lastAppSync by config<Long>(0L)
         var notifyAboutUpdates by config<Boolean>(true)
         var webPushEnabled by config<Boolean>(true)
+        var lessonNotificationsEnabled by config<Boolean>("lessonNotificationsEnabled", true)
+        var lessonNotificationMinutes by config<Int>("lessonNotificationMinutes", 10)
+        var automaticSilenceEnabled by config<Boolean>("automaticSilenceEnabled", true)
 
         // Quiet Hours
         var quietHoursEnabled by config<Boolean>(false)
