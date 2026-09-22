@@ -134,7 +134,7 @@ class SettingsFragment : BaseFragment<AximoSettingsFragmentBinding, MainActivity
         } else {
             "⚠ Brak dostępu. Android nie pokazuje tu zwykłego okna uprawnień — trzeba włączyć dostęp w ustawieniach systemu."
         }
-        b.permissionButton.text = if (granted) "Otwórz ustawienia dostępu" else "Nadaj uprawnienie"
+        b.permissionButton.text = if (granted) "Otwórz ustawienia dostępu" else "Otwórz dostęp „Nie przeszkadzać”"
         b.permissionButton.isEnabled = true
         b.schoolModeSwitch.isEnabled = granted
         if (!granted && app.config.sync.automaticSilenceEnabled) {
