@@ -70,6 +70,14 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:textColor="#F3F5FA"
+                android:textSize="13sp" />
+
+            <TextView
                 android:id="@+id/type"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
