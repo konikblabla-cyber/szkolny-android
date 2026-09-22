@@ -14,7 +14,7 @@ class NotificationSettingsFragment : BaseFragment<NotificationSettingsFragmentBi
 ) {
     override suspend fun onViewReady(savedInstanceState: Bundle?) {
         b.lessonNotifications.isChecked = app.config.sync.lessonNotificationsEnabled
-        b.automaticSilence.isChecked = app.config.sync.automaticSilenceEnabled
+        b.automaticSilence.isChecked = app.config.sync.automaticSilenceEnabled && AximoLessonSilence.hasNotificationPolicyAccess(app)
         b.minutesSeek.progress = app.config.sync.lessonNotificationMinutes.coerceIn(1, 30)
         updateMinutes()
 
@@ -32,11 +32,16 @@ class NotificationSettingsFragment : BaseFragment<NotificationSettingsFragmentBi
         }
 
         b.automaticSilence.setOnCheckedChangeListener { _, checked ->
+            if (checked && !AximoLessonSilence.hasNotificationPolicyAccess(app)) {
+                b.automaticSilence.isChecked = false
+                app.config.sync.automaticSilenceEnabled = false
+                AximoLessonSilence.openNotificationPolicyAccessSettings(activity)
+                return@setOnCheckedChangeListener
+            }
             app.config.sync.automaticSilenceEnabled = checked
             if (checked) {
                 AximoLessonSilence.scheduleTodayAndTomorrow(app, app.profile.id)
             } else {
-                AximoLessonSilence.scheduleTodayAndTomorrow(app, app.profile.id)
                 AximoLessonSilence.disableAndRestore(app)
             }
         }
