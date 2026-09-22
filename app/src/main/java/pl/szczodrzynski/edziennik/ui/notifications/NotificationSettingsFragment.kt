@@ -18,6 +18,12 @@ class NotificationSettingsFragment : BaseFragment<NotificationSettingsFragmentBi
     override suspend fun onViewReady(savedInstanceState: Bundle?) {
         b.lessonNotifications.isChecked = app.config.sync.lessonNotificationsEnabled
         updatePermissionUi()
+        if (app.config.sync.lessonNotificationsEnabled &&
+            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            requireContext().checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+        ) {
+            requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 47002)
+        }
         b.automaticSilence.isChecked = app.config.sync.automaticSilenceEnabled && AximoLessonSilence.hasNotificationPolicyAccess(app)
         b.minutesSeek.progress = app.config.sync.lessonNotificationMinutes.coerceIn(1, 30)
         updateMinutes()
