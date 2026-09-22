@@ -156,7 +156,7 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
             val chip = TextView(requireContext()).apply {
                 layoutParams = LinearLayout.LayoutParams(66.dp, 52.dp).apply { marginEnd = 6.dp }
                 gravity = Gravity.CENTER
-                text = "${Week.getShortDayName(day.weekDay)}\n${day.day}"
+                text = "${Week.getFullDayName(day.weekDay).take(2)}\n${day.day}"
                 textSize = 12f
                 setTextColor(if (day == date) 0xFFFFFFFF.toInt() else 0xFFE9EAF5.toInt())
                 setBackgroundResource(if (day == date) R.drawable.aximo_plan_day_selected else R.drawable.aximo_plan_day_chip)
