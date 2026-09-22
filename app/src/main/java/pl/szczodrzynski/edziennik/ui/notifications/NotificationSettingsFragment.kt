@@ -49,15 +49,18 @@ class NotificationSettingsFragment : BaseFragment<NotificationSettingsFragmentBi
         }
 
         b.automaticSilence.setOnCheckedChangeListener { _, checked ->
-            if (checked && !AximoLessonSilence.hasNotificationPolicyAccess(app)) {
-                b.automaticSilence.isChecked = false
-                app.config.sync.automaticSilenceEnabled = false
-                AximoLessonSilence.openNotificationPolicyAccessSettings(activity)
-                return@setOnCheckedChangeListener
-            }
+            // School mode primarily uses Android's normal silent ringer mode.
+            // ACCESS_NOTIFICATION_POLICY is optional and must never block activation.
             app.config.sync.automaticSilenceEnabled = checked
             if (checked) {
                 AximoLessonSilence.scheduleTodayAndTomorrow(app, app.profile.id)
+                if (!AximoLessonSilence.hasNotificationPolicyAccess(app)) {
+                    android.widget.Toast.makeText(
+                        activity,
+                        "Tryb szkolny został włączony. Podstawowe wyciszanie działa bez dodatkowego dostępu Androida.",
+                        android.widget.Toast.LENGTH_SHORT
+                    ).show()
+                }
             } else {
                 AximoLessonSilence.disableAndRestore(app)
             }
@@ -135,9 +138,9 @@ class NotificationSettingsFragment : BaseFragment<NotificationSettingsFragmentBi
         b.silencePermissionStatus.text = if (granted) {
             "✓ Dostęp przyznany — Aximo może automatycznie wyciszać telefon podczas szkoły."
         } else {
-            "⚠ Brak dostępu. Android wymaga włączenia dostępu „Nie przeszkadzać” w ustawieniach systemu."
+            "✓ Podstawowe wyciszanie działa bez tego dostępu. Opcjonalny dostęp „Nie przeszkadzać” rozszerza tryb szkolny."
         }
-        b.silencePermissionButton.text = if (granted) "Otwórz ustawienia dostępu" else "Otwórz dostęp „Nie przeszkadzać”"
+        b.silencePermissionButton.text = if (granted) "Ustawienia dodatkowego dostępu" else "Opcjonalny dostęp „Nie przeszkadzać”"
     }
 
     private fun updateMinutes() {
