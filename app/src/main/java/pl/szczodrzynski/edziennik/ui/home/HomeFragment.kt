@@ -182,11 +182,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
             manager.requestNotificationsPermission(activity, 0, false){}
         }
 
-        // The Aximo home screen is now a self-contained reference view.
-        // Do not initialize the legacy dashboard/cards behind it: they are hidden
-        // and can prevent the Start fragment from completing when opened again.
-        return
-
+        // Keep the reference artwork as the visible Aximo surface, but continue
+        // initializing the underlying dashboard so navigation, refreshes and
+        // lifecycle callbacks keep working normally.
         launch(Dispatchers.IO) {
             try {
                 val today = pl.szczodrzynski.edziennik.utils.models.Date.getToday()
