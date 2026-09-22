@@ -262,22 +262,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
             HomeConfigDialog(activity, reloadOnDismiss = true).show()
         }
 
-        // Zastosuj wybrany preset wyglądu tylko do warstwy Aximo — oryginalne karty lekcji pozostają bez zmian.
-        val appearance = AximoAppearanceStyle.fromOrdinal(app.config.ui.aximoAppearanceStyle)
-        fun styleSurface(view: View, color: Int, radius: Int = 18) {
-            view.background = GradientDrawable().apply {
-                shape = GradientDrawable.RECTANGLE
-                cornerRadius = dpForHome(radius).toFloat()
-                setColor(color)
-                setStroke(dpForHome(1).toInt(), appearance.accentSoft)
-            }
-        }
-        styleSurface(b.nowCard, appearance.surfaceAlt, 22)
-        styleSurface(b.todaySummaryCard, appearance.surface, 20)
-        styleSurface(b.focusStatusCard, appearance.surfaceAlt, 20)
-        listOf(b.quickPlan, b.quickHomework, b.quickGrades, b.quickTomorrow, b.quickMessages).forEach {
-            styleSurface(it, appearance.surface, 16)
-        }
+        // Ekran główny korzysta z własnego, pełnoekranowego motywu referencyjnego.
+        // Nie nadpisujemy jego kart presetem kolorystycznym, ponieważ tło i karta powitalna
+        // są elementami projektu 1:1.
 
         // Delikatne wejście elementów dashboardu — bardziej „premium”, bez ciężkich animacji.
         val entranceViews = listOf(
