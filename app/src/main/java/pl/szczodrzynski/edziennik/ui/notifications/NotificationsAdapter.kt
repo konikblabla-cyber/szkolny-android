@@ -54,8 +54,8 @@ class NotificationsAdapter(
         b.notificationIcon.background =
             item.type.icon.toDrawable(app, colorAttr = R.attr.colorPrimary)
 
-        b.title.text = item.title
-        b.message.text = item.text
+        b.title.text = cleanTechnicalText(item.title, "Powiadomienie Aximo")
+        b.message.text = cleanTechnicalText(item.text, "Szczegóły powiadomienia są dostępne po otwarciu wpisu.")
         b.profileDate.text = listOf(
                 item.profileName ?: "",
                 " • ",
@@ -79,6 +79,16 @@ class NotificationsAdapter(
         onItemClick?.let { listener ->
             b.root.onClick { listener(item) }
         }
+    }
+
+    private fun cleanTechnicalText(value: String?, fallback: String): String {
+        val raw = value?.trim().orEmpty()
+        if (raw.isBlank()) return fallback
+        val lower = raw.lowercase()
+        if (lower.contains("http ") || lower.contains("http/") || lower.contains("httpclient") || lower.contains("retrofit") || lower.contains("okhttp") || lower.contains("sockettimeoutexception") || lower.contains("connectexception")) {
+            return "Nie udało się pobrać aktualizacji danych. Sprawdź połączenie i spróbuj ponownie."
+        }
+        return raw
     }
 
     override fun getItemCount() = items.size
