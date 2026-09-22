@@ -71,6 +71,15 @@
                     android:textColor="#8D9BB8"
                     android:textSize="12sp" />
             </LinearLayout>
+
+            <ImageButton
+                android:id="@+id/settingsButton"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/aximo_notification_header_icon"
+                android:src="@drawable/ic_aximo_settings"
+                android:tint="#D7B7FF"
+                android:contentDescription="Ustawienia powiadomień" />
         </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
