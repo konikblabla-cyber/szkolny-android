@@ -1,56 +1,42 @@
-/*
- * Copyright (c) Kuba Szczodrzyński 2021-3-16.
- */
-
 package pl.szczodrzynski.edziennik.ui.settings
 
-import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import com.danielstone.materialaboutlibrary.MaterialAboutFragment
-import com.danielstone.materialaboutlibrary.model.MaterialAboutList
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import pl.szczodrzynski.edziennik.App
 import pl.szczodrzynski.edziennik.MainActivity
-import pl.szczodrzynski.edziennik.ui.settings.cards.*
-import kotlin.coroutines.CoroutineContext
+import pl.szczodrzynski.edziennik.R
+import pl.szczodrzynski.edziennik.databinding.AximoSettingsFragmentBinding
+import pl.szczodrzynski.edziennik.ui.base.fragment.BaseFragment
+import pl.szczodrzynski.edziennik.data.enums.NavTarget
+import pl.szczodrzynski.edziennik.core.aximo.AximoLessonSilence
 
-class SettingsFragment : MaterialAboutFragment() {
+class SettingsFragment : BaseFragment<AximoSettingsFragmentBinding, MainActivity>(
+    inflater = AximoSettingsFragmentBinding::inflate,
+) {
+    override suspend fun onViewReady(savedInstanceState: Bundle?) {
+        b.backButton.setOnClickListener { activity.onBackPressedDispatcher.onBackPressed() }
+        b.profileButton.setOnClickListener { activity.navigate(navTarget = NavTarget.PROFILE_MANAGER) }
+        b.notificationSettingsButton.setOnClickListener { activity.navigate(navTarget = NavTarget.NOTIFICATION_SETTINGS) }
+        b.silenceButton.setOnClickListener { activity.navigate(navTarget = NavTarget.SILENCE) }
+        b.appearanceButton.setOnClickListener { activity.navigate(navTarget = NavTarget.APPEARANCE) }
+        b.moreButton.setOnClickListener { activity.navigate(navTarget = NavTarget.MORE) }
+        b.helpButton.setOnClickListener { activity.navigate(navTarget = NavTarget.HELP) }
+        b.aboutButton.setOnClickListener { activity.navigate(navTarget = NavTarget.ABOUT) }
 
-    private lateinit var app: App
-    private lateinit var activity: MainActivity
-
-    private val util by lazy {
-        SettingsUtil(activity) {
-            refreshMaterialAboutList()
+        b.schoolModeSwitch.isChecked = app.config.sync.automaticSilenceEnabled
+        b.schoolModeSwitch.setOnCheckedChangeListener { _, checked ->
+            app.config.sync.automaticSilenceEnabled = checked
+            if (checked) {
+                AximoLessonSilence.scheduleTodayAndTomorrow(app, app.profile.id)
+            } else {
+                AximoLessonSilence.disableAndRestore(app)
+            }
         }
-    }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        activity = (getActivity() as MainActivity?) ?: return null
-        app = activity.application as App
-        return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
-    override fun getViewTypeManager() =
-        SettingsViewTypeManager()
-
-    override fun getMaterialAboutList(activityContext: Context?): MaterialAboutList {
-        return MaterialAboutList(
-            SettingsProfileCard(util).card,
-            SettingsThemeCard(util).card,
-            SettingsAximoCard(util).card,
-            SettingsSyncCard(util).card,
-            SettingsRegisterCard(util).card,
-            SettingsAboutCard(util).card,
-        )
+        b.profileSummary.text = try {
+            val profile = app.profile
+            if (profile.name.isNotBlank()) "${profile.name} • ${profile.subname}"
+            else getString(R.string.aximo_settings_school_subtitle)
+        } catch (_: Exception) {
+            getString(R.string.aximo_settings_school_subtitle)
+        }
     }
 }
