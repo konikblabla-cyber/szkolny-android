@@ -46,13 +46,16 @@ object AximoLessonSilence {
         val intents = mutableListOf<Intent>()
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            // Android 12+ expects the target package in the URI for the
+            // app-specific DND access page. The old EXTRA-only form is ignored
+            // by several Android/OEM Settings implementations.
             intents += Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_DETAIL_SETTINGS)
+                .setData(android.net.Uri.parse("package:$packageName"))
                 .putExtra(android.provider.Settings.EXTRA_NOTIFICATION_POLICY_PACKAGE, packageName)
                 .addFlags(flags)
         }
 
-        // Fallback used by Android/OEM Settings implementations that do not
-        // support the package-specific detail screen.
+        // Standard list of apps allowed to control Do Not Disturb.
         intents += Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
             .addFlags(flags)
 
