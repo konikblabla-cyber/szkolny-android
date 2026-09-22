@@ -1,6 +1,7 @@
 package pl.szczodrzynski.edziennik.ui.notifications
 
 import android.os.Bundle
+import android.widget.SeekBar
 import pl.szczodrzynski.edziennik.MainActivity
 import pl.szczodrzynski.edziennik.databinding.NotificationSettingsFragmentBinding
 import pl.szczodrzynski.edziennik.ui.base.fragment.BaseFragment
@@ -17,9 +18,19 @@ class NotificationSettingsFragment : BaseFragment<NotificationSettingsFragmentBi
         b.minutesSeek.progress = app.config.sync.lessonNotificationMinutes.coerceIn(1, 30)
         updateMinutes()
 
-        b.backButton.setOnClickListener { activity.onBackPressedDispatcher.onBackPressed() }
-        b.lessonNotifications.setOnCheckedChangeListener { _, checked -> app.config.sync.lessonNotificationsEnabled = checked
-            AximoLessonNotifications.scheduleTodayAndTomorrow(app, app.profile.id) }
+        b.backButton.setOnClickListener {
+            activity.onBackPressedDispatcher.onBackPressed()
+        }
+
+        b.lessonNotifications.setOnCheckedChangeListener { _, checked ->
+            app.config.sync.lessonNotificationsEnabled = checked
+            if (checked) {
+                AximoLessonNotifications.scheduleTodayAndTomorrow(app, app.profile.id)
+            } else {
+                AximoLessonNotifications.cancelAll(app)
+            }
+        }
+
         b.automaticSilence.setOnCheckedChangeListener { _, checked ->
             app.config.sync.automaticSilenceEnabled = checked
             if (checked) {
@@ -29,22 +40,33 @@ class NotificationSettingsFragment : BaseFragment<NotificationSettingsFragmentBi
                 AximoLessonSilence.disableAndRestore(app)
             }
         }
-        b.minutesSeek.setOnSeekBarChangeListener(object : android.widget.SeekBar.OnSeekBarChangeListener {
-            override fun onProgressChanged(seekBar: android.widget.SeekBar?, progress: Int, fromUser: Boolean) {
+
+        b.minutesSeek.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(
+                seekBar: SeekBar?,
+                progress: Int,
+                fromUser: Boolean,
+            ) {
                 if (fromUser) {
                     app.config.sync.lessonNotificationMinutes = progress.coerceAtLeast(1)
                     updateMinutes()
                 }
             }
-            override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {
+
+            override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
+
+            override fun onStopTrackingTouch(seekBar: SeekBar?) {
                 AximoLessonNotifications.scheduleTodayAndTomorrow(app, app.profile.id)
-            }}
+            }
         })
-        b.filterCard.setOnClickListener { NotificationFilterDialog(activity).show() }
+
+        b.filterCard.setOnClickListener {
+            NotificationFilterDialog(activity).show()
+        }
     }
 
     private fun updateMinutes() {
-        b.minutesValue.text = "Przypomnienie " + app.config.sync.lessonNotificationMinutes + " minut przed rozpoczęciem"
+        b.minutesValue.text =
+            "Przypomnienie ${app.config.sync.lessonNotificationMinutes} minut przed rozpoczęciem"
     }
 }
