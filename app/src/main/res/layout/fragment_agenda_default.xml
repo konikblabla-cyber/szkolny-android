@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:agendaCalendar="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/aximo_calendar_background"
+    android:paddingTop="10dp">
 
     <ProgressBar
         android:id="@+id/progressBar"
@@ -24,11 +25,5 @@
         agendaCalendar:calendarHeaderColor="?colorSurface"
         agendaCalendar:calendarHeaderTextColor="?colorOnSurface"
         agendaCalendar:calendarPastDayTextColor="?android:textColorSecondary"
-        agendaCalendar:fabColor="?colorPrimaryContainer"
-        agendaCalendar:layout_constraintBottom_toBottomOf="parent"
-        agendaCalendar:layout_constraintEnd_toEndOf="parent"
-        agendaCalendar:layout_constraintHorizontal_bias="1.0"
-        agendaCalendar:layout_constraintStart_toStartOf="parent"
-        agendaCalendar:layout_constraintTop_toTopOf="parent"
-        agendaCalendar:layout_constraintVertical_bias="1.0" />
+        agendaCalendar:fabColor="?colorPrimaryContainer" />
 </LinearLayout>
