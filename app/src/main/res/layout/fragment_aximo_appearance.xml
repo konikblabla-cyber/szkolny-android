@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#02091A"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingStart="20dp"
+        android:paddingTop="18dp"
+        android:paddingEnd="20dp"
+        android:paddingBottom="120dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:gravity="center_vertical">
+
+            <ImageButton
+                android:id="@+id/backButton"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/aximo_icon_button_background"
+                android:contentDescription="Wstecz"
+                android:src="@drawable/ic_aximo_back"
+                android:tint="#FFFFFF" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="14dp"
+                android:text="Wygląd aplikacji"
+                android:textColor="#FFFFFF"
+                android:textSize="25sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:text="Motyw"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/themeRow"
+            android:layout_width="match_parent"
+            android:layout_height="118dp"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:id="@+id/themeDark"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/aximo_more_card"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="8dp">
+                <TextView android:layout_width="48dp" android:layout_height="58dp" android:background="#111A32" android:gravity="center" android:text="☾" android:textColor="#FFFFFF" android:textSize="24sp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="Ciemny" android:textColor="#FFFFFF" android:textSize="12sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/themeLight"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_marginEnd="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/aximo_more_card"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="8dp">
+                <TextView android:layout_width="48dp" android:layout_height="58dp" android:background="#EEF1F8" android:gravity="center" android:text="☀" android:textColor="#17213B" android:textSize="24sp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="Jasny" android:textColor="#FFFFFF" android:textSize="12sp"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/themeAuto"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="5dp"
+                android:layout_weight="1"
+                android:background="@drawable/aximo_more_card"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="8dp">
+                <TextView android:layout_width="48dp" android:layout_height="58dp" android:background="#283452" android:gravity="center" android:text="◐" android:textColor="#FFFFFF" android:textSize="24sp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="Automatyczny" android:textColor="#FFFFFF" android:textSize="12sp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="26dp"
+            android:text="Kolor akcentu"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/accentRow"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/aximo_more_card"
+            android:paddingStart="18dp"
+            android:paddingEnd="18dp">
+
+            <View android:id="@+id/accentPurple" android:layout_width="32dp" android:layout_height="32dp" android:layout_marginEnd="12dp" android:background="#8D72FF"/>
+            <View android:id="@+id/accentBlue" android:layout_width="32dp" android:layout_height="32dp" android:layout_marginEnd="12dp" android:background="#4D8DFF"/>
+            <View android:id="@+id/accentCyan" android:layout_width="32dp" android:layout_height="32dp" android:layout_marginEnd="12dp" android:background="#34D5E8"/>
+            <View android:id="@+id/accentGreen" android:layout_width="32dp" android:layout_height="32dp" android:layout_marginEnd="12dp" android:background="#58D68D"/>
+            <View android:id="@+id/accentYellow" android:layout_width="32dp" android:layout_height="32dp" android:layout_marginEnd="12dp" android:background="#F2C94C"/>
+            <View android:id="@+id/accentOrange" android:layout_width="32dp" android:layout_height="32dp" android:layout_marginEnd="12dp" android:background="#F2994A"/>
+            <View android:id="@+id/accentPink" android:layout_width="32dp" android:layout_height="32dp" android:background="#E56BFF"/>
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="26dp"
+            android:text="Tło aplikacji"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:id="@+id/backgroundRow"
+            android:layout_width="match_parent"
+            android:layout_height="92dp"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:background="@drawable/aximo_more_card"
+            android:paddingStart="14dp"
+            android:paddingEnd="14dp">
+
+            <TextView android:id="@+id/bgDefault" android:layout_width="0dp" android:layout_height="62dp" android:layout_marginEnd="7dp" android:layout_weight="1" android:background="#111A32" android:gravity="center" android:text="Domyślne" android:textColor="#FFFFFF" android:textSize="11sp"/>
+            <TextView android:id="@+id/bgMountains" android:layout_width="0dp" android:layout_height="62dp" android:layout_marginStart="7dp" android:layout_marginEnd="7dp" android:layout_weight="1" android:background="#24304F" android:gravity="center" android:text="Góry" android:textColor="#FFFFFF" android:textSize="11sp"/>
+            <TextView android:id="@+id/bgSea" android:layout_width="0dp" android:layout_height="62dp" android:layout_marginStart="7dp" android:layout_marginEnd="7dp" android:layout_weight="1" android:background="#123B50" android:gravity="center" android:text="Morze" android:textColor="#FFFFFF" android:textSize="11sp"/>
+            <TextView android:id="@+id/bgCity" android:layout_width="0dp" android:layout_height="62dp" android:layout_marginStart="7dp" android:layout_weight="1" android:background="#293047" android:gravity="center" android:text="Miasto" android:textColor="#FFFFFF" android:textSize="11sp"/>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/appearanceSaved"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="18dp"
+            android:text="Zmiany są zapisywane automatycznie"
+            android:textColor="#7F8BA8"
+            android:textSize="12sp" />
+    </LinearLayout>
+</ScrollView>
