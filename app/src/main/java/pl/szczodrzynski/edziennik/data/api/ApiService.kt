@@ -77,7 +77,8 @@ class ApiService : Service() {
          |______\__,_/___|_|\___|_| |_|_| |_|_|_|\_\  \_____\__,_|_|_|_.__/ \__,_|\___|_|\*/
     private val taskCallback = object : EdziennikCallback {
         override fun onCompleted() {
-            if (taskRunning is EdziennikTask && taskRunning?.request is EdziennikTask.SyncProfileRequest) {
+            val completedTask = taskRunning
+            if (completedTask is EdziennikTask && completedTask.request is EdziennikTask.SyncProfileRequest) {
                 val syncedProfileId = taskProfileId
                 if (syncedProfileId > 0) {
                     AximoLessonSilence.scheduleTodayAndTomorrow(app, syncedProfileId)
