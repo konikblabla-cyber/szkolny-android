@@ -39,12 +39,15 @@ object AximoLessonSilence {
 
         val flags = Intent.FLAG_ACTIVITY_NEW_TASK
 
-        val intents = listOf(
-            Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
-                .addFlags(flags),
-            Intent(android.provider.Settings.ACTION_SETTINGS)
-                .addFlags(flags)
-        )
+        val intents = mutableListOf<Intent>()
+        // Newer Android versions can open the exact Aximo access page directly.
+        intents += Intent("android.settings.NOTIFICATION_POLICY_ACCESS_DETAIL_SETTINGS")
+            .putExtra("android.provider.extra.NOTIFICATION_POLICY_PACKAGE", context.packageName)
+            .addFlags(flags)
+        intents += Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
+            .addFlags(flags)
+        intents += Intent(android.provider.Settings.ACTION_SETTINGS)
+            .addFlags(flags)
 
         for (intent in intents) {
             try {
