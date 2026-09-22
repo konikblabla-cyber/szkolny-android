@@ -15,7 +15,7 @@ class AximoMoreFragment : BaseFragment<FragmentAximoMoreBinding, MainActivity>(
         b.tasksCard.setOnClickListener { activity.navigate(navTarget = NavTarget.HOMEWORK) }
         b.gradesCard.setOnClickListener { activity.navigate(navTarget = NavTarget.GRADES) }
         b.settingsCard.setOnClickListener { activity.navigate(navTarget = NavTarget.SETTINGS) }
-        b.helpCard.setOnClickListener { activity.navigate(navTarget = NavTarget.FEEDBACK) }
+        b.helpCard.setOnClickListener { activity.navigate(navTarget = NavTarget.HELP) }
         b.profileCard.setOnClickListener { activity.navigate(navTarget = NavTarget.PROFILE_MANAGER) }
         b.appearanceCard.setOnClickListener {
             activity.navigate(navTarget = NavTarget.APPEARANCE)
