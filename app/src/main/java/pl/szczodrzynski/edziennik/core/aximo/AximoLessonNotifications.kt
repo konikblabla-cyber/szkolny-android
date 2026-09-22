@@ -29,6 +29,8 @@ object AximoLessonNotifications {
     private const val MINUTE = 60_000L
     private const val EXTRA_LESSON_ID = "aximoLessonId"
     private const val EXTRA_LESSON_START = "aximoLessonStart"
+    private const val PREFS = "aximo_lesson_notifications"
+    private const val SCHEDULED_REQUEST_CODES = "scheduled_request_codes"
 
     fun ensureChannel(context: Context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
@@ -43,6 +45,15 @@ object AximoLessonNotifications {
     fun scheduleTodayAndTomorrow(context: Context, profileId: Int) {
         val app = context.applicationContext as App
         val alarm = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        val oldCodes = prefs.getStringSet(SCHEDULED_REQUEST_CODES, emptySet())?.toSet().orEmpty()
+        oldCodes.forEach { codeString ->
+            codeString.toIntOrNull()?.let { code ->
+                val cancelIntent = Intent(context, AximoLessonSilenceReceiver::class.java).setAction(ACTION_NOTIFY)
+                PendingIntent.getBroadcast(context, code, cancelIntent, PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE)?.let(alarm::cancel)
+            }
+        }
+        val newCodes = mutableSetOf<String>()
         val today = Date.getToday()
 
         for (offset in 0..2) {
@@ -86,8 +97,10 @@ object AximoLessonNotifications {
                     } catch (_: SecurityException) {
                         alarm.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, notifyAt, pending)
                     }
+                    newCodes += requestCode.toString()
                 }
         }
+        prefs.edit().putStringSet(SCHEDULED_REQUEST_CODES, newCodes).apply()
     }
 
     fun show(context: Context, profileId: Int, lessonId: Long = -1L, lessonStart: Long = -1L) {
