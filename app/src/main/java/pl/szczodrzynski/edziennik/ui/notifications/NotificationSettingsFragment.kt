@@ -1,6 +1,7 @@
 package pl.szczodrzynski.edziennik.ui.notifications
 
 import android.os.Build
+import android.app.AlertDialog
 import android.os.Bundle
 import android.content.pm.PackageManager
 import android.widget.SeekBar
@@ -71,6 +72,35 @@ class NotificationSettingsFragment : BaseFragment<NotificationSettingsFragmentBi
                 AximoLessonNotifications.scheduleTodayAndTomorrow(app, app.profile.id)
             }
         })
+
+        b.testSilenceButton.setOnClickListener {
+            if (!AximoLessonSilence.hasNotificationPolicyAccess(app)) {
+                AximoLessonSilence.openNotificationPolicyAccessSettings(activity)
+                return@setOnClickListener
+            }
+            val input = android.widget.EditText(activity).apply {
+                hint = "Kod developerski"
+                inputType = android.text.InputType.TYPE_CLASS_TEXT
+            }
+            AlertDialog.Builder(activity)
+                .setTitle("Test wyciszenia")
+                .setMessage("Wpisz kod developerski, aby na 10 sekund wyciszyć telefon.")
+                .setView(input)
+                .setNegativeButton("Anuluj", null)
+                .setPositiveButton("Uruchom") { _, _ ->
+                    if (input.text.toString() == "89@#") {
+                        val started = AximoLessonSilence.testForDuration(app, 10_000L)
+                        android.widget.Toast.makeText(
+                            activity,
+                            if (started) "Test wyciszenia uruchomiony na 10 sekund." else "Brak dostępu do wyciszania.",
+                            android.widget.Toast.LENGTH_SHORT
+                        ).show()
+                    } else {
+                        android.widget.Toast.makeText(activity, "Nieprawidłowy kod.", android.widget.Toast.LENGTH_SHORT).show()
+                    }
+                }
+                .show()
+        }
 
         b.filterCard.setOnClickListener {
             NotificationFilterDialog(activity).show()
