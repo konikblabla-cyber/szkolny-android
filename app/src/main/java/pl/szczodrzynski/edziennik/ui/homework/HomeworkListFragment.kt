@@ -25,7 +25,8 @@ class HomeworkListFragment : BaseFragment<HomeworkListFragmentBinding, MainActiv
     override fun getSyncParams() = FeatureType.HOMEWORK to null
 
     override suspend fun onViewReady(savedInstanceState: Bundle?) {
-        val homeworkDate = arguments.getInt("homeworkDate", HomeworkDate.CURRENT)
+        val args = requireArguments()
+        val homeworkDate = args.getInt("homeworkDate", HomeworkDate.CURRENT)
 
         val today = Date.getToday()
         val filter = when (homeworkDate) {
@@ -37,19 +38,19 @@ class HomeworkListFragment : BaseFragment<HomeworkListFragmentBinding, MainActiv
 
         b.filterAll.setOnClickListener {
             if (homeworkDate != HomeworkDate.ALL) {
-                arguments.putInt("homeworkDate", HomeworkDate.ALL)
+                args.putInt("homeworkDate", HomeworkDate.ALL)
                 activity.reloadTarget()
             }
         }
         b.filterTodo.setOnClickListener {
             if (homeworkDate != HomeworkDate.CURRENT) {
-                arguments.putInt("homeworkDate", HomeworkDate.CURRENT)
+                args.putInt("homeworkDate", HomeworkDate.CURRENT)
                 activity.reloadTarget()
             }
         }
         b.filterDone.setOnClickListener {
             if (homeworkDate != HomeworkDate.PAST) {
-                arguments.putInt("homeworkDate", HomeworkDate.PAST)
+                args.putInt("homeworkDate", HomeworkDate.PAST)
                 activity.reloadTarget()
             }
         }
