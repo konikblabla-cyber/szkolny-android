@@ -48,7 +48,12 @@ class AximoLessonSilenceReceiver : BroadcastReceiver() {
                     AximoLessonNotifications.ACTION_NOTIFY -> {
                         val profileId = intent.getIntExtra(AximoLessonSilence.EXTRA_PROFILE, 0)
                         if (profileId != 0) {
-                            AximoLessonNotifications.show(appContext, profileId)
+                            AximoLessonNotifications.show(
+                                appContext,
+                                profileId,
+                                intent.getLongExtra("aximoLessonId", -1L),
+                                intent.getLongExtra("aximoLessonStart", -1L)
+                            )
                             AximoLessonNotifications.scheduleTodayAndTomorrow(appContext, profileId)
                         }
                     }
