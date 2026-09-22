@@ -132,24 +132,6 @@ object AximoLessonNotifications {
         prefs.edit().putStringSet(SCHEDULED_REQUEST_CODES, newCodes).apply()
     }
 
-    fun cancelAll(context: Context) {
-        val alarm = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
-        val codes = prefs.getStringSet(SCHEDULED_REQUEST_CODES, emptySet())?.toSet().orEmpty()
-        codes.forEach { codeString ->
-            codeString.toIntOrNull()?.let { code ->
-                val intent = Intent(context, AximoLessonSilenceReceiver::class.java).setAction(ACTION_NOTIFY)
-                PendingIntent.getBroadcast(
-                    context,
-                    code,
-                    intent,
-                    PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE
-                )?.let(alarm::cancel)
-            }
-        }
-        prefs.edit().putStringSet(SCHEDULED_REQUEST_CODES, emptySet()).apply()
-    }
-
     fun testNotification(context: Context) {
         ensureChannel(context)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
