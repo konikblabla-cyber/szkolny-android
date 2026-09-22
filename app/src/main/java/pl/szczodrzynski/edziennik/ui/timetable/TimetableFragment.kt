@@ -9,11 +9,16 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.view.Gravity
 import android.view.View
+import android.view.ViewGroup
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.mikepenz.iconics.typeface.library.community.material.CommunityMaterial
 import eu.szkolny.font.SzkolnyFont
+import pl.szczodrzynski.edziennik.data.db.entity.Lesson
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import pl.szczodrzynski.edziennik.App
@@ -141,6 +146,85 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
     private val weekEnd by lazy { weekStart.clone().stepForward(0, 0, 6) }
     private val items = mutableListOf<Date>()
     private var fabShown = false
+    private fun renderAximoPlan(date: Date) {
+        if (!isAdded) return
+        b.aximoPlanDate.text = "${Week.getFullDayName(date.weekDay)}, ${date.stringDm}"
+        b.aximoDayStrip.removeAllViews()
+
+        for (offset in 0..6) {
+            val day = weekStart.clone().stepForward(0, 0, offset)
+            val chip = TextView(requireContext()).apply {
+                layoutParams = LinearLayout.LayoutParams(66.dp, 52.dp).apply { marginEnd = 6.dp }
+                gravity = Gravity.CENTER
+                text = "${Week.getShortDayName(day.weekDay)}\n${day.day}"
+                textSize = 12f
+                setTextColor(if (day == date) 0xFFFFFFFF.toInt() else 0xFFE9EAF5.toInt())
+                setBackgroundResource(if (day == date) R.drawable.aximo_plan_day_selected else R.drawable.aximo_plan_day_chip)
+                setOnClickListener {
+                    val index = items.indexOfFirst { it == day }
+                    if (index >= 0) b.viewPager.setCurrentItem(index, true)
+                }
+            }
+            b.aximoDayStrip.addView(chip)
+        }
+
+        val lessons = try {
+            app.db.timetableDao().getAllForDateNow(App.profileId, date)
+                .filter { it.type != Lesson.TYPE_CANCELLED && it.type != Lesson.TYPE_NO_LESSONS }
+                .sortedBy { it.displayStartTime?.toString() ?: "" }
+        } catch (_: Exception) { emptyList() }
+
+        b.aximoLessonContainer.removeAllViews()
+        b.aximoPlanCount.text = "${lessons.size} lekcji"
+        b.aximoEmptyState.visibility = if (lessons.isEmpty()) View.VISIBLE else View.GONE
+
+        val backgrounds = intArrayOf(
+            R.drawable.aximo_plan_lesson_bg_1, R.drawable.aximo_plan_lesson_bg_2,
+            R.drawable.aximo_plan_lesson_bg_3, R.drawable.aximo_plan_lesson_bg_4,
+            R.drawable.aximo_plan_lesson_bg_5, R.drawable.aximo_plan_lesson_bg_6
+        )
+
+        lessons.forEachIndexed { index, lesson ->
+            val card = LinearLayout(requireContext()).apply {
+                orientation = LinearLayout.HORIZONTAL
+                gravity = Gravity.CENTER_VERTICAL
+                minimumHeight = 78.dp
+                setPadding(14.dp, 10.dp, 14.dp, 10.dp)
+                setBackgroundResource(backgrounds[index % backgrounds.size])
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { bottomMargin = 8.dp }
+            }
+            val time = TextView(requireContext()).apply {
+                layoutParams = LinearLayout.LayoutParams(74.dp, ViewGroup.LayoutParams.WRAP_CONTENT)
+                text = "${lesson.displayStartTime ?: "--:--"}\n${lesson.displayEndTime ?: "--:--"}"
+                textSize = 12f
+                gravity = Gravity.CENTER_VERTICAL
+                setTextColor(0xFFECE8F8.toInt())
+            }
+            val details = LinearLayout(requireContext()).apply {
+                orientation = LinearLayout.VERTICAL
+                layoutParams = LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f)
+            }
+            val subject = TextView(requireContext()).apply {
+                text = lesson.displaySubjectName?.takeIf { it.isNotBlank() } ?: "Lekcja"
+                textSize = 16f
+                setTextColor(0xFFFFFFFF.toInt())
+                setTypeface(typeface, android.graphics.Typeface.BOLD)
+            }
+            val room = TextView(requireContext()).apply {
+                text = lesson.displayClassroom?.takeIf { it.isNotBlank() }?.let { "Sala $it" } ?: "Sala —"
+                textSize = 12f
+                setTextColor(0xFFCFD2E5.toInt())
+                layoutParams = LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT).apply { topMargin = 3.dp }
+            }
+            details.addView(subject)
+            details.addView(room)
+            card.addView(time)
+            card.addView(details)
+            b.aximoLessonContainer.addView(card)
+        }
+    }
+
+    private val Int.dp: Int get() = (this * resources.displayMetrics.density).toInt()
 
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context, i: Intent) {
@@ -229,6 +313,7 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
             ?: items.indexOfFirst { it == today }
 
         super.onViewReady(savedInstanceState)
+        renderAximoPlan(items.getOrNull(savedPageSelection) ?: today)
     }
 
     override suspend fun onFabClick() {
@@ -236,6 +321,7 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
     }
 
     override suspend fun onPageSelected(position: Int) {
+        renderAximoPlan(items[position])
         activity.navView.bottomBar.fabEnable = items[position] != today
         if (activity.navView.bottomBar.fabEnable && !fabShown) {
             activity.gainAttentionFAB()
