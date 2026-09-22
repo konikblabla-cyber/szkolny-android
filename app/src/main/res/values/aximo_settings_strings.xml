@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+<string name="aximo_settings_title">Ustawienia</string>
+<string name="aximo_settings_subtitle">Aximo • dopasuj swój dzień</string>
+<string name="aximo_settings_back">Wróć</string>
+<string name="aximo_settings_section_school">TWÓJ PROFIL</string>
+<string name="aximo_settings_school_title">Mój profil szkolny</string>
+<string name="aximo_settings_school_subtitle">Konto, klasa i synchronizacja</string>
+<string name="aximo_settings_profile">Profil i konto</string>
+<string name="aximo_settings_section_school_day">DZIEŃ SZKOLNY</string>
+<string name="aximo_settings_notifications">Powiadomienia i przypomnienia</string>
+<string name="aximo_settings_school_mode">Tryb szkolny</string>
+<string name="aximo_settings_school_mode_subtitle">Automatyczne wyciszanie podczas lekcji</string>
+<string name="aximo_settings_section_personalization">PERSONALIZACJA</string>
+<string name="aximo_settings_appearance">Wygląd aplikacji</string>
+<string name="aximo_settings_appearance_subtitle">Motyw, kolory, tło i elementy ekranu</string>
+<string name="aximo_settings_more">Układ i szybki dostęp</string>
+<string name="aximo_settings_section_support">POMOC I INFORMACJE</string>
+<string name="aximo_settings_help">Pomoc i FAQ</string>
+<string name="aximo_settings_about">O Aximo</string>
+<string name="aximo_settings_footer">Aximo • ustawienia zaprojektowane dla szkoły</string>
+</resources>
