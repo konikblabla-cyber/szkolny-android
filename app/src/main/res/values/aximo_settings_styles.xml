@@ -7,4 +7,11 @@
 <style name="AximoSettingsSub"><item name="android:layout_width">match_parent</item><item name="android:layout_height">wrap_content</item><item name="android:layout_marginTop">2dp</item><item name="android:textColor">#AEB8D4</item><item name="android:textSize">12sp</item></style>
 <style name="AximoSettingsArrow"><item name="android:layout_width">28dp</item><item name="android:layout_height">match_parent</item><item name="android:gravity">center</item><item name="android:textColor">#A96CFF</item><item name="android:textSize">28sp</item></style>
 <style name="AximoSettingsSection"><item name="android:layout_width">match_parent</item><item name="android:layout_height">wrap_content</item><item name="android:layout_marginTop">22dp</item><item name="android:layout_marginBottom">4dp</item><item name="android:textColor">#FFFFFF</item><item name="android:textSize">16sp</item><item name="android:textStyle">bold</item></style>
+<style name="AximoHomeQuickCard">
+<item name="android:layout_width">112dp</item><item name="android:layout_height">88dp</item>
+<item name="android:layout_marginEnd">8dp</item><item name="android:background">@drawable/aximo_more_card</item>
+<item name="android:gravity">center</item><item name="android:padding">8dp</item>
+<item name="android:textColor">#FFFFFF</item><item name="android:textSize">13sp</item>
+<item name="android:textStyle">bold</item><item name="android:clickable">true</item><item name="android:focusable">true</item>
+</style>
 </resources>
