@@ -5,6 +5,4 @@
     <string name="settings_aximo_home_subtext">Wybierz elementy i kolejność ekranu głównego</string>
     <string name="settings_sync_quiet_during_lessons_text">Wyciszaj podczas lekcji</string>
     <string name="settings_sync_quiet_during_lessons_subtext">Automatycznie wycisza powiadomienia podczas wszystkich lekcji</string>
-    <string name="menu_about">O aplikacji</string>
-    <string name="menu_appearance">Wygląd aplikacji</string>
 </resources>
