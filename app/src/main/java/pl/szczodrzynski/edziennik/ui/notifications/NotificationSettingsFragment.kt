@@ -16,8 +16,8 @@ class NotificationSettingsFragment : BaseFragment<NotificationSettingsFragmentBi
         updateMinutes()
 
         b.backButton.setOnClickListener { activity.onBackPressedDispatcher.onBackPressed() }
-        b.lessonNotifications.setOnCheckedChangeListener { _, checked -> app.config.sync.lessonNotificationsEnabled = checked }
-        b.automaticSilence.setOnCheckedChangeListener { _, checked -> app.config.sync.automaticSilenceEnabled = checked }
+        b.lessonNotifications.setOnCheckedChangeListener { _, checked -> app.config.sync.lessonNotificationsEnabled = checked\n            AximoLessonNotifications.scheduleTodayAndTomorrow(app, app.profile.id) }
+        b.automaticSilence.setOnCheckedChangeListener { _, checked -> app.config.sync.automaticSilenceEnabled = checked\n            AximoLessonSilence.scheduleTodayAndTomorrow(app, app.profile.id) }
         b.minutesSeek.setOnSeekBarChangeListener(object : android.widget.SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: android.widget.SeekBar?, progress: Int, fromUser: Boolean) {
                 app.config.sync.lessonNotificationMinutes = progress.coerceAtLeast(1)
