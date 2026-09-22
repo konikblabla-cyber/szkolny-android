@@ -61,7 +61,7 @@ class UpdateDownloaderService : IntentService(UpdateDownloaderService::class.jav
             }
 
             val file = File(app.getExternalFilesDir(null), downloadFilename)
-            val installIntent = Intent(Intent.ACTION_VIEW)
+            val installIntent = Intent(Intent.ACTION_INSTALL_PACKAGE)
             installIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             installIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
             installIntent.setDataAndType(Uri.fromFile(file), "application/vnd.android.package-archive")
