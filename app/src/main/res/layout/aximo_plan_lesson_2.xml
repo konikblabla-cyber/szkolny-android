@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginBottom="6dp"
+    android:background="@drawable/aximo_plan_lesson_bg_2" android:gravity="center_vertical" android:orientation="horizontal" android:paddingStart="9dp" android:paddingEnd="9dp">
+    <TextView android:layout_width="22dp" android:layout_height="match_parent" android:gravity="center" android:text="2" android:textColor="#FFFFFF" android:textSize="12sp" android:textStyle="bold"/>
+    <TextView android:layout_width="34dp" android:layout_height="34dp" android:layout_marginStart="2dp" android:gravity="center" android:text="2" android:textColor="#FFFFFF" android:textSize="17sp" android:textStyle="bold"/>
+    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="9dp" android:orientation="vertical">
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Fizyka" android:textColor="#FFFFFF" android:textSize="13sp" android:textStyle="bold"/>
+        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="1dp" android:text="08:55 – 09:40" android:textColor="#D8DCE8" android:textSize="10sp"/>
+    </LinearLayout>
+    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="◉ s. 14" android:textColor="#E5D7F7" android:textSize="10sp"/>
+</LinearLayout>
