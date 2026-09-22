@@ -37,37 +37,21 @@ object AximoLessonSilence {
     fun openNotificationPolicyAccessSettings(context: Context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return
 
-        val flags = Intent.FLAG_ACTIVITY_NEW_TASK
         val packageName = context.packageName
+        val candidates = listOf(
+            Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS),
+            Intent("android.settings.NOTIFICATION_POLICY_ACCESS_DETAIL_SETTINGS")
+                .setData(android.net.Uri.parse("package:$packageName")),
+            Intent(android.provider.Settings.ACTION_SETTINGS)
+        )
 
-        // ACCESS_NOTIFICATION_POLICY is a special Settings access, not a
-        // normal Android runtime permission. On Android 12+ try to open
-        // Aximo's own entry directly so the user can see the switch immediately.
-        val intents = mutableListOf<Intent>()
-
-        // First try the app-specific DND access page. We use the action
-        // string directly so this stays compatible with the project's compile SDK
-        // while still working on newer Android versions.
-        intents += Intent("android.settings.NOTIFICATION_POLICY_ACCESS_DETAIL_SETTINGS")
-            .setData(android.net.Uri.parse("package:$packageName"))
-            .addFlags(flags)
-
-        // Fallback for Android/OEM versions that do not expose the detail page.
-        intents += Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
-            .addFlags(flags)
-
-        // Last resort: open the main Settings screen instead of failing silently.
-        intents += Intent(android.provider.Settings.ACTION_SETTINGS)
-            .addFlags(flags)
-
-        for (intent in intents) {
+        for (intent in candidates) {
             try {
-                if (intent.resolveActivity(context.packageManager) != null) {
-                    context.startActivity(intent)
-                    return
-                }
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                context.startActivity(intent)
+                return
             } catch (_: Exception) {
-                // Continue with the next Settings fallback.
+                // Try the next Android/OEM Settings fallback.
             }
         }
     }
