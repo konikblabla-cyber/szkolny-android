@@ -35,6 +35,7 @@ object AximoLessonSilence {
     fun scheduleTodayAndTomorrow(context: Context, profileId: Int) {
         val app = context.applicationContext as App
         val alarm = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        cancelScheduled(context, profileId)
         val today = Date.getToday()
 
         for (offset in 0..2) {
@@ -84,6 +85,18 @@ object AximoLessonSilence {
                 setAlarm(alarm, context, ACTION_START, silenceStart, profileId, 0L, offset * 2, silenceEnd)
             }
             setAlarm(alarm, context, ACTION_END, silenceEnd, profileId, 0L, offset * 2 + 1, silenceEnd)
+        }
+    }
+
+    private fun cancelScheduled(context: Context, profileId: Int) {
+        val alarm = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        for (kind in 0..5) {
+            val requestCode = (1000 + kind + profileId * 10).coerceAtLeast(1)
+            val intent = Intent(context, AximoLessonSilenceReceiver::class.java)
+            PendingIntent.getBroadcast(context, requestCode, intent, PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE)?.let {
+                alarm.cancel(it)
+                it.cancel()
+            }
         }
     }
 
