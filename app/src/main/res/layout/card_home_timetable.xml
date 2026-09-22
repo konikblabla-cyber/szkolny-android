@@ -121,7 +121,27 @@
                 android:id="@+id/noTimetableLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"/>
+                android:orientation="vertical"
+                android:paddingTop="14dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/noTimetableText"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tools:text="Brak pobranego planu lekcji"/>
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/noTimetableSync"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="@string/sync"
+                    android:textAllCaps="false"/>
+            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/noLessonsLayout"
