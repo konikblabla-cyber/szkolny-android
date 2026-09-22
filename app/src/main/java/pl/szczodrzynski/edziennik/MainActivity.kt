@@ -180,7 +180,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         // Keep the Aximo navigation above NavView/SwipeRefreshLayout so taps
         // on Start, Plan, Notifications and More can never be swallowed.
         b.aximoBottomNavigation.bringToFront()
-        b.aximoBottomNavigation.isClickable = false
 
         // Aximo keeps the bottom navigation visible so the main sections are always one tap away.
         // Aximo uses its own modern bottom navigation overlay.\n        // Hide NavLib's legacy bottom bar to avoid two navigation bars at once.\n        b.navView.bottomBar.visibility = View.GONE
