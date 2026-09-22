@@ -19,7 +19,9 @@ class SettingsFragment : BaseFragment<AximoSettingsFragmentBinding, MainActivity
         b.appearanceButton.setOnClickListener { activity.navigate(navTarget = NavTarget.APPEARANCE) }
         b.moreButton.setOnClickListener { activity.navigate(navTarget = NavTarget.MORE) }
         b.helpButton.setOnClickListener { activity.navigate(navTarget = NavTarget.HELP) }
-        b.permissionButton.setOnClickListener { AximoLessonSilence.openNotificationPolicyAccessSettings(activity) }
+        b.permissionButton.setOnClickListener {
+            AximoLessonSilence.openNotificationPolicyAccessSettings(activity)
+        }
         updatePermissionUi()
         b.aboutButton.setOnClickListener { activity.navigate(navTarget = NavTarget.ABOUT) }
 
