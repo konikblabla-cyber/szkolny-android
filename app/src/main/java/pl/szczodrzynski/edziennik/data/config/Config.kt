@@ -101,6 +101,9 @@ class Config(app: App) : BaseConfig<Config>(app, profileId = null) {
         var lessonNotificationsEnabled by config<Boolean>("lessonNotificationsEnabled", true)
         var lessonNotificationMinutes by config<Int>("lessonNotificationMinutes", 10)
         var automaticSilenceEnabled by config<Boolean>("automaticSilenceEnabled", true)
+        var lessonNameNotifications by config<Boolean>("lessonNameNotifications", true)
+        var planChangeNotifications by config<Boolean>("planChangeNotifications", true)
+        var systemNotifications by config<Boolean>("systemNotifications", true)
 
         // Quiet Hours
         var quietHoursEnabled by config<Boolean>(false)
