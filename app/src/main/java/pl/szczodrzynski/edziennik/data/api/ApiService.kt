@@ -19,6 +19,8 @@ import pl.szczodrzynski.edziennik.data.api.events.requests.TaskCancelRequest
 import pl.szczodrzynski.edziennik.data.api.interfaces.EdziennikCallback
 import pl.szczodrzynski.edziennik.data.api.models.ApiError
 import pl.szczodrzynski.edziennik.data.api.task.ErrorReportTask
+import pl.szczodrzynski.edziennik.core.aximo.AximoLessonNotifications
+import pl.szczodrzynski.edziennik.core.aximo.AximoLessonSilence
 import pl.szczodrzynski.edziennik.data.api.task.IApiTask
 import pl.szczodrzynski.edziennik.data.api.task.SzkolnyTask
 import pl.szczodrzynski.edziennik.data.db.entity.Profile
@@ -75,6 +77,14 @@ class ApiService : Service() {
          |______\__,_/___|_|\___|_| |_|_| |_|_|_|\_\  \_____\__,_|_|_|_.__/ \__,_|\___|_|\*/
     private val taskCallback = object : EdziennikCallback {
         override fun onCompleted() {
+            if (taskRunning is EdziennikTask && taskRunning?.request is EdziennikTask.SyncProfileRequest) {
+                val syncedProfileId = taskProfileId
+                if (syncedProfileId > 0) {
+                    AximoLessonSilence.scheduleTodayAndTomorrow(app, syncedProfileId)
+                    AximoLessonNotifications.scheduleTodayAndTomorrow(app, syncedProfileId)
+                    Timber.d("Aximo timetable alarms refreshed after successful profile sync: $syncedProfileId")
+                }
+            }
             lastEventTime = System.currentTimeMillis()
             Timber.d("Task $taskRunningId (profile $taskProfileId) finished in ${System.currentTimeMillis()-taskStartTime}")
             EventBus.getDefault().postSticky(ApiTaskFinishedEvent(taskProfileId))
