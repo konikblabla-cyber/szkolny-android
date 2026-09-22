@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" android:layout_width="match_parent" android:layout_height="match_parent" android:background="#080A14" android:fillViewport="true">
+<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:paddingStart="18dp" android:paddingTop="18dp" android:paddingEnd="18dp" android:paddingBottom="120dp">
+<LinearLayout android:layout_width="match_parent" android:layout_height="56dp" android:gravity="center_vertical">
+<ImageButton android:id="@+id/backButton" android:layout_width="44dp" android:layout_height="44dp" android:background="@drawable/aximo_icon_button_background" android:contentDescription="@string/aximo_settings_back" android:src="@drawable/ic_aximo_back" android:tint="#E9E8F2"/>
+<LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="14dp" android:layout_weight="1" android:orientation="vertical">
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/aximo_settings_title" android:textColor="#F7F5FF" android:textSize="25sp" android:textStyle="bold"/>
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/aximo_settings_subtitle" android:textColor="#8F91A8" android:textSize="12sp"/>
+</LinearLayout>
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/aximo_settings_badge" android:paddingStart="10dp" android:paddingTop="6dp" android:paddingEnd="10dp" android:paddingBottom="6dp" android:text="AXIMO" android:textColor="#DCD2FF" android:textSize="10sp" android:textStyle="bold"/>
+</LinearLayout>
+
+<com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="18dp" app:cardBackgroundColor="#17162A" app:cardCornerRadius="22dp" app:strokeColor="#302B4B" app:strokeWidth="1dp">
+<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="18dp">
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/aximo_settings_section_school" android:textColor="#AFA5FF" android:textSize="12sp" android:textStyle="bold"/>
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="5dp" android:text="@string/aximo_settings_school_title" android:textColor="#F4F1FF" android:textSize="19sp" android:textStyle="bold"/>
+<TextView android:id="@+id/profileSummary" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="3dp" android:text="@string/aximo_settings_school_subtitle" android:textColor="#9294AA" android:textSize="13sp"/>
+<LinearLayout android:id="@+id/profileButton" android:layout_width="match_parent" android:layout_height="54dp" android:layout_marginTop="14dp" android:background="@drawable/aximo_settings_row" android:gravity="center_vertical" android:paddingStart="14dp" android:paddingEnd="12dp">
+<TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/aximo_settings_profile" android:textColor="#EDEAF8" android:textSize="14sp" android:textStyle="bold"/>
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textColor="#9C8DFF" android:textSize="26sp"/>
+</LinearLayout>
+</LinearLayout>
+</com.google.android.material.card.MaterialCardView>
+
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="4dp" android:layout_marginTop="24dp" android:text="@string/aximo_settings_section_school_day" android:textColor="#AFA5FF" android:textSize="12sp" android:textStyle="bold"/>
+<com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" app:cardBackgroundColor="#121525" app:cardCornerRadius="20dp" app:strokeColor="#252A42" app:strokeWidth="1dp">
+<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+<LinearLayout android:id="@+id/notificationSettingsButton" android:layout_width="match_parent" android:layout_height="72dp" android:gravity="center_vertical" android:paddingStart="16dp" android:paddingEnd="14dp">
+<TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/aximo_settings_notifications" android:textColor="#F0EEF9" android:textSize="15sp" android:textStyle="bold"/>
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textColor="#9C8DFF" android:textSize="26sp"/>
+</LinearLayout>
+<View android:layout_width="match_parent" android:layout_height="1dp" android:background="#24283D"/>
+<LinearLayout android:id="@+id/silenceButton" android:layout_width="match_parent" android:layout_height="72dp" android:gravity="center_vertical" android:paddingStart="16dp" android:paddingEnd="14dp">
+<LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/aximo_settings_school_mode" android:textColor="#F0EEF9" android:textSize="15sp" android:textStyle="bold"/>
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/aximo_settings_school_mode_subtitle" android:textColor="#85899F" android:textSize="12sp"/>
+</LinearLayout>
+<com.google.android.material.materialswitch.MaterialSwitch android:id="@+id/schoolModeSwitch" android:layout_width="wrap_content" android:layout_height="wrap_content"/>
+</LinearLayout>
+</LinearLayout>
+</com.google.android.material.card.MaterialCardView>
+
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="4dp" android:layout_marginTop="24dp" android:text="@string/aximo_settings_section_personalization" android:textColor="#AFA5FF" android:textSize="12sp" android:textStyle="bold"/>
+<com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" app:cardBackgroundColor="#121525" app:cardCornerRadius="20dp" app:strokeColor="#252A42" app:strokeWidth="1dp">
+<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+<LinearLayout android:id="@+id/appearanceButton" android:layout_width="match_parent" android:layout_height="70dp" android:gravity="center_vertical" android:paddingStart="16dp" android:paddingEnd="14dp">
+<LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/aximo_settings_appearance" android:textColor="#F0EEF9" android:textSize="15sp" android:textStyle="bold"/>
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/aximo_settings_appearance_subtitle" android:textColor="#85899F" android:textSize="12sp"/>
+</LinearLayout>
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textColor="#9C8DFF" android:textSize="26sp"/>
+</LinearLayout>
+<View android:layout_width="match_parent" android:layout_height="1dp" android:background="#24283D"/>
+<LinearLayout android:id="@+id/moreButton" android:layout_width="match_parent" android:layout_height="70dp" android:gravity="center_vertical" android:paddingStart="16dp" android:paddingEnd="14dp">
+<TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/aximo_settings_more" android:textColor="#F0EEF9" android:textSize="15sp" android:textStyle="bold"/>
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textColor="#9C8DFF" android:textSize="26sp"/>
+</LinearLayout>
+</LinearLayout>
+</com.google.android.material.card.MaterialCardView>
+
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="4dp" android:layout_marginTop="24dp" android:text="@string/aximo_settings_section_support" android:textColor="#AFA5FF" android:textSize="12sp" android:textStyle="bold"/>
+<com.google.android.material.card.MaterialCardView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="8dp" app:cardBackgroundColor="#121525" app:cardCornerRadius="20dp" app:strokeColor="#252A42" app:strokeWidth="1dp">
+<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+<LinearLayout android:id="@+id/helpButton" android:layout_width="match_parent" android:layout_height="66dp" android:gravity="center_vertical" android:paddingStart="16dp" android:paddingEnd="14dp">
+<TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/aximo_settings_help" android:textColor="#F0EEF9" android:textSize="15sp" android:textStyle="bold"/>
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textColor="#9C8DFF" android:textSize="26sp"/>
+</LinearLayout>
+<View android:layout_width="match_parent" android:layout_height="1dp" android:background="#24283D"/>
+<LinearLayout android:id="@+id/aboutButton" android:layout_width="match_parent" android:layout_height="66dp" android:gravity="center_vertical" android:paddingStart="16dp" android:paddingEnd="14dp">
+<TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="@string/aximo_settings_about" android:textColor="#F0EEF9" android:textSize="15sp" android:textStyle="bold"/>
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textColor="#9C8DFF" android:textSize="26sp"/>
+</LinearLayout>
+</LinearLayout>
+</com.google.android.material.card.MaterialCardView>
+<TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="22dp" android:gravity="center" android:text="@string/aximo_settings_footer" android:textColor="#62667E" android:textSize="11sp"/>
+</LinearLayout>
+</ScrollView>
