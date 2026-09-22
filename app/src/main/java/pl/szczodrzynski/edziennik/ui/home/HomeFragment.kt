@@ -182,16 +182,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
             manager.requestNotificationsPermission(activity, 0, false){}
         }
 
-        // The reference home screen is a complete Aximo surface. Do not execute
-        // the legacy configurable-card dashboard underneath it: hidden legacy
-        // views can receive stale lifecycle/config callbacks and make Start
-        // appear broken or crash after navigation. Real navigation is provided
-        // by the Aximo bottom bar and the visible settings button.
-        return@onViewReady
-
-        // Keep the reference artwork as the visible Aximo surface, but continue
-        // initializing the underlying dashboard so navigation, refreshes and
-        // lifecycle callbacks keep working normally.
+        // Aximo Start is now a real interactive dashboard instead of a static
+        // reference image, so every quick-access control remains functional.
         launch(Dispatchers.IO) {
             try {
                 val today = pl.szczodrzynski.edziennik.utils.models.Date.getToday()
@@ -343,6 +335,18 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
 
         countdownHandler.removeCallbacks(countdownRefresh)
         countdownHandler.post(countdownRefresh)
+
+        val firstName = app.profile.name?.trim()?.split(" ")?.firstOrNull().orEmpty()
+        if (firstName.isNotBlank()) {
+            b.homeGreeting.text = "Cześć, $firstName!"
+        }
+
+        b.nowCard.setOnClickListener {
+            activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.TIMETABLE)
+        }
+        b.focusStatusCard.setOnClickListener {
+            activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.SILENCE)
+        }
 
         b.quickPlan.onClick { activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.TIMETABLE) }
         b.quickHomework.onClick { activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.HOMEWORK) }
