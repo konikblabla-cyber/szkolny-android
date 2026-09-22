@@ -2,6 +2,8 @@ package pl.szczodrzynski.edziennik.ui.aximo
 
 import android.os.Bundle
 import android.graphics.Color
+import android.content.Intent
+import android.provider.Settings
 import pl.szczodrzynski.edziennik.MainActivity
 import pl.szczodrzynski.edziennik.core.aximo.AximoLessonSilence
 import pl.szczodrzynski.edziennik.data.enums.NavTarget
