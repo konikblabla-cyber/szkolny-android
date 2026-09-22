@@ -169,6 +169,17 @@ object AximoLessonSilence {
             .putLong(ACTIVE_UNTIL, windowEnd)
             .apply()
     }
+    fun disableAndRestore(context: Context) {
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        if (prefs.getInt(ACTIVE, 0) == 0) return
+        val audio = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
+        val previous = prefs.getInt(PREVIOUS_MODE, AudioManager.RINGER_MODE_NORMAL)
+        if (audio.ringerMode == AudioManager.RINGER_MODE_SILENT) {
+            try { audio.ringerMode = previous } catch (_: SecurityException) {}
+        }
+        prefs.edit().putInt(ACTIVE, 0).remove(PREVIOUS_MODE).remove(ACTIVE_UNTIL).apply()
+    }
+
     fun onEnd(context: Context, windowEnd: Long = 0L) {
         val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
         val storedUntil = prefs.getLong(ACTIVE_UNTIL, 0L)
