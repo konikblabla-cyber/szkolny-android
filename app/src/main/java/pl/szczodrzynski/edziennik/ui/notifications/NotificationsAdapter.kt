@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
+import android.graphics.Color
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -53,13 +54,27 @@ class NotificationsAdapter(
         b.notificationIcon.background =
             item.type.icon.toDrawable(app, colorAttr = R.attr.colorPrimary)
 
-        b.title.text = item.text
+        b.title.text = item.title
+        b.message.text = item.text
         b.profileDate.text = listOf(
                 item.profileName ?: "",
                 " • ",
                 date
         ).concat().asColoredSpannable(colorSecondary)
         b.type.text = item.type.titleRes.resolveString(activity)
+
+        val accent = when (item.type) {
+            pl.szczodrzynski.edziennik.data.enums.NotificationType.TIMETABLE_LESSON_CHANGE,
+            pl.szczodrzynski.edziennik.data.enums.NotificationType.TIMETABLE_CHANGED -> Color.rgb(169, 108, 255)
+            pl.szczodrzynski.edziennik.data.enums.NotificationType.EVENT,
+            pl.szczodrzynski.edziennik.data.enums.NotificationType.SHARED_EVENT -> Color.rgb(213, 166, 87)
+            pl.szczodrzynski.edziennik.data.enums.NotificationType.MESSAGE -> Color.rgb(93, 157, 255)
+            pl.szczodrzynski.edziennik.data.enums.NotificationType.HOMEWORK,
+            pl.szczodrzynski.edziennik.data.enums.NotificationType.SHARED_HOMEWORK -> Color.rgb(57, 200, 194)
+            else -> Color.rgb(232, 91, 186)
+        }
+        b.accent.setBackgroundColor(accent)
+        b.notificationIcon.setColorFilter(accent)
 
         onItemClick?.let { listener ->
             b.root.onClick { listener(item) }
