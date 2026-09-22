@@ -15,17 +15,24 @@
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:elevation="0dp"
+            android:paddingHorizontal="10dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="6dp">
 
             <pl.szczodrzynski.edziennik.ui.base.views.RecyclerTabLayout
                 android:id="@+id/tabLayout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="56dp"
+                android:background="@drawable/aximo_timetable_tabs_bg"
+                android:elevation="0dp"
                 app:tabMode="auto"
-                app:tabPaddingBottom="16dp"
+                app:tabPaddingBottom="10dp"
                 app:tabPaddingEnd="16dp"
                 app:tabPaddingStart="16dp"
-                app:tabPaddingTop="16dp" />
+                app:tabPaddingTop="10dp" />
         </com.google.android.material.appbar.AppBarLayout>
 
         <androidx.viewpager2.widget.ViewPager2
@@ -41,26 +48,28 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
+        android:padding="32dp"
         android:visibility="gone"
         tools:visibility="visible">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="96dp"
+            android:layout_height="96dp"
+            android:alpha="0.9"
             app:srcCompat="@drawable/ic_no_timetable" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:text="@string/timetable_not_public_title"
-            android:textAppearance="?textAppearanceHeadlineSmall" />
+            android:textAppearance="?textAppearanceHeadlineSmall"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="10dp"
             android:gravity="center"
             android:text="@string/timetable_not_public_text"
             android:textAppearance="?textAppearanceBodyLarge" />
@@ -68,9 +77,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="32dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="12dp"
             android:gravity="center"
-            android:text="@string/timetable_not_public_hint" />
+            android:text="@string/timetable_not_public_hint"
+            android:textAppearance="?textAppearanceBodyMedium" />
     </LinearLayout>
 </FrameLayout>
