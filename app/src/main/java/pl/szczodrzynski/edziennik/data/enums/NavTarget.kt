@@ -27,6 +27,7 @@ import pl.szczodrzynski.edziennik.ui.aximo.AximoAppearanceFragment
 import pl.szczodrzynski.edziennik.ui.aximo.AximoHelpFragment
 import pl.szczodrzynski.edziennik.ui.aximo.AximoAboutFragment
 import pl.szczodrzynski.edziennik.ui.aximo.AximoSilenceFragment
+import pl.szczodrzynski.edziennik.ui.aximo.AximoSettingsFragment
 import pl.szczodrzynski.edziennik.ui.homework.HomeworkFragment
 import pl.szczodrzynski.edziennik.ui.messages.compose.MessagesComposeFragment
 import pl.szczodrzynski.edziennik.ui.messages.list.MessagesFragment
@@ -219,9 +220,10 @@ enum class NavTarget(
     ),
     SETTINGS(
         id = 101,
-        fragmentClass = SettingsFragment::class.java,
-        location = NavTargetLocation.DRAWER_BOTTOM,
+        fragmentClass = AximoSettingsFragment::class.java,
+        location = NavTargetLocation.NOWHERE,
         nameRes = R.string.menu_settings,
+        titleRes = R.string.menu_settings,
         icon = CommunityMaterial.Icon.cmd_cog_outline,
     ),
     LAB(
