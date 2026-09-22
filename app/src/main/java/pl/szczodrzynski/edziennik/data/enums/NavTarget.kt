@@ -24,6 +24,8 @@ import pl.szczodrzynski.edziennik.ui.grades.editor.GradesEditorFragment
 import pl.szczodrzynski.edziennik.ui.home.HomeFragment
 import pl.szczodrzynski.edziennik.ui.aximo.AximoMoreFragment
 import pl.szczodrzynski.edziennik.ui.aximo.AximoAppearanceFragment
+import pl.szczodrzynski.edziennik.ui.aximo.AximoHelpFragment
+import pl.szczodrzynski.edziennik.ui.aximo.AximoAboutFragment
 import pl.szczodrzynski.edziennik.ui.aximo.AximoSilenceFragment
 import pl.szczodrzynski.edziennik.ui.homework.HomeworkFragment
 import pl.szczodrzynski.edziennik.ui.messages.compose.MessagesComposeFragment
@@ -158,6 +160,22 @@ enum class NavTarget(
         location = NavTargetLocation.DRAWER_MORE,
         nameRes = R.string.menu_teachers,
         icon = CommunityMaterial.Icon3.cmd_shield_account_outline,
+    ),
+    HELP(
+        id = 29,
+        fragmentClass = AximoHelpFragment::class.java,
+        location = NavTargetLocation.NOWHERE,
+        nameRes = R.string.menu_help,
+        titleRes = R.string.menu_help,
+        icon = CommunityMaterial.Icon2.cmd_help_circle_outline,
+    ),
+    ABOUT(
+        id = 30,
+        fragmentClass = AximoAboutFragment::class.java,
+        location = NavTargetLocation.NOWHERE,
+        nameRes = R.string.menu_about,
+        titleRes = R.string.menu_about,
+        icon = CommunityMaterial.Icon.cmd_information_outline,
     ),
     APPEARANCE(
         id = 27,
