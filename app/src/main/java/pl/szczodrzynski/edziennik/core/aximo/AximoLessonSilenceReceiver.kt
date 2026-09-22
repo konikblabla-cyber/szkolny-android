@@ -30,11 +30,11 @@ class AximoLessonSilenceReceiver : BroadcastReceiver() {
                     }
 
                     AximoLessonSilence.ACTION_START -> {
-                        AximoLessonSilence.onStart(appContext)
+                        AximoLessonSilence.onStart(appContext, intent.getLongExtra(AximoLessonSilence.EXTRA_WINDOW_END, 0L))
                     }
 
                     AximoLessonSilence.ACTION_END -> {
-                        AximoLessonSilence.onEnd(appContext)
+                        AximoLessonSilence.onEnd(appContext, intent.getLongExtra(AximoLessonSilence.EXTRA_WINDOW_END, 0L))
 
                         // Keep the automation rolling after every completed school day.
                         val app = appContext as? App
