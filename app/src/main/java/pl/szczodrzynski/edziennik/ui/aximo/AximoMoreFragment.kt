@@ -17,6 +17,6 @@ class AximoMoreFragment : BaseFragment<FragmentAximoMoreBinding, MainActivity>(
         b.settingsCard.setOnClickListener { activity.navigate(navTarget = NavTarget.SETTINGS) }
         b.helpCard.setOnClickListener { activity.navigate(navTarget = NavTarget.FEEDBACK) }
         b.profileCard.setOnClickListener { activity.navigate(navTarget = NavTarget.PROFILE_MANAGER) }
-        b.silenceCard.setOnClickListener { activity.navigate(navTarget = NavTarget.NOTIFICATION_SETTINGS) }
+        b.silenceCard.setOnClickListener { activity.navigate(navTarget = NavTarget.SILENCE) }
     }
 }
