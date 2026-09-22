@@ -1138,7 +1138,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
         transaction.replace(R.id.fragment, fragment)
         transaction.commitAllowingStateLoss()
-        b.aximoBottomNavigation.setActiveTarget(navTarget)
+        b.aximoBottomNavigation?.setActiveTarget(navTarget)
 
         // TASK DESCRIPTION
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
