@@ -225,21 +225,22 @@ object AximoLessonSilence {
 
         val audio = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
-        if (!canControlDoNotDisturb(context)) return
-
+        // Basic school mode uses the normal Android ringer mode and therefore
+        // can work with MODIFY_AUDIO_SETTINGS even when optional DND access
+        // has not been granted. DND access is only an enhancement.
+        val hasPolicyAccess = canControlDoNotDisturb(context)
         val previousMode = audio.ringerMode
         try {
             // Prefer the Android DND policy API. On newer Android versions this
             // is integrated with the system's Modes/Automatic Zen Rules model.
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && hasPolicyAccess) {
                 val notificationManager =
                     context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
                 notificationManager.setInterruptionFilter(
                     NotificationManager.INTERRUPTION_FILTER_NONE
                 )
             }
-            // Keep the physical ringer silent as a fallback for devices/OEMs
-            // where DND does not mute every audio path consistently.
+            // Always mute the ringer: this is the core school-mode behavior.
             audio.ringerMode = AudioManager.RINGER_MODE_SILENT
         } catch (_: SecurityException) {
             return
@@ -251,8 +252,7 @@ object AximoLessonSilence {
             .putLong(ACTIVE_UNTIL, windowEnd)
             .apply()
     }
-    fun testForDuration(context: Context, durationMs: Long = 10_000L): Boolean {
-        if (!canControlDoNotDisturb(context)) return false
+    fun testForDuration(context: Context, durationMs: Long = 10_000L): Boolean { false
         onStart(context, System.currentTimeMillis() + durationMs)
         android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(
             { disableAndRestore(context) },
