@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#02091A"
+   
     android:fillViewport="true">
 
     <LinearLayout
@@ -64,7 +64,7 @@
                 android:gravity="center"
                 android:orientation="vertical"
                 android:padding="8dp">
-                <TextView android:layout_width="48dp" android:layout_height="58dp" android:background="#111A32" android:gravity="center" android:text="☾" android:textColor="#FFFFFF" android:textSize="24sp"/>
+                <TextView android:layout_width="48dp" android:layout_height="58dp" android:gravity="center" android:text="☾" android:textColor="#FFFFFF" android:textSize="24sp"/>
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="Ciemny" android:textColor="#FFFFFF" android:textSize="12sp"/>
             </LinearLayout>
 
@@ -79,7 +79,7 @@
                 android:gravity="center"
                 android:orientation="vertical"
                 android:padding="8dp">
-                <TextView android:layout_width="48dp" android:layout_height="58dp" android:background="#EEF1F8" android:gravity="center" android:text="☀" android:textColor="#17213B" android:textSize="24sp"/>
+                <TextView android:layout_width="48dp" android:layout_height="58dp" android:gravity="center" android:text="☀" android:textColor="#17213B" android:textSize="24sp"/>
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="Jasny" android:textColor="#FFFFFF" android:textSize="12sp"/>
             </LinearLayout>
 
@@ -93,7 +93,7 @@
                 android:gravity="center"
                 android:orientation="vertical"
                 android:padding="8dp">
-                <TextView android:layout_width="48dp" android:layout_height="58dp" android:background="#283452" android:gravity="center" android:text="◐" android:textColor="#FFFFFF" android:textSize="24sp"/>
+                <TextView android:layout_width="48dp" android:layout_height="58dp" android:gravity="center" android:text="◐" android:textColor="#FFFFFF" android:textSize="24sp"/>
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="Automatyczny" android:textColor="#FFFFFF" android:textSize="12sp"/>
             </LinearLayout>
         </LinearLayout>
@@ -117,13 +117,13 @@
             android:paddingStart="18dp"
             android:paddingEnd="18dp">
 
-            <View android:id="@+id/accentPurple" android:layout_width="32dp" android:layout_height="32dp" android:layout_marginEnd="12dp" android:background="#8D72FF" android:background="@drawable/aximo_accent_circle" android:backgroundTint="#8D72FF"/>
-            <View android:id="@+id/accentBlue" android:layout_width="32dp" android:layout_height="32dp" android:layout_marginEnd="12dp" android:background="#4D8DFF" android:background="@drawable/aximo_accent_circle" android:backgroundTint="#4D8DFF"/>
-            <View android:id="@+id/accentCyan" android:layout_width="32dp" android:layout_height="32dp" android:layout_marginEnd="12dp" android:background="#34D5E8" android:background="@drawable/aximo_accent_circle" android:backgroundTint="#34D5E8"/>
-            <View android:id="@+id/accentGreen" android:layout_width="32dp" android:layout_height="32dp" android:layout_marginEnd="12dp" android:background="#58D68D" android:background="@drawable/aximo_accent_circle" android:backgroundTint="#58D68D"/>
-            <View android:id="@+id/accentYellow" android:layout_width="32dp" android:layout_height="32dp" android:layout_marginEnd="12dp" android:background="#F2C94C" android:background="@drawable/aximo_accent_circle" android:backgroundTint="#F2C94C"/>
-            <View android:id="@+id/accentOrange" android:layout_width="32dp" android:layout_height="32dp" android:layout_marginEnd="12dp" android:background="#F2994A" android:background="@drawable/aximo_accent_circle" android:backgroundTint="#F2994A"/>
-            <View android:id="@+id/accentPink" android:layout_width="32dp" android:layout_height="32dp" android:background="#E56BFF" android:background="@drawable/aximo_accent_circle" android:backgroundTint="#E56BFF"/>
+            <View android:id="@+id/accentPurple" android:layout_width="32dp" android:layout_height="32dp" android:layout_marginEnd="12dp" android:background="@drawable/aximo_accent_circle" android:backgroundTint="#8D72FF"/>
+            <View android:id="@+id/accentBlue" android:layout_width="32dp" android:layout_height="32dp" android:layout_marginEnd="12dp" android:background="@drawable/aximo_accent_circle" android:backgroundTint="#4D8DFF"/>
+            <View android:id="@+id/accentCyan" android:layout_width="32dp" android:layout_height="32dp" android:layout_marginEnd="12dp" android:background="@drawable/aximo_accent_circle" android:backgroundTint="#34D5E8"/>
+            <View android:id="@+id/accentGreen" android:layout_width="32dp" android:layout_height="32dp" android:layout_marginEnd="12dp" android:background="@drawable/aximo_accent_circle" android:backgroundTint="#58D68D"/>
+            <View android:id="@+id/accentYellow" android:layout_width="32dp" android:layout_height="32dp" android:layout_marginEnd="12dp" android:background="@drawable/aximo_accent_circle" android:backgroundTint="#F2C94C"/>
+            <View android:id="@+id/accentOrange" android:layout_width="32dp" android:layout_height="32dp" android:layout_marginEnd="12dp" android:background="@drawable/aximo_accent_circle" android:backgroundTint="#F2994A"/>
+            <View android:id="@+id/accentPink" android:layout_width="32dp" android:layout_height="32dp" android:background="@drawable/aximo_accent_circle" android:backgroundTint="#E56BFF"/>
         </LinearLayout>
 
         <TextView
@@ -145,12 +145,12 @@
             android:paddingStart="14dp"
             android:paddingEnd="14dp">
 
-            <TextView android:id="@+id/bgDefault" android:layout_width="0dp" android:layout_height="62dp" android:layout_marginEnd="7dp" android:layout_weight="1" android:background="#111A32" android:gravity="center" android:text="Domyślne" android:textColor="#FFFFFF" android:textSize="11sp"/>
-            <TextView android:id="@+id/bgMountains" android:layout_width="0dp" android:layout_height="62dp" android:layout_marginStart="7dp" android:layout_marginEnd="7dp" android:layout_weight="1" android:background="#24304F" android:gravity="center" android:text="Góry" android:textColor="#FFFFFF" android:textSize="11sp"/>
-            <TextView android:id="@+id/bgSea" android:layout_width="0dp" android:layout_height="62dp" android:layout_marginStart="7dp" android:layout_marginEnd="7dp" android:layout_weight="1" android:background="#123B50" android:gravity="center" android:text="Morze" android:textColor="#FFFFFF" android:textSize="11sp"/>
-            <TextView android:id="@+id/bgCity" android:layout_width="0dp" android:layout_height="62dp" android:layout_marginStart="7dp" android:layout_weight="1" android:background="#293047" android:gravity="center" android:text="Miasto" android:textColor="#FFFFFF" android:textSize="11sp"/>
-            <TextView android:id="@+id/bgAbstract" android:layout_width="0dp" android:layout_height="62dp" android:layout_marginStart="7dp" android:layout_weight="1" android:background="#352B52" android:gravity="center" android:text="Abstrakcyjne" android:textColor="#FFFFFF" android:textSize="10sp"/>
-            <TextView android:id="@+id/bgCustom" android:layout_width="0dp" android:layout_height="62dp" android:layout_marginStart="7dp" android:layout_weight="1" android:background="#1D2940" android:gravity="center" android:text="Własne" android:textColor="#FFFFFF" android:textSize="10sp"/>
+            <TextView android:id="@+id/bgDefault" android:layout_width="0dp" android:layout_height="62dp" android:layout_marginEnd="7dp" android:layout_weight="1" android:gravity="center" android:text="Domyślne" android:textColor="#FFFFFF" android:textSize="11sp"/>
+            <TextView android:id="@+id/bgMountains" android:layout_width="0dp" android:layout_height="62dp" android:layout_marginStart="7dp" android:layout_marginEnd="7dp" android:layout_weight="1" android:gravity="center" android:text="Góry" android:textColor="#FFFFFF" android:textSize="11sp"/>
+            <TextView android:id="@+id/bgSea" android:layout_width="0dp" android:layout_height="62dp" android:layout_marginStart="7dp" android:layout_marginEnd="7dp" android:layout_weight="1" android:gravity="center" android:text="Morze" android:textColor="#FFFFFF" android:textSize="11sp"/>
+            <TextView android:id="@+id/bgCity" android:layout_width="0dp" android:layout_height="62dp" android:layout_marginStart="7dp" android:layout_weight="1" android:gravity="center" android:text="Miasto" android:textColor="#FFFFFF" android:textSize="11sp"/>
+            <TextView android:id="@+id/bgAbstract" android:layout_width="0dp" android:layout_height="62dp" android:layout_marginStart="7dp" android:layout_weight="1" android:gravity="center" android:text="Abstrakcyjne" android:textColor="#FFFFFF" android:textSize="10sp"/>
+            <TextView android:id="@+id/bgCustom" android:layout_width="0dp" android:layout_height="62dp" android:layout_marginStart="7dp" android:layout_weight="1" android:gravity="center" android:text="Własne" android:textColor="#FFFFFF" android:textSize="10sp"/>
         </LinearLayout>
 
         <TextView
