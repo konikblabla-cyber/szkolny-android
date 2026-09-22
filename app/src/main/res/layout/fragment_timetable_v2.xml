@@ -34,9 +34,9 @@
             android:fillViewport="true"
             android:overScrollMode="never"
             android:paddingStart="16dp"
-            android:paddingTop="16dp"
+            android:paddingTop="18dp"
             android:paddingEnd="16dp"
-            android:paddingBottom="108dp">
+            android:paddingBottom="112dp">
 
             <LinearLayout
                 android:id="@+id/aximoPlanContent"
@@ -46,16 +46,16 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="48dp"
+                    android:layout_height="56dp"
                     android:gravity="center_vertical">
 
                     <TextView
-                        android:layout_width="38dp"
-                        android:layout_height="38dp"
+                        android:layout_width="42dp"
+                        android:layout_height="42dp"
                         android:gravity="center"
                         android:text="A"
                         android:textColor="#FFFFFF"
-                        android:textSize="19sp"
+                        android:textSize="21sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -63,9 +63,9 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="9dp"
                         android:layout_weight="1"
-                        android:text="Mój plan lekcji"
+                        android:text="Plan lekcji"
                         android:textColor="#F7F5FF"
-                        android:textSize="24sp"
+                        android:textSize="25sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -86,8 +86,8 @@
                     android:id="@+id/aximoPlanDate"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:textColor="#E7E8F4"
+                    android:layout_marginTop="8dp"
+                    android:textColor="#AEB8D4"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     tools:text="Poniedziałek, 22 września" />
@@ -95,8 +95,9 @@
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="64dp"
-                    android:layout_marginTop="10dp"
-                    android:scrollbars="none">
+                    android:layout_marginTop="12dp"
+                    android:scrollbars="none"
+                    android:clipToPadding="false">
 
                     <LinearLayout
                         android:id="@+id/aximoDayStrip"
@@ -109,7 +110,7 @@
                     android:id="@+id/aximoLessonContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
+                    android:layout_marginTop="14dp"
                     android:orientation="vertical" />
 
                 <LinearLayout
