@@ -20,7 +20,8 @@ class AximoLessonSilenceReceiver : BroadcastReceiver() {
                     Intent.ACTION_TIME_CHANGED,
                     Intent.ACTION_TIMEZONE_CHANGED,
                     Intent.ACTION_MY_PACKAGE_REPLACED,
-                    "android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED" -> {
+                    "android.app.action.SCHEDULE_EXACT_ALARM_PERMISSION_STATE_CHANGED",
+                    "android.app.action.NOTIFICATION_POLICY_ACCESS_GRANTED_CHANGED" -> {
                         val app = appContext as? App
                         if (app != null && App.profileId != 0) {
                             AximoLessonSilence.scheduleTodayAndTomorrow(appContext, App.profileId)
