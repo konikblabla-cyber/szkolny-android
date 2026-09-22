@@ -37,11 +37,14 @@ object AximoLessonSilence {
     fun openNotificationPolicyAccessSettings(context: Context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return
 
+        // On newer Android/Motorola builds the app-specific detail screen is
+        // the reliable path. The generic list can omit the app or open a screen
+        // where the user cannot immediately find the Aximo switch.
         val intents = listOf(
-            Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS),
             Intent("android.settings.NOTIFICATION_POLICY_ACCESS_DETAIL_SETTINGS")
                 .setData(android.net.Uri.parse("package:" + context.packageName))
                 .putExtra(android.provider.Settings.EXTRA_APP_PACKAGE, context.packageName),
+            Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS),
             Intent(android.provider.Settings.ACTION_SETTINGS)
         )
 
