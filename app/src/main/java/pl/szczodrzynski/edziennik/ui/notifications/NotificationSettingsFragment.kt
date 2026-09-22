@@ -20,16 +20,26 @@ class NotificationSettingsFragment : BaseFragment<NotificationSettingsFragmentBi
         b.backButton.setOnClickListener { activity.onBackPressedDispatcher.onBackPressed() }
         b.lessonNotifications.setOnCheckedChangeListener { _, checked -> app.config.sync.lessonNotificationsEnabled = checked
             AximoLessonNotifications.scheduleTodayAndTomorrow(app, app.profile.id) }
-        b.automaticSilence.setOnCheckedChangeListener { _, checked -> app.config.sync.automaticSilenceEnabled = checked
-            AximoLessonSilence.scheduleTodayAndTomorrow(app, app.profile.id) }
+        b.automaticSilence.setOnCheckedChangeListener { _, checked ->
+            app.config.sync.automaticSilenceEnabled = checked
+            if (checked) {
+                AximoLessonSilence.scheduleTodayAndTomorrow(app, app.profile.id)
+            } else {
+                AximoLessonSilence.scheduleTodayAndTomorrow(app, app.profile.id)
+                AximoLessonSilence.disableAndRestore(app)
+            }
+        }
         b.minutesSeek.setOnSeekBarChangeListener(object : android.widget.SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: android.widget.SeekBar?, progress: Int, fromUser: Boolean) {
-                app.config.sync.lessonNotificationMinutes = progress.coerceAtLeast(1)
-                AximoLessonNotifications.scheduleTodayAndTomorrow(app, app.profile.id)
-                updateMinutes()
+                if (fromUser) {
+                    app.config.sync.lessonNotificationMinutes = progress.coerceAtLeast(1)
+                    updateMinutes()
+                }
             }
             override fun onStartTrackingTouch(seekBar: android.widget.SeekBar?) {}
-            override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {}
+            override fun onStopTrackingTouch(seekBar: android.widget.SeekBar?) {
+                AximoLessonNotifications.scheduleTodayAndTomorrow(app, app.profile.id)
+            }}
         })
         b.filterCard.setOnClickListener { NotificationFilterDialog(activity).show() }
     }
