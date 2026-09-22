@@ -1,39 +1,86 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (c) Kuba Szczodrzyński 2019-11-22.
-  -->
-
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="#02091A">
 
     <ProgressBar
         android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:visibility="gone" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:id="@+id/noData"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:drawablePadding="16dp"
-        android:gravity="center"
-        android:padding="16dp"
-        android:text="@string/notifications_no_data"
-        android:textAppearance="?textAppearanceHeadlineSmall"
-        android:visibility="gone"
-        app:drawableTopCompat="@drawable/ic_no_notifications"
-        tools:visibility="visible" />
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:visibility="gone" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
+        android:visibility="gone"
+        tools:listitem="@layout/notifications_list_item" />
+
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
-        tools:listitem="@layout/notifications_list_item"
-        tools:visibility="visible" />
+        android:fillViewport="true"
+        android:clipToPadding="false"
+        android:paddingBottom="108dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="18dp"
+            android:paddingTop="22dp"
+            android:paddingEnd="18dp"
+            android:paddingBottom="30dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="42dp"
+                    android:layout_height="42dp"
+                    android:background="@drawable/aximo_notification_header_icon"
+                    android:gravity="center"
+                    android:text="♧"
+                    android:textColor="#D7B7FF"
+                    android:textSize="23sp" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:text="Powiadomienia"
+                    android:textColor="#FFFFFF"
+                    android:textSize="27sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:text="Najważniejsze informacje i przypomnienia"
+                android:textColor="#8D9BB8"
+                android:textSize="13sp" />
+
+            <include layout="@layout/aximo_notification_1" />
+            <include layout="@layout/aximo_notification_2" />
+            <include layout="@layout/aximo_notification_3" />
+            <include layout="@layout/aximo_notification_4" />
+            <include layout="@layout/aximo_notification_5" />
+
+        </LinearLayout>
+    </ScrollView>
 </FrameLayout>
