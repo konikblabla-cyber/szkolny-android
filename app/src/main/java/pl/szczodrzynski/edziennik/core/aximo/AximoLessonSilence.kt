@@ -21,6 +21,29 @@ import pl.szczodrzynski.edziennik.utils.models.Date
  * active before school mode started.
  */
 object AximoLessonSilence {
+    fun hasNotificationPolicyAccess(context: Context): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return true
+        val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        return manager.isNotificationPolicyAccessGranted
+    }
+
+    fun openNotificationPolicyAccessSettings(context: Context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return
+        try {
+            context.startActivity(
+                Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS).addFlags(
+                    Intent.FLAG_ACTIVITY_NEW_TASK
+                )
+            )
+        } catch (_: Exception) {
+            try {
+                context.startActivity(
+                    Intent(android.provider.Settings.ACTION_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                )
+            } catch (_: Exception) { }
+        }
+    }
+
     const val ACTION_START = "pl.szczodrzynski.edziennik.aximo.SILENCE_START"
     const val ACTION_END = "pl.szczodrzynski.edziennik.aximo.SILENCE_END"
     const val EXTRA_PROFILE = "profile_id"
