@@ -26,6 +26,14 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
         b.appearanceCard.setOnClickListener { activity.navigate(navTarget = NavTarget.APPEARANCE) }
         b.helpCard.setOnClickListener { activity.navigate(navTarget = NavTarget.HELP) }
         b.aboutCard.setOnClickListener { activity.navigate(navTarget = NavTarget.ABOUT) }
+        b.notificationPermissionCard.setOnClickListener {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU &&
+                requireContext().checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 47002)
+            } else {
+                Toast.makeText(activity, "Powiadomienia są już dostępne.", Toast.LENGTH_SHORT).show()
+            }
+        }
         b.silencePermissionCard.setOnClickListener {
             if (AximoLessonSilence.hasNotificationPolicyAccess(requireContext())) {
                 Toast.makeText(activity, "Dostęp do trybu Nie przeszkadzać jest już przyznany.", Toast.LENGTH_SHORT).show()
@@ -37,7 +45,14 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
 
     override fun onResume() {
         super.onResume()
-        if (view != null) updatePermission()
+        if (view != null) { updatePermission(); updateNotificationPermission() }
+    }
+
+    private fun updateNotificationPermission() {
+        val granted = android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.TIRAMISU ||
+            requireContext().checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) == android.content.pm.PackageManager.PERMISSION_GRANTED
+        b.notificationPermissionValue.text = if (granted) "Przyznane • przypomnienia mogą pojawiać się na ekranie" else "Wymagane • dotknij, aby zezwolić Androidowi"
+        b.notificationPermissionValue.setTextColor(requireContext().getColor(if (granted) R.color.aximo_success else R.color.aximo_muted))
     }
 
     private fun updatePermission() {
