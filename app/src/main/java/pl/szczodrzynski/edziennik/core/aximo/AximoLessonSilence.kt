@@ -27,21 +27,44 @@ object AximoLessonSilence {
         return manager.isNotificationPolicyAccessGranted
     }
 
+    /**
+     * Opens the system page where the user can explicitly grant Aximo
+     * Do Not Disturb / notification-policy access.
+     *
+     * This is a special Settings access: Android does not show the normal
+     * runtime permission dialog for ACCESS_NOTIFICATION_POLICY.
+     */
     fun openNotificationPolicyAccessSettings(context: Context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return
-        try {
-            context.startActivity(
-                Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS).addFlags(
-                    Intent.FLAG_ACTIVITY_NEW_TASK
-                )
-            )
-        } catch (_: Exception) {
+
+        val flags = Intent.FLAG_ACTIVITY_NEW_TASK
+
+        val intents = listOf(
+            Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
+                .addFlags(flags),
+            Intent(android.provider.Settings.ACTION_SETTINGS)
+                .addFlags(flags)
+        )
+
+        for (intent in intents) {
             try {
-                context.startActivity(
-                    Intent(android.provider.Settings.ACTION_SETTINGS).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-                )
-            } catch (_: Exception) { }
+                context.startActivity(intent)
+                return
+            } catch (_: Exception) {
+                // Try the next system settings fallback.
+            }
         }
+    }
+
+    /**
+     * Returns true only when Android has actually granted Aximo access to
+     * the notification/DND policy. Keeping this check in one place prevents
+     * the School Mode UI from claiming that it can control DND when it cannot.
+     */
+    fun canControlDoNotDisturb(context: Context): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return true
+        val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        return manager.isNotificationPolicyAccessGranted
     }
 
     const val ACTION_START = "pl.szczodrzynski.edziennik.aximo.SILENCE_START"
@@ -173,14 +196,21 @@ object AximoLessonSilence {
 
         val audio = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val notificationManager =
-                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            if (!notificationManager.isNotificationPolicyAccessGranted) return
-        }
+        if (!canControlDoNotDisturb(context)) return
 
         val previousMode = audio.ringerMode
         try {
+            // Prefer the Android DND policy API. On newer Android versions this
+            // is integrated with the system's Modes/Automatic Zen Rules model.
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                val notificationManager =
+                    context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.setInterruptionFilter(
+                    NotificationManager.INTERRUPTION_FILTER_NONE
+                )
+            }
+            // Keep the physical ringer silent as a fallback for devices/OEMs
+            // where DND does not mute every audio path consistently.
             audio.ringerMode = AudioManager.RINGER_MODE_SILENT
         } catch (_: SecurityException) {
             return
@@ -197,9 +227,18 @@ object AximoLessonSilence {
         if (prefs.getInt(ACTIVE, 0) == 0) return
         val audio = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         val previous = prefs.getInt(PREVIOUS_MODE, AudioManager.RINGER_MODE_NORMAL)
-        if (audio.ringerMode == AudioManager.RINGER_MODE_SILENT) {
-            try { audio.ringerMode = previous } catch (_: SecurityException) {}
-        }
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && canControlDoNotDisturb(context)) {
+                val notificationManager =
+                    context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.setInterruptionFilter(
+                    NotificationManager.INTERRUPTION_FILTER_ALL
+                )
+            }
+            if (audio.ringerMode == AudioManager.RINGER_MODE_SILENT) {
+                audio.ringerMode = previous
+            }
+        } catch (_: SecurityException) {}
         prefs.edit().putInt(ACTIVE, 0).remove(PREVIOUS_MODE).remove(ACTIVE_UNTIL).apply()
     }
 
@@ -212,9 +251,18 @@ object AximoLessonSilence {
         val audio = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         val previous = prefs.getInt(PREVIOUS_MODE, AudioManager.RINGER_MODE_NORMAL)
 
-        if (audio.ringerMode == AudioManager.RINGER_MODE_SILENT) {
-            try { audio.ringerMode = previous } catch (_: SecurityException) {}
-        }
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && canControlDoNotDisturb(context)) {
+                val notificationManager =
+                    context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+                notificationManager.setInterruptionFilter(
+                    NotificationManager.INTERRUPTION_FILTER_ALL
+                )
+            }
+            if (audio.ringerMode == AudioManager.RINGER_MODE_SILENT) {
+                audio.ringerMode = previous
+            }
+        } catch (_: SecurityException) {}
 
         prefs.edit()
             .putInt(ACTIVE, 0)
