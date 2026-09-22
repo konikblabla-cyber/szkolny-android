@@ -31,7 +31,6 @@ import pl.szczodrzynski.edziennik.ext.hasUIFeature
 import pl.szczodrzynski.edziennik.ext.onClick
 import pl.szczodrzynski.edziennik.ui.base.fragment.BaseFragment
 import pl.szczodrzynski.edziennik.ui.aximo.AximoAppearanceStyle
-import pl.szczodrzynski.edziennik.ui.main.AximoBottomNavigation
 import pl.szczodrzynski.edziennik.ui.dialogs.settings.StudentNumberDialog
 import pl.szczodrzynski.edziennik.ui.home.cards.HomeArchiveCard
 import pl.szczodrzynski.edziennik.ui.home.cards.HomeAvailabilityCard
@@ -175,7 +174,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
 
     override suspend fun onViewReady(savedInstanceState: Bundle?) {
         // Home is rendered from the supplied 1:1 reference artwork.
-        activity.findViewById<AximoBottomNavigation>(R.id.aximoBottomNavigation)?.alpha = 0f
         b.homeSettingsHit.setOnClickListener {
             activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.SETTINGS)
         }
@@ -427,11 +425,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
         })
         itemTouchHelper.attachToRecyclerView(b.list)
     }
-    override fun onDestroyView() {
-        activity.findViewById<AximoBottomNavigation>(R.id.aximoBottomNavigation)?.alpha = 1f
-        super.onDestroyView()
-    }
-
     private fun dpForHome(value: Int): Float =
         value * resources.displayMetrics.density
 
