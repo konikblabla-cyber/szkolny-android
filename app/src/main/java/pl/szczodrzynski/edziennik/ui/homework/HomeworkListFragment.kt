@@ -28,20 +28,24 @@ class HomeworkListFragment : BaseFragment<HomeworkListFragmentBinding, MainActiv
         val homeworkDate = arguments.getInt("homeworkDate", HomeworkDate.CURRENT)
 
         val today = Date.getToday()
-        val filter = when(homeworkDate) {
+        val filter = when (homeworkDate) {
             HomeworkDate.CURRENT -> "eventDate >= '${today.stringY_m_d}' AND eventIsDone = 0"
-            else -> "(eventDate < '${today.stringY_m_d}' OR eventIsDone = 1)"
+            HomeworkDate.PAST -> "eventIsDone = 1"
+            HomeworkDate.ALL -> "1 = 1"
+            else -> "1 = 1"
         }
 
         b.filterAll.setOnClickListener {
-            if (homeworkDate != HomeworkDate.CURRENT) {
-                arguments.putInt("homeworkDate", HomeworkDate.CURRENT)
+            if (homeworkDate != HomeworkDate.ALL) {
+                arguments.putInt("homeworkDate", HomeworkDate.ALL)
                 activity.reloadTarget()
             }
         }
         b.filterTodo.setOnClickListener {
-            arguments.putInt("homeworkDate", HomeworkDate.CURRENT)
-            activity.reloadTarget()
+            if (homeworkDate != HomeworkDate.CURRENT) {
+                arguments.putInt("homeworkDate", HomeworkDate.CURRENT)
+                activity.reloadTarget()
+            }
         }
         b.filterDone.setOnClickListener {
             if (homeworkDate != HomeworkDate.PAST) {
