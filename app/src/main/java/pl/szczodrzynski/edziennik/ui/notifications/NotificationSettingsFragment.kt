@@ -1,6 +1,8 @@
 package pl.szczodrzynski.edziennik.ui.notifications
 
+import android.os.Build
 import android.os.Bundle
+import android.content.pm.PackageManager
 import android.widget.SeekBar
 import pl.szczodrzynski.edziennik.MainActivity
 import pl.szczodrzynski.edziennik.databinding.NotificationSettingsFragmentBinding
@@ -14,6 +16,7 @@ class NotificationSettingsFragment : BaseFragment<NotificationSettingsFragmentBi
 ) {
     override suspend fun onViewReady(savedInstanceState: Bundle?) {
         b.lessonNotifications.isChecked = app.config.sync.lessonNotificationsEnabled
+        updatePermissionUi()
         b.automaticSilence.isChecked = app.config.sync.automaticSilenceEnabled && AximoLessonSilence.hasNotificationPolicyAccess(app)
         b.minutesSeek.progress = app.config.sync.lessonNotificationMinutes.coerceIn(1, 30)
         updateMinutes()
@@ -23,6 +26,10 @@ class NotificationSettingsFragment : BaseFragment<NotificationSettingsFragmentBi
         }
 
         b.lessonNotifications.setOnCheckedChangeListener { _, checked ->
+            if (checked && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                requireContext().checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
+                requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 47002)
+            }
             app.config.sync.lessonNotificationsEnabled = checked
             if (checked) {
                 AximoLessonNotifications.scheduleTodayAndTomorrow(app, app.profile.id)
@@ -68,6 +75,25 @@ class NotificationSettingsFragment : BaseFragment<NotificationSettingsFragmentBi
         b.filterCard.setOnClickListener {
             NotificationFilterDialog(activity).show()
         }
+
+        b.silencePermissionButton.setOnClickListener {
+            AximoLessonSilence.openNotificationPolicyAccessSettings(activity)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (view != null) updatePermissionUi()
+    }
+
+    private fun updatePermissionUi() {
+        val granted = AximoLessonSilence.hasNotificationPolicyAccess(requireContext())
+        b.silencePermissionStatus.text = if (granted) {
+            "✓ Dostęp przyznany — Aximo może automatycznie wyciszać telefon podczas szkoły."
+        } else {
+            "⚠ Brak dostępu. Android wymaga włączenia dostępu „Nie przeszkadzać” w ustawieniach systemu."
+        }
+        b.silencePermissionButton.text = if (granted) "Otwórz ustawienia dostępu" else "Nadaj dostęp do wyciszania"
     }
 
     private fun updateMinutes() {
