@@ -182,6 +182,13 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
             manager.requestNotificationsPermission(activity, 0, false){}
         }
 
+        // The reference home screen is a complete Aximo surface. Do not execute
+        // the legacy configurable-card dashboard underneath it: hidden legacy
+        // views can receive stale lifecycle/config callbacks and make Start
+        // appear broken or crash after navigation. Real navigation is provided
+        // by the Aximo bottom bar and the visible settings button.
+        return@onViewReady
+
         // Keep the reference artwork as the visible Aximo surface, but continue
         // initializing the underlying dashboard so navigation, refreshes and
         // lifecycle callbacks keep working normally.
