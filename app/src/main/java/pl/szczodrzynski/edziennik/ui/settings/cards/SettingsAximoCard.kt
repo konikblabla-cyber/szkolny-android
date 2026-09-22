@@ -22,6 +22,7 @@ class SettingsAximoCard(util: SettingsUtil) : SettingsCard(util) {
         R.string.settings_card_aximo_title,
         items = ::getItems,
         itemsMore = { emptyList() },
+        backgroundColor = util.aximoCardColor(2),
     )
 
     override fun getItems(card: MaterialAboutCard) = listOf(
