@@ -17,6 +17,7 @@ import kotlinx.coroutines.launch
 import pl.szczodrzynski.edziennik.MainActivity
 import pl.szczodrzynski.edziennik.R
 import pl.szczodrzynski.edziennik.databinding.NotificationsListFragmentBinding
+import pl.szczodrzynski.edziennik.data.enums.NavTarget
 import pl.szczodrzynski.edziennik.ext.isNotNullNorEmpty
 import pl.szczodrzynski.edziennik.ui.base.fragment.BaseFragment
 import pl.szczodrzynski.edziennik.utils.SimpleDividerItemDecoration
@@ -46,6 +47,7 @@ class NotificationsListFragment : BaseFragment<NotificationsListFragmentBinding,
     )
 
     override suspend fun onViewReady(savedInstanceState: Bundle?) {
+        b.settingsButton.setOnClickListener { activity.navigate(navTarget = NavTarget.NOTIFICATION_SETTINGS) }
         val adapter = NotificationsAdapter(activity) { notification ->
             val intent = Intent("android.intent.action.MAIN")
             notification.fillIntent(intent)
