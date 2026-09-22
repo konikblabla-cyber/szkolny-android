@@ -1,63 +1,21 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (c) Kuba Szczodrzyński 2021-10-23.
-  -->
-
-<com.google.android.material.card.MaterialCardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginHorizontal="4dp"
-    android:layout_marginVertical="3dp"
-    app:cardBackgroundColor="?colorSurfaceContainer"
-    app:cardElevation="0dp"
-    app:shapeAppearance="?shapeAppearanceCornerMedium">
-
-    <LinearLayout
-        android:id="@+id/colorLayout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:padding="8dp">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <com.mikepenz.iconics.view.IconicsTextView
-                android:id="@+id/topic"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:ellipsize="end"
-                android:maxLines="4"
-                android:minLines="2"
-                android:textAppearance="?textAppearanceBodyLarge"
-                tools:text="Temat notatki. Ale może też\nbyć treść tutaj." />            <!-- cmd_pencil_outline -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/editButton"
-                style="?materialIconButtonSecondaryStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:layout_marginLeft="4dp"
-                android:fontFamily="@font/community_material_font_v5_8_55"
-                android:minWidth="0dp"
-                android:text="\uf2f4"
-                android:textSize="20sp"
-                tools:visibility="gone" />
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="2dp" android:layout_marginBottom="8dp"
+    app:cardBackgroundColor="#211C2D" app:cardCornerRadius="20dp" app:cardElevation="0dp"
+    app:strokeColor="#352D47" app:strokeWidth="1dp">
+    <LinearLayout android:id="@+id/colorLayout" android:layout_width="match_parent" android:layout_height="wrap_content"
+        android:orientation="vertical" android:padding="15dp">
+        <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
+            <com.mikepenz.iconics.view.IconicsTextView android:id="@+id/topic" android:layout_width="0dp" android:layout_height="wrap_content"
+                android:layout_weight="1" android:ellipsize="end" android:maxLines="4" android:minLines="2" android:textColor="#F2EFF8" android:textSize="14sp" android:textStyle="bold"
+                tools:text="Temat notatki. Ale może też&#10;być treść tutaj."/>
+            <com.google.android.material.button.MaterialButton android:id="@+id/editButton" style="?materialIconButtonSecondaryStyle"
+                android:layout_width="42dp" android:layout_height="42dp" android:layout_marginStart="6dp" android:minWidth="0dp"
+                android:fontFamily="@font/community_material_font_v5_8_55" android:text="\uf2f4" android:textSize="19sp" tools:visibility="gone"/>
         </LinearLayout>
-
-        <com.mikepenz.iconics.view.IconicsTextView
-            android:id="@+id/addedBy"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ellipsize="middle"
-            android:singleLine="true"
-            android:textAppearance="?textAppearanceBodySmall"
-            tools:text="Jakub Szczodrzyński • 23 października" />
+        <com.mikepenz.iconics.view.IconicsTextView android:id="@+id/addedBy" android:layout_width="match_parent" android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" android:ellipsize="middle" android:singleLine="true" android:textColor="#8F899D" android:textSize="10sp"
+            tools:text="Jakub Szczodrzyński • 23 października"/>
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
