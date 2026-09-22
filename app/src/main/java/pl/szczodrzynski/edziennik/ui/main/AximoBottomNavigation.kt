@@ -52,7 +52,6 @@ class AximoBottomNavigation @JvmOverloads constructor(
     private val menuViews = mutableListOf<TextView>()
     private var open = false
     private var selected = -1
-    private var holdRunnable: Runnable? = null
 
     private val appearance: AximoAppearanceStyle
         get() = AximoAppearanceStyle.fromOrdinal(
@@ -141,6 +140,26 @@ class AximoBottomNavigation @JvmOverloads constructor(
                 compoundDrawablePadding = dp(1)
             }
         }
+
+    fun setActiveTarget(target: NavTarget?) {
+        bottomItems.forEachIndexed { index, item ->
+            val view = (getChildAt(0) as? LinearLayout)?.getChildAt(index) as? TextView
+                ?: return@forEachIndexed
+            if (index == 3) {
+                view.background = roundedBackground(Color.TRANSPARENT, Color.TRANSPARENT, 0, 20)
+                view.setTextColor(appearance.text)
+                view.compoundDrawables.forEach { it?.setTint(appearance.text) }
+                view.elevation = 0f
+            } else if (item.target == target) {
+                applyActive(view)
+            } else {
+                view.background = roundedBackground(Color.TRANSPARENT, Color.TRANSPARENT, 0, 18)
+                view.setTextColor(appearance.text)
+                view.compoundDrawables.forEach { it?.setTint(appearance.text) }
+                view.elevation = 0f
+            }
+        }
+    }
 
     private fun applyActive(view: TextView) {
         view.background = GradientDrawable(
