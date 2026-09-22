@@ -42,6 +42,17 @@
      android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="10dp"
      android:text="Nadaj dostęp do wyciszania" android:textAllCaps="false"/>
    </LinearLayout>
+
+   <com.google.android.material.button.MaterialButton
+    android:id="@+id/testSilenceButton"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="10dp"
+    android:text="Test wyciszenia"
+    android:textAllCaps="false"
+    android:textColor="#FFFFFF"
+    android:backgroundTint="#8B5CF6"/>
+
    <com.google.android.material.materialswitch.MaterialSwitch
     android:id="@+id/lessonNameNotifications" android:layout_width="match_parent" android:layout_height="wrap_content"
     android:layout_marginTop="2dp" android:text="Nazwa lekcji w powiadomieniu"
