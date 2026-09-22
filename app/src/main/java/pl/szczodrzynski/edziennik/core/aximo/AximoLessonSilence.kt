@@ -209,19 +209,10 @@ object AximoLessonSilence {
         // Basic school mode uses the normal Android ringer mode and therefore
         // can work with MODIFY_AUDIO_SETTINGS even when optional DND access
         // has not been granted. DND access is only an enhancement.
-        val hasPolicyAccess = canControlDoNotDisturb(context)
         val previousMode = audio.ringerMode
         try {
-            // Prefer the Android DND policy API. On newer Android versions this
-            // is integrated with the system's Modes/Automatic Zen Rules model.
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && hasPolicyAccess) {
-                val notificationManager =
-                    context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                notificationManager.setInterruptionFilter(
-                    NotificationManager.INTERRUPTION_FILTER_NONE
-                )
-            }
-            // Always mute the ringer: this is the core school-mode behavior.
+            // Core school mode intentionally uses only the normal silent ringer.
+            // ACCESS_NOTIFICATION_POLICY is optional and never blocks activation.
             audio.ringerMode = AudioManager.RINGER_MODE_SILENT
         } catch (_: SecurityException) {
             return
@@ -248,13 +239,6 @@ object AximoLessonSilence {
         val audio = context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
         val previous = prefs.getInt(PREVIOUS_MODE, AudioManager.RINGER_MODE_NORMAL)
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && canControlDoNotDisturb(context)) {
-                val notificationManager =
-                    context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                notificationManager.setInterruptionFilter(
-                    NotificationManager.INTERRUPTION_FILTER_ALL
-                )
-            }
             if (audio.ringerMode == AudioManager.RINGER_MODE_SILENT) {
                 audio.ringerMode = previous
             }
@@ -272,13 +256,6 @@ object AximoLessonSilence {
         val previous = prefs.getInt(PREVIOUS_MODE, AudioManager.RINGER_MODE_NORMAL)
 
         try {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && canControlDoNotDisturb(context)) {
-                val notificationManager =
-                    context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                notificationManager.setInterruptionFilter(
-                    NotificationManager.INTERRUPTION_FILTER_ALL
-                )
-            }
             if (audio.ringerMode == AudioManager.RINGER_MODE_SILENT) {
                 audio.ringerMode = previous
             }
