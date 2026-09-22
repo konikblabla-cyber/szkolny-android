@@ -225,6 +225,16 @@ object AximoLessonSilence {
             .putLong(ACTIVE_UNTIL, windowEnd)
             .apply()
     }
+    fun testForDuration(context: Context, durationMs: Long = 10_000L): Boolean {
+        if (!canControlDoNotDisturb(context)) return false
+        onStart(context, System.currentTimeMillis() + durationMs)
+        android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(
+            { disableAndRestore(context) },
+            durationMs
+        )
+        return true
+    }
+
     fun disableAndRestore(context: Context) {
         val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
         if (prefs.getInt(ACTIVE, 0) == 0) return
