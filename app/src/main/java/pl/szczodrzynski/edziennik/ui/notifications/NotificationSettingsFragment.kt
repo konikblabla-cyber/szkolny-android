@@ -27,7 +27,7 @@ class NotificationSettingsFragment : BaseFragment<NotificationSettingsFragmentBi
             if (checked) {
                 AximoLessonNotifications.scheduleTodayAndTomorrow(app, app.profile.id)
             } else {
-                AximoLessonNotifications.scheduleTodayAndTomorrow(app, app.profile.id)
+                AximoLessonNotifications.cancelAll(app)
             }
         }
 
