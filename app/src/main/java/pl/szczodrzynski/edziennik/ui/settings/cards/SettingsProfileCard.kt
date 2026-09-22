@@ -20,6 +20,7 @@ class SettingsProfileCard(util: SettingsUtil) : SettingsCard(util) {
         null,
         items = ::getItems,
         itemsMore = ::getItemsMore,
+        backgroundColor = util.aximoCardColor(0),
     )
 
     private fun getProfileItem(): MaterialAboutProfileItem = util.createProfileItem(
