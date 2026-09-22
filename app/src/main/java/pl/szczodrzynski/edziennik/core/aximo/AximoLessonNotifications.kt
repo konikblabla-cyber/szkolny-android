@@ -126,6 +126,25 @@ object AximoLessonNotifications {
         prefs.edit().putStringSet(SCHEDULED_REQUEST_CODES, emptySet()).apply()
     }
 
+    fun testNotification(context: Context) {
+        ensureChannel(context)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+            context.checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED
+        ) return
+
+        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_aximo_launcher)
+            .setContentTitle("Aximo • test powiadomienia")
+            .setContentText("System powiadomień działa poprawnie.")
+            .setStyle(NotificationCompat.BigTextStyle().bigText("To jest test panelu developerskiego. Jeśli widzisz to powiadomienie, Aximo może wysyłać przypomnienia."))
+            .setAutoCancel(true)
+            .setCategory(NotificationCompat.CATEGORY_EVENT)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .build()
+
+        NotificationManagerCompat.from(context).notify(47099, notification)
+    }
+
     fun show(context: Context, profileId: Int, lessonId: Long = -1L, lessonStart: Long = -1L) {
         ensureChannel(context)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
