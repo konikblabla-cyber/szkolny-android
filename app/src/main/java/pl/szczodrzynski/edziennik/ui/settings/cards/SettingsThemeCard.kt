@@ -22,6 +22,7 @@ class SettingsThemeCard(util: SettingsUtil) : SettingsCard(util) {
         R.string.settings_card_theme_title,
         items = ::getItems,
         itemsMore = ::getItemsMore,
+        backgroundColor = util.aximoCardColor(1),
     )
 
     override fun getItems(card: MaterialAboutCard) = listOfNotNull(
