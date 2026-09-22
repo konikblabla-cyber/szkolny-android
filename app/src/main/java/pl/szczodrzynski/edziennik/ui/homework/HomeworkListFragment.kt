@@ -33,6 +33,23 @@ class HomeworkListFragment : BaseFragment<HomeworkListFragmentBinding, MainActiv
             else -> "(eventDate < '${today.stringY_m_d}' OR eventIsDone = 1)"
         }
 
+        b.filterAll.setOnClickListener {
+            if (homeworkDate != HomeworkDate.CURRENT) {
+                arguments.putInt("homeworkDate", HomeworkDate.CURRENT)
+                activity.reloadTarget()
+            }
+        }
+        b.filterTodo.setOnClickListener {
+            arguments.putInt("homeworkDate", HomeworkDate.CURRENT)
+            activity.reloadTarget()
+        }
+        b.filterDone.setOnClickListener {
+            if (homeworkDate != HomeworkDate.PAST) {
+                arguments.putInt("homeworkDate", HomeworkDate.PAST)
+                activity.reloadTarget()
+            }
+        }
+
         val adapter = EventListAdapter(
             activity,
             showWeekDay = true,
