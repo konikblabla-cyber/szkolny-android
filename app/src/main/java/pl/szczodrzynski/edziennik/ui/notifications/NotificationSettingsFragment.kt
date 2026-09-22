@@ -123,7 +123,7 @@ class NotificationSettingsFragment : BaseFragment<NotificationSettingsFragmentBi
         } else {
             "⚠ Brak dostępu. Android wymaga włączenia dostępu „Nie przeszkadzać” w ustawieniach systemu."
         }
-        b.silencePermissionButton.text = if (granted) "Otwórz ustawienia dostępu" else "Nadaj dostęp do wyciszania"
+        b.silencePermissionButton.text = if (granted) "Otwórz ustawienia dostępu" else "Otwórz dostęp „Nie przeszkadzać”"
     }
 
     private fun updateMinutes() {
