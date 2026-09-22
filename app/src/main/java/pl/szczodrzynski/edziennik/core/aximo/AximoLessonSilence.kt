@@ -36,6 +36,7 @@ object AximoLessonSilence {
         val app = context.applicationContext as App
         val alarm = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         cancelScheduled(context, profileId)
+        if (!app.config.sync.automaticSilenceEnabled) return
         val today = Date.getToday()
 
         for (offset in 0..2) {
