@@ -1,46 +1,7 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (c) Kuba Szczodrzyński 2020-4-4.
-  -->
-
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center" />
-
-    <androidx.appcompat.widget.AppCompatTextView
-        android:id="@+id/noData"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:drawablePadding="16dp"
-        android:gravity="center"
-        android:padding="16dp"
-        android:text="@string/messages_no_data"
-        android:textAppearance="?textAppearanceHeadlineSmall"
-        android:visibility="gone"
-        app:drawableTopCompat="@drawable/ic_no_messages"
-        tools:visibility="visible" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clipToPadding="false"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:paddingTop="6dp"
-        android:paddingBottom="112dp"
-        android:scrollbars="vertical"
-        android:overScrollMode="never"
-        android:visibility="gone"
-        tools:listitem="@layout/messages_list_item"
-        tools:visibility="visible" />
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/aximo_messages_background">
+    <ProgressBar android:id="@+id/progressBar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" />
+    <androidx.appcompat.widget.AppCompatTextView android:id="@+id/noData" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:gravity="center" android:padding="24dp" android:text="@string/messages_no_data" android:textAppearance="?textAppearanceHeadlineSmall" android:visibility="gone" app:drawableTopCompat="@drawable/ic_no_messages" tools:visibility="visible" />
+    <androidx.recyclerview.widget.RecyclerView android:id="@+id/list" android:layout_width="match_parent" android:layout_height="match_parent" android:clipToPadding="false" android:paddingStart="14dp" android:paddingEnd="14dp" android:paddingTop="14dp" android:paddingBottom="112dp" android:scrollbars="vertical" android:overScrollMode="never" android:visibility="gone" tools:listitem="@layout/messages_list_item" tools:visibility="visible" />
 </FrameLayout>
