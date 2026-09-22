@@ -358,6 +358,14 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             R.color.md_green_500
         )
 
+        // Start a complete background refresh immediately after the main screen is ready.
+        // This keeps messages, timetable and the remaining profile data current without
+        // requiring the user to pull-to-refresh manually after every app launch.
+        try {
+            EdziennikTask.sync().enqueue(this)
+        } catch (e: Exception) {
+            Timber.w(e, "Initial Aximo background sync could not be started")
+        }
         SyncWorker.scheduleNext(app)
         UpdateWorker.scheduleNext(app)
 
@@ -572,7 +580,6 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         }
 
         swipeRefreshLayout.isRefreshing = true
-        Toast.makeText(this, fragmentToSyncName(navTarget), Toast.LENGTH_SHORT).show()
         val featureType = when (navTarget) {
             NavTarget.MESSAGES -> when (MessagesFragment.pageSelection) {
                 Message.TYPE_SENT -> FeatureType.MESSAGES_SENT
