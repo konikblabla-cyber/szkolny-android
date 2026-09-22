@@ -47,14 +47,14 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <TextView
+                <ImageView
                     android:layout_width="42dp"
                     android:layout_height="42dp"
                     android:background="@drawable/aximo_notification_header_icon"
-                    android:gravity="center"
-                    android:text="♧"
-                    android:textColor="#D7B7FF"
-                    android:textSize="23sp" />
+                    android:padding="10dp"
+                    android:src="@drawable/ic_aximo_bell"
+                    android:tint="#D7B7FF"
+                    android:contentDescription="Powiadomienia" />
 
                 <TextView
                     android:layout_width="0dp"
