@@ -38,23 +38,36 @@ object AximoLessonSilence {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return
 
         val flags = Intent.FLAG_ACTIVITY_NEW_TASK
+        val packageName = context.packageName
 
+        // ACCESS_NOTIFICATION_POLICY is a special Settings access, not a
+        // normal Android runtime permission. On Android 12+ try to open
+        // Aximo's own entry directly so the user can see the switch immediately.
         val intents = mutableListOf<Intent>()
-        // Newer Android versions can open the exact Aximo access page directly.
-        intents += Intent("android.settings.NOTIFICATION_POLICY_ACCESS_DETAIL_SETTINGS")
-            .putExtra("android.provider.extra.NOTIFICATION_POLICY_PACKAGE", context.packageName)
-            .addFlags(flags)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            intents += Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_DETAIL_SETTINGS)
+                .putExtra(android.provider.Settings.EXTRA_NOTIFICATION_POLICY_PACKAGE, packageName)
+                .addFlags(flags)
+        }
+
+        // Fallback used by Android/OEM Settings implementations that do not
+        // support the package-specific detail screen.
         intents += Intent(android.provider.Settings.ACTION_NOTIFICATION_POLICY_ACCESS_SETTINGS)
             .addFlags(flags)
+
+        // Last resort: open the main Settings screen instead of failing silently.
         intents += Intent(android.provider.Settings.ACTION_SETTINGS)
             .addFlags(flags)
 
         for (intent in intents) {
             try {
-                context.startActivity(intent)
-                return
+                if (intent.resolveActivity(context.packageManager) != null) {
+                    context.startActivity(intent)
+                    return
+                }
             } catch (_: Exception) {
-                // Try the next system settings fallback.
+                // Continue with the next Settings fallback.
             }
         }
     }
