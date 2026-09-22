@@ -31,6 +31,7 @@ class SettingsSyncCard(util: SettingsUtil) : SettingsCard(util) {
         R.string.settings_card_sync_title,
         items = ::getItems,
         itemsMore = ::getItemsMore,
+        backgroundColor = util.aximoCardColor(3),
     )
 
     private fun getQuietHours(): String {
