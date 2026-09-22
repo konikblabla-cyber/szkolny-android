@@ -22,6 +22,16 @@ class SettingsUtil(
 
     fun refresh() = onRefresh()
 
+    /** Aximo settings palette: each group gets its own visual surface. */
+    fun aximoCardColor(index: Int): Int = when (index) {
+        0 -> android.graphics.Color.rgb(31, 24, 52)
+        1 -> android.graphics.Color.rgb(24, 29, 48)
+        2 -> android.graphics.Color.rgb(38, 27, 55)
+        3 -> android.graphics.Color.rgb(23, 35, 45)
+        4 -> android.graphics.Color.rgb(43, 31, 28)
+        else -> android.graphics.Color.rgb(27, 30, 40)
+    }
+
     fun createCard(
         titleRes: Int?,
         items: (card: MaterialAboutCard) -> List<MaterialAboutItem>,
