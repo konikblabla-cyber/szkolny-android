@@ -45,7 +45,7 @@ class AximoBottomNavigation @JvmOverloads constructor(
         allItems[0],
         allItems[1],
         allItems[2],
-        Item(NavTarget.SETTINGS, "Więcej")
+        Item(NavTarget.MORE, "Więcej")
     )
 
     private val center = TextView(context)
@@ -82,11 +82,7 @@ class AximoBottomNavigation @JvmOverloads constructor(
             if (index == 0) applyActive(button)
             button.setOnClickListener {
                 performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
-                if (index == 3) {
-                    openMenu()
-                } else {
-                    (context as? MainActivity)?.navigate(navTarget = item.target)
-                }
+                (context as? MainActivity)?.navigate(navTarget = item.target)
             }
             bar.addView(button, LinearLayout.LayoutParams(0, dp(58), 1f))
         }
