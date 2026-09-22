@@ -18,13 +18,7 @@ class AximoSilenceFragment : BaseFragment<FragmentAximoSilenceBinding, MainActiv
         updateStatus()
         b.backButton.setOnClickListener { activity.onBackPressedDispatcher.onBackPressed() }
         b.schoolModeSwitch.setOnCheckedChangeListener { _, checked ->
-            if (checked && !AximoLessonSilence.hasNotificationPolicyAccess(app)) {
-                b.schoolModeSwitch.isChecked = false
-                app.config.sync.automaticSilenceEnabled = false
-                AximoLessonSilence.openNotificationPolicyAccessSettings(activity)
-                updateStatus()
-                return@setOnCheckedChangeListener
-            }
+            // Normal silent mode does not require DND/notification-policy access.
             app.config.sync.automaticSilenceEnabled = checked
             if (checked) AximoLessonSilence.scheduleTodayAndTomorrow(app, app.profile.id)
             else {
@@ -45,11 +39,6 @@ class AximoSilenceFragment : BaseFragment<FragmentAximoSilenceBinding, MainActiv
     override fun onResume() {
         super.onResume()
         if (!isAdded) return
-        val access = AximoLessonSilence.hasNotificationPolicyAccess(app)
-        if (app.config.sync.automaticSilenceEnabled && !access) {
-            app.config.sync.automaticSilenceEnabled = false
-            b.schoolModeSwitch.isChecked = false
-        }
         updateStatus()
     }
 
@@ -57,10 +46,6 @@ class AximoSilenceFragment : BaseFragment<FragmentAximoSilenceBinding, MainActiv
         val access = AximoLessonSilence.hasNotificationPolicyAccess(app)
         val enabled = app.config.sync.automaticSilenceEnabled
         when {
-            !access -> {
-                b.statusText.text = "● Wymaga uprawnienia"
-                b.statusText.setTextColor(Color.parseColor("#FFB86B"))
-            }
             enabled -> {
                 b.statusText.text = "● Aktywny"
                 b.statusText.setTextColor(Color.parseColor("#62E59A"))
@@ -70,6 +55,6 @@ class AximoSilenceFragment : BaseFragment<FragmentAximoSilenceBinding, MainActiv
                 b.statusText.setTextColor(Color.parseColor("#8792B0"))
             }
         }
-        b.settingsButton.text = if (!access) "Nadaj uprawnienie do wyciszania" else "Zmień ustawienia"
+        b.settingsButton.text = if (access) "Zmień ustawienia" else "Dodatkowy dostęp systemowy"
     }
 }
