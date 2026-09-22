@@ -238,4 +238,18 @@
         <item name="android:gravity">center</item>
         <item name="android:orientation">vertical</item>
     </style>
+
+    <style name="AximoMoreCard">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">76dp</item>
+        <item name="android:layout_margin">4dp</item>
+        <item name="android:background">@drawable/aximo_more_card</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+    <style name="AximoMoreIcon"><item name="android:layout_width">wrap_content</item><item name="android:layout_height">wrap_content</item><item name="android:textColor">#C6B0FF</item><item name="android:textSize">18sp</item></style>
+    <style name="AximoMoreTitle"><item name="android:layout_width">wrap_content</item><item name="android:layout_height">wrap_content</item><item name="android:textColor">#F4F5FF</item><item name="android:textSize">12sp</item><item name="android:textStyle">bold</item></style>
+    <style name="AximoMoreSub"><item name="android:layout_width">wrap_content</item><item name="android:layout_height">wrap_content</item><item name="android:textColor">#8D9AC1</item><item name="android:textSize">9sp</item></style>
+
 </resources>
