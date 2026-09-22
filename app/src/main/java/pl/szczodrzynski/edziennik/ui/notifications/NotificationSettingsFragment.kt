@@ -24,7 +24,10 @@ class NotificationSettingsFragment : BaseFragment<NotificationSettingsFragmentBi
         ) {
             requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 47002)
         }
-        b.automaticSilence.isChecked = app.config.sync.automaticSilenceEnabled && AximoLessonSilence.hasNotificationPolicyAccess(app)
+        b.automaticSilence.isChecked = app.config.sync.automaticSilenceEnabled
+        b.lessonNameNotifications.isChecked = app.config.sync.lessonNameNotifications
+        b.planChangeNotifications.isChecked = app.config.sync.planChangeNotifications
+        b.systemNotifications.isChecked = app.config.sync.systemNotifications
         b.minutesSeek.progress = app.config.sync.lessonNotificationMinutes.coerceIn(1, 30)
         updateMinutes()
 
@@ -79,6 +82,11 @@ class NotificationSettingsFragment : BaseFragment<NotificationSettingsFragmentBi
             }
         })
 
+        b.lessonNameNotifications.setOnCheckedChangeListener { _, checked -> app.config.sync.lessonNameNotifications = checked }
+        b.planChangeNotifications.setOnCheckedChangeListener { _, checked -> app.config.sync.planChangeNotifications = checked }
+        b.systemNotifications.setOnCheckedChangeListener { _, checked -> app.config.sync.systemNotifications = checked }
+
+        b.testSilenceButton.visibility = android.view.View.GONE
         b.testSilenceButton.setOnClickListener {
             if (!AximoLessonSilence.hasNotificationPolicyAccess(app)) {
                 AximoLessonSilence.openNotificationPolicyAccessSettings(activity)
