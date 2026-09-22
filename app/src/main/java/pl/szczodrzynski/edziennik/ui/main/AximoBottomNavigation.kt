@@ -58,6 +58,7 @@ class AximoBottomNavigation @JvmOverloads constructor(
         clipToPadding = false
         setBackgroundColor(Color.TRANSPARENT)
         isClickable = false
+        isFocusable = false
 
         val bar = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
@@ -90,6 +91,13 @@ class AximoBottomNavigation @JvmOverloads constructor(
                 bottomMargin = dp(2)
             }
         )
+
+        // Keep the custom bar above every fragment and synchronize its selected
+        // state after the first layout pass. This avoids a dead-looking Start
+        // tab when MainActivity restores a fragment during launch.
+        post {
+            (context as? MainActivity)?.let { setActiveTarget(it.navTarget) }
+        }
 
         menuItems.forEach { item ->
             val view = createItemView(item).apply {
