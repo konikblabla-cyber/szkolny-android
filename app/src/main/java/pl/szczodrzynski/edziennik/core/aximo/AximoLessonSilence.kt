@@ -252,7 +252,7 @@ object AximoLessonSilence {
             .putLong(ACTIVE_UNTIL, windowEnd)
             .apply()
     }
-    fun testForDuration(context: Context, durationMs: Long = 10_000L): Boolean { false
+    fun testForDuration(context: Context, durationMs: Long = 10_000L): Boolean {
         onStart(context, System.currentTimeMillis() + durationMs)
         android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(
             { disableAndRestore(context) },
