@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#05081A">
+    android:background="@android:color/transparent">
 
     <ProgressBar
         android:id="@+id/progressBar"
