@@ -224,6 +224,10 @@ class MessagesComposeFragment : BaseFragment<MessagesComposeFragmentBinding, Mai
             },
         )
 
+        b.sendButton.setOnClickListener {
+            sendMessage()
+        }
+
         b.fontStyle.root.isVisible = app.data.messagesConfig.textStyling
         if (app.data.messagesConfig.textStyling) {
             textStylingManager.attach(stylingConfig)
