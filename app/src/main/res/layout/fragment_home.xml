@@ -31,7 +31,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Poniedziałek, 22 września"
-                    android:textColor="#9DA9C7"
+                    android:textColor="#8F9DBB"
                     android:textSize="12sp"/>
                 <TextView
                     android:id="@+id/homeGreeting"
@@ -80,7 +80,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="TERAZ / NASTĘPNA LEKCJA"
-                    android:textColor="#BBA6FF"
+                    android:textColor="#B58CFF"
                     android:textSize="10sp"
                     android:textStyle="bold"/>
                 <TextView
@@ -88,7 +88,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sprawdzam…"
-                    android:textColor="#DDE3FF"
+                    android:textColor="#C9D1E8"
                     android:textSize="11sp"/>
             </LinearLayout>
 
@@ -107,7 +107,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:text="Ładowanie danych…"
-                android:textColor="#B7C0DA"
+                android:textColor="#9AA7C4"
                 android:textSize="13sp"/>
             <TextView
                 android:layout_width="wrap_content"
@@ -142,9 +142,9 @@
             android:padding="8dp">
             <LinearLayout android:layout_width="0dp" android:layout_height="82dp" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
                 <TextView android:id="@+id/todayLessonsCount" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="#FFFFFF" android:textSize="22sp" android:textStyle="bold"/>
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Lekcje" android:textColor="#8793B1" android:textSize="11sp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Lekcje" android:textColor="#7F8BA8" android:textSize="11sp"/>
             </LinearLayout>
-            <View android:layout_width="1dp" android:layout_height="48dp" android:layout_gravity="center" android:background="#25304C"/>
+            <View android:layout_width="1dp" android:layout_height="48dp" android:layout_gravity="center" android:background="#293653"/>
             <LinearLayout android:layout_width="0dp" android:layout_height="82dp" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
                 <TextView android:id="@+id/todayTasksCount" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="#FFFFFF" android:textSize="22sp" android:textStyle="bold"/>
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Zadania" android:textColor="#8793B1" android:textSize="11sp"/>
@@ -203,7 +203,7 @@ Wiadomości"/>
                 <TextView android:id="@+id/focusStatusDot" android:layout_width="10dp" android:layout_height="10dp" android:background="@drawable/aximo_focus_dot" android:text=""/>
                 <TextView android:id="@+id/focusStatusText" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="10dp" android:text="Tryb szkolny" android:textColor="#FFFFFF" android:textSize="14sp" android:textStyle="bold"/>
             </LinearLayout>
-            <TextView android:id="@+id/focusStatusDetails" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="Automatyczne wyciszanie telefonu" android:textColor="#8F9AB8" android:textSize="12sp"/>
+            <TextView android:id="@+id/focusStatusDetails" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="Automatyczne wyciszanie telefonu" android:textColor="#8F9DBB" android:textSize="12sp"/>
         </LinearLayout>
 
         <LinearLayout
