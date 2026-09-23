@@ -1300,6 +1300,14 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
                     "aurora" -> intArrayOf(0x5542D8B0, 0x558D72FF, 0x4438A6FF)
                     "sea" -> intArrayOf(0x5542C9D8, 0x443C9CFF, 0x3332E0C4)
                     "city" -> intArrayOf(0x556D42FF, 0x44D77ABF, 0x3342A8FF)
+                    "sunset" -> intArrayOf(0x66FF7B5A, 0x55D45C92, 0x443B62D8)
+                    "forest" -> intArrayOf(0x6657D59A, 0x4442C9D8, 0x333C8B5C)
+                    "rain" -> intArrayOf(0x665B8DFF, 0x4442C9D8, 0x333D6FA8)
+                    "ember" -> intArrayOf(0x66FF744A, 0x55D75A3A, 0x443B1A5E)
+                    "lavender" -> intArrayOf(0x668D72FF, 0x55C07CFF, 0x445E4CB5)
+                    "neon" -> intArrayOf(0x665BFFDC, 0x55D77ABF, 0x444A7CFF)
+                    "mist" -> intArrayOf(0x668FA6C9, 0x556D7DA8, 0x443C4D75)
+                    "stars" -> intArrayOf(0x668D72FF, 0x555B8DFF, 0x443B62D8)
                     else -> intArrayOf(0x558D72FF, 0x445B8DFF, 0x3342C9D8)
                 }
                 glowColors.forEach { color ->
