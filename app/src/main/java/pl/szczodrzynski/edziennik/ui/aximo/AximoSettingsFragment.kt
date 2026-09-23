@@ -257,8 +257,19 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
     private fun showCategory(categories: List<Category>, selected: Int) {
         categories.forEachIndexed { index, category ->
             category.container.visibility = if (index == selected) View.VISIBLE else View.GONE
-            category.container.alpha = if (index == selected) 0f else 1f
-            if (index == selected) category.container.animate().alpha(1f).setDuration(180).start()
+            val animationsEnabled = prefs.getBoolean("animationsEnabled", true)
+            if (index == selected) {
+                if (animationsEnabled) {
+                    category.container.alpha = 0f
+                    category.container.animate().alpha(1f).setDuration(180).start()
+                } else {
+                    category.container.alpha = 1f
+                    category.container.animate().cancel()
+                }
+            } else {
+                category.container.alpha = 1f
+                category.container.animate().cancel()
+            }
         }
         b.categoryTitle.text = categories[selected].title
         b.categoryDescription.text = categories[selected].description
