@@ -105,6 +105,7 @@ import pl.szczodrzynski.edziennik.ui.timetable.TimetableFragment
 import pl.szczodrzynski.edziennik.ui.aximo.AximoAppearanceStyle
 import pl.szczodrzynski.edziennik.ui.aximo.AximoAppearanceApplier
 import pl.szczodrzynski.edziennik.ui.aximo.AximoAnimatedWallpaperDrawable
+import pl.szczodrzynski.edziennik.ui.aximo.AximoPhotoWallpaperDrawable
 import pl.szczodrzynski.edziennik.utils.BigNightUtil
 import pl.szczodrzynski.edziennik.utils.PausedNavigationData
 import pl.szczodrzynski.edziennik.utils.Utils
@@ -1253,6 +1254,9 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
     fun setAppBackground() {
         try {
+            (b.root.background as? AximoAnimatedWallpaperDrawable)?.stop()
+            (b.root.background as? AximoPhotoWallpaperDrawable)?.stop()
+
             val custom = app.config.ui.appBackground
             if (!custom.isNullOrBlank()) {
                 val customDrawable = if (custom.endsWith(".gif", true)) {
@@ -1284,15 +1288,15 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
                 "mist" -> intArrayOf(0xFF0B1018.toInt(), 0xFF273044.toInt(), 0xFF171D2C.toInt())
                 "stars" -> intArrayOf(0xFF03040E.toInt(), 0xFF0B1230.toInt(), 0xFF170C31.toInt())
                 "city" -> intArrayOf(0xFF0D0917.toInt(), 0xFF2A1734.toInt(), 0xFF0C101D.toInt())
-                "default" -> intArrayOf(style.background, style.surface, style.surfaceAlt)
-                else -> intArrayOf(style.background, style.surface, style.accentSoft)
+                else -> intArrayOf(style.background, style.surface, style.surfaceAlt)
             }
-            val animate = prefs.getBoolean("animationsEnabled", true)
-            b.root.background = if (animate) {
+
+            val drawable = if (background == "default") {
                 AximoAnimatedWallpaperDrawable(background, colors)
             } else {
-                GradientDrawable(GradientDrawable.Orientation.TL_BR, colors)
+                AximoPhotoWallpaperDrawable(this, background, colors)
             }
+            b.root.background = drawable
         } catch (e: Exception) {
             Timber.e(e, "Aximo background could not be applied")
         }
