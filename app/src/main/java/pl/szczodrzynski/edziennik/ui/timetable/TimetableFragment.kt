@@ -152,12 +152,12 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
         val styleIndex = requireContext().getSharedPreferences("aximo_appearance", Context.MODE_PRIVATE).getInt("style", AximoAppearanceStyle.AXIMO.ordinal)
         val style = AximoAppearanceStyle.fromOrdinal(styleIndex)
         val bg = style.background
-        val surface = style.surface
-        val surfaceAlt = style.surfaceAlt
+        val surface = android.graphics.Color.rgb(17, 17, 22)
+        val surfaceAlt = android.graphics.Color.rgb(28, 28, 36)
         val accentMain = style.accent
-        val accentSoft = style.accentSoft
-        val primaryText = style.text
-        val mutedText = blend(style.text, style.background, 0.52f)
+        val accentSoft = blend(style.accent, android.graphics.Color.BLACK, 0.52f)
+        val primaryText = android.graphics.Color.WHITE
+        val mutedText = android.graphics.Color.rgb(166, 166, 180)
         // Timetable intentionally uses a stable black canvas: the animated app wallpaper
         // stays available everywhere else, but the plan remains calm and easy to scan.
         b.aximoPlanScroll.setBackgroundColor(android.graphics.Color.BLACK)
@@ -229,14 +229,14 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
             val card = LinearLayout(requireContext()).apply {
                 orientation = LinearLayout.HORIZONTAL
                 gravity = Gravity.CENTER_VERTICAL
-                minimumHeight = 88.dp
+                minimumHeight = 80.dp
                 setPadding(0, 0, 12.dp, 0)
                 background = android.graphics.drawable.GradientDrawable().apply {
-                    cornerRadius = 20.dp.toFloat()
+                    cornerRadius = 18.dp.toFloat()
                     setColor(if (current) surfaceAlt else surface)
                     setStroke(1.dp, if (current) accent else accentSoft)
                 }
-                layoutParams = LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = 10.dp }
+                layoutParams = LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = 9.dp }
             }
 
             val stripe = View(requireContext()).apply {
@@ -276,7 +276,7 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
             }
             val subject = TextView(requireContext()).apply {
                 text = lesson.displaySubjectName?.takeIf { it.isNotBlank() } ?: "Lekcja"
-                textSize = 16f
+                textSize = 15.5f
                 setTextColor(primaryText)
                 setTypeface(typeface, android.graphics.Typeface.BOLD)
             }
