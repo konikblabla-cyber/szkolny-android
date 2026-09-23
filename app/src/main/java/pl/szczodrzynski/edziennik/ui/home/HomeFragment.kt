@@ -270,7 +270,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
             HomeConfigDialog(activity, reloadOnDismiss = true).show()
         }
 
-        applyAximoSettings()\n\n        // Ekran główny korzysta z własnego, pełnoekranowego motywu referencyjnego.
+        applyAximoSettings()
+
+        // Ekran główny korzysta z własnego, pełnoekranowego motywu referencyjnego.
         // Nie nadpisujemy jego kart presetem kolorystycznym, ponieważ tło i karta powitalna
         // są elementami projektu 1:1.
 
