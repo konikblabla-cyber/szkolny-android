@@ -21,19 +21,23 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
         requireContext().getSharedPreferences("aximo_appearance", 0)
     }
 
+    private var selectedWallpaperSlot = 0
+
     private val imagePicker = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri ?: return@registerForActivityResult
         try {
-            val file = File(requireContext().filesDir, "aximo_custom_background.jpg")
+            val file = File(requireContext().filesDir, "aximo_custom_background_$" + selectedWallpaperSlot + ".jpg")
             requireContext().contentResolver.openInputStream(uri)?.use { input ->
                 FileOutputStream(file).use { output -> input.copyTo(output) }
             }
-            prefs.edit().putString("background", "custom").apply()
+            prefs.edit().putString("custom_$" + selectedWallpaperSlot, file.absolutePath).apply()
+            prefs.edit().putString("background", "custom_$" + selectedWallpaperSlot).apply()
             app.config.ui.appBackground = file.absolutePath
-            b.appearanceSaved.text = "Własne zdjęcie zapisane ✓"
+            b.appearanceSaved.text = "Własna tapeta " + (selectedWallpaperSlot + 1) + " zapisana ✓"
+            refreshWallpaperSlots()
             activity.refreshAximoAppearance()
         } catch (_: Exception) {
-            b.appearanceSaved.text = "Nie udało się zapisać zdjęcia"
+            b.appearanceSaved.text = "Nie udało się zapisać tapety"
         }
     }
 
@@ -69,9 +73,23 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
             b.bgSea to "sea", b.bgCity to "city", b.bgAbstract to "abstract"
         ).forEach { (view, value) -> view.setOnClickListener { saveBackground(value) } }
 
-        b.bgCustom.setOnClickListener {
-            imagePicker.launch("image/*")
+        val customSlots = listOf(b.customBg1, b.customBg2, b.customBg3, b.customBg4, b.customBg5)
+        customSlots.forEachIndexed { index, view ->
+            view.setOnClickListener {
+                selectedWallpaperSlot = index
+                val path = prefs.getString("custom_" + index, null)
+                if (path != null && File(path).exists()) {
+                    prefs.edit().putString("background", "custom_" + index).apply()
+                    app.config.ui.appBackground = path
+                    setBackground("custom_" + index)
+                    b.appearanceSaved.text = "Wybrano własną tapetę " + (index + 1) + " ✓"
+                    activity.refreshAximoAppearance()
+                } else {
+                    imagePicker.launch("image/*")
+                }
+            }
         }
+        refreshWallpaperSlots()
     }
 
     private fun buildStyleGrid(selected: Int) {
@@ -208,10 +226,18 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
     }
 
     private fun setBackground(value: String) {
-        val views: List<View> = listOf(b.bgDefault,b.bgMountains,b.bgSea,b.bgCity,b.bgAbstract,b.bgCustom)
-        val names = listOf("default","mountains","sea","city","abstract","custom")
+        val views: List<View> = listOf(b.bgDefault,b.bgMountains,b.bgSea,b.bgCity,b.bgAbstract,b.customBg1,b.customBg2,b.customBg3,b.customBg4,b.customBg5)
+        val names = listOf("default","mountains","sea","city","abstract","custom_0","custom_1","custom_2","custom_3","custom_4")
         views.forEachIndexed { i, v ->
             v.alpha = if (names[i] == value) 1f else 0.58f
+        }
+    }
+    private fun refreshWallpaperSlots() {
+        val slots = listOf(b.customBg1, b.customBg2, b.customBg3, b.customBg4, b.customBg5)
+        slots.forEachIndexed { index, view ->
+            val path = prefs.getString("custom_" + index, null)
+            view.text = if (path != null && File(path).exists()) "✓ " + (index + 1) else "+ " + (index + 1)
+            view.alpha = if (prefs.getString("background", "default") == "custom_" + index) 1f else 0.72f
         }
     }
 }
