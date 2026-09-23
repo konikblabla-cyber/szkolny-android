@@ -143,7 +143,15 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
                 }
                 isClickable = true
                 isFocusable = true
-                setOnClickListener { saveStyle(index) }
+                setOnClickListener {
+                    val animationsEnabled = prefs.getBoolean("animationsEnabled", true)
+                    if (animationsEnabled) {
+                        animate().scaleX(0.96f).scaleY(0.96f).setDuration(70).withEndAction {
+                            animate().scaleX(1f).scaleY(1f).setDuration(110).start()
+                        }.start()
+                    }
+                    saveStyle(index)
+                }
             }
             val lp = GridLayout.LayoutParams().apply {
                 width = 0
