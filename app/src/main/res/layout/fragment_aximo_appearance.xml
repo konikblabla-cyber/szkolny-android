@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0F0B18"
+    android:background="#05081A"
     android:fillViewport="true">
 
     <LinearLayout
@@ -48,7 +48,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:text="Dopasuj aplikację do siebie"
-                    android:textColor="#A99DBB"
+                    android:textColor="#8F9DBB"
                     android:textSize="12sp" />
             </LinearLayout>
         </LinearLayout>
@@ -123,7 +123,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
             android:text="20 przygaszonych stylów — bez rażących kolorów"
-            android:textColor="#A99DBB"
+            android:textColor="#8F9DBB"
             android:textSize="12sp" />
 
         <GridLayout
