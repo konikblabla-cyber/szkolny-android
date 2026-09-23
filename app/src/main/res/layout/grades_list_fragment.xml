@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="match_parent" android:background="@drawable/aximo_grades_background" android:paddingStart="12dp" android:paddingEnd="12dp">
+    android:layout_width="match_parent" android:layout_height="match_parent" android:background="@android:color/transparent" android:paddingStart="12dp" android:paddingEnd="12dp">
     <ProgressBar android:id="@+id/progressBar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" />
     <androidx.appcompat.widget.AppCompatTextView android:id="@+id/noData" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center" android:gravity="center" android:padding="24dp" android:textColor="#EDE9FF" android:textSize="17sp" android:textStyle="bold" android:text="@string/grades_no_data" android:textAppearance="?textAppearanceHeadlineSmall" android:visibility="gone" app:drawableTopCompat="@drawable/ic_no_grades" tools:visibility="visible" />
     <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical">
