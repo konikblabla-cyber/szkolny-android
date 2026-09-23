@@ -1,17 +1,40 @@
 package pl.szczodrzynski.edziennik.ui.aximo
 
+import android.graphics.drawable.GradientDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.GridLayout
+import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
 import pl.szczodrzynski.edziennik.MainActivity
 import pl.szczodrzynski.edziennik.data.enums.Theme
 import pl.szczodrzynski.edziennik.databinding.FragmentAximoAppearanceBinding
 import pl.szczodrzynski.edziennik.ui.base.fragment.BaseFragment
+import java.io.File
+import java.io.FileOutputStream
 
 class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, MainActivity>(
     inflater = FragmentAximoAppearanceBinding::inflate,
 ) {
     private val prefs by lazy {
         requireContext().getSharedPreferences("aximo_appearance", 0)
+    }
+
+    private val imagePicker = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri ?: return@registerForActivityResult
+        try {
+            val file = File(requireContext().filesDir, "aximo_custom_background.jpg")
+            requireContext().contentResolver.openInputStream(uri)?.use { input ->
+                FileOutputStream(file).use { output -> input.copyTo(output) }
+            }
+            prefs.edit().putString("background", "custom").apply()
+            app.config.ui.appBackground = file.absolutePath
+            b.appearanceSaved.text = "Własne zdjęcie zapisane ✓"
+            requireActivity().recreate()
+        } catch (_: Exception) {
+            b.appearanceSaved.text = "Nie udało się zapisać zdjęcia"
+        }
     }
 
     override suspend fun onViewReady(savedInstanceState: Bundle?) {
@@ -22,31 +45,69 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
         val theme = prefs.getString("theme", "dark") ?: "dark"
         val accent = prefs.getString("accent", "purple") ?: "purple"
         val background = prefs.getString("background", "default") ?: "default"
+        val style = prefs.getInt("style", AximoAppearanceStyle.AXIMO.ordinal)
 
         setTheme(theme)
         setAccent(accent)
         setBackground(background)
+        buildStyleGrid(style)
 
         b.themeDark.setOnClickListener { saveTheme("dark") }
         b.themeLight.setOnClickListener { saveTheme("light") }
         b.themeAuto.setOnClickListener { saveTheme("auto") }
 
-        val accents = mapOf(
+        mapOf(
             b.accentPurple to "purple", b.accentBlue to "blue", b.accentCyan to "cyan",
             b.accentGreen to "green", b.accentYellow to "yellow", b.accentOrange to "orange",
             b.accentPink to "pink"
-        )
-        accents.forEach { (view, value) ->
-            view.setOnClickListener { saveAccent(value) }
-        }
+        ).forEach { (view, value) -> view.setOnClickListener { saveAccent(value) } }
 
-        val backgrounds = mapOf(
+        mapOf(
             b.bgDefault to "default", b.bgMountains to "mountains",
-            b.bgSea to "sea", b.bgCity to "city", b.bgAbstract to "abstract", b.bgCustom to "custom"
-        )
-        backgrounds.forEach { (view, value) ->
-            view.setOnClickListener { saveBackground(value) }
+            b.bgSea to "sea", b.bgCity to "city", b.bgAbstract to "abstract"
+        ).forEach { (view, value) -> view.setOnClickListener { saveBackground(value) } }
+
+        b.bgCustom.setOnClickListener {
+            imagePicker.launch("image/*")
         }
+    }
+
+    private fun buildStyleGrid(selected: Int) {
+        b.styleGrid.removeAllViews()
+        AximoAppearanceStyle.entries.forEachIndexed { index, style ->
+            val card = TextView(requireContext()).apply {
+                text = "  " + style.title + "\n  " + if (index == selected) "✓ Wybrany" else "Dotknij, aby wybrać"
+                setTextColor(style.text)
+                textSize = 13f
+                setPadding(10, 10, 10, 10)
+                gravity = android.view.Gravity.CENTER_VERTICAL
+                background = GradientDrawable(
+                    GradientDrawable.Orientation.TL_BR,
+                    intArrayOf(style.surfaceAlt, style.surface)
+                ).apply {
+                    cornerRadius = 18f
+                    setStroke(if (index == selected) 3 else 1, if (index == selected) style.accent else style.accentSoft)
+                }
+                isClickable = true
+                isFocusable = true
+                setOnClickListener { saveStyle(index) }
+            }
+            val lp = GridLayout.LayoutParams().apply {
+                width = 0
+                height = 78
+                columnSpec = GridLayout.spec(index % 2, 1f)
+                rowSpec = GridLayout.spec(index / 2)
+                setMargins(0, 0, 6, 7)
+            }
+            b.styleGrid.addView(card, lp)
+        }
+    }
+
+    private fun saveStyle(index: Int) {
+        prefs.edit().putInt("style", index).apply()
+        val style = AximoAppearanceStyle.fromOrdinal(index)
+        b.appearanceSaved.text = "Styl: " + style.title + " · zapisano ✓"
+        requireActivity().recreate()
     }
 
     private fun saveTheme(value: String) {
@@ -66,7 +127,8 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
             "blue" -> Theme.BLUE
             "green" -> Theme.GREEN
             "cyan" -> Theme.TEAL
-            "orange", "pink" -> Theme.RED
+            "orange" -> Theme.RED
+            "pink" -> Theme.RED
             else -> Theme.PURPLE
         }
         setAccent(value)
@@ -75,7 +137,9 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
 
     private fun saveBackground(value: String) {
         prefs.edit().putString("background", value).apply()
+        if (value != "custom") app.config.ui.appBackground = null
         setBackground(value)
+        requireActivity().recreate()
     }
 
     private fun setTheme(value: String) {
@@ -87,29 +151,23 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
         listOf(b.themeDark, b.themeLight, b.themeAuto).forEach {
             it.alpha = if (it == selected) 1f else 0.55f
         }
-        b.appearanceSaved.text = "Motyw: " + when (value) {
-            "light" -> "Jasny"
-            "auto" -> "Automatyczny"
-            else -> "Ciemny"
-        } + " · zapisano"
     }
 
     private fun setAccent(value: String) {
-        val colors = mapOf(
-            "purple" to 0xFF8D72FF.toInt(), "blue" to 0xFF4D8DFF.toInt(),
-            "cyan" to 0xFF34D5E8.toInt(), "green" to 0xFF58D68D.toInt(),
-            "yellow" to 0xFFF2C94C.toInt(), "orange" to 0xFFF2994A.toInt(),
-            "pink" to 0xFFE56BFF.toInt()
-        )
         val views = listOf(b.accentPurple,b.accentBlue,b.accentCyan,b.accentGreen,b.accentYellow,b.accentOrange,b.accentPink)
         val names = listOf("purple","blue","cyan","green","yellow","orange","pink")
-        views.forEachIndexed { i, v -> v.scaleX = if (names[i] == value) 1.18f else 1f; v.scaleY = if (names[i] == value) 1.18f else 1f }
-        b.appearanceSaved.text = "Kolor: " + value + " · zapisano"
+        views.forEachIndexed { i, v ->
+            v.scaleX = if (names[i] == value) 1.18f else 1f
+            v.scaleY = if (names[i] == value) 1.18f else 1f
+            v.alpha = if (names[i] == value) 1f else 0.72f
+        }
     }
 
     private fun setBackground(value: String) {
         val views: List<View> = listOf(b.bgDefault,b.bgMountains,b.bgSea,b.bgCity,b.bgAbstract,b.bgCustom)
         val names = listOf("default","mountains","sea","city","abstract","custom")
-        views.forEachIndexed { i, v -> v.alpha = if (names[i] == value) 1f else 0.6f }
+        views.forEachIndexed { i, v ->
+            v.alpha = if (names[i] == value) 1f else 0.58f
+        }
     }
 }
