@@ -322,7 +322,8 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
                 ACTION_SCROLL_TO_DATE -> {
                     val dateStr = i.extras?.getString("timetableDate", null) ?: return
                     val date = Date.fromY_m_d(dateStr)
-                    goToPage(items.indexOf(date))
+                    val index = items.indexOf(date)
+                    if (index >= 0) goToPage(index)
                 }
 
                 ACTION_RELOAD_PAGES -> {
@@ -414,7 +415,7 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
         savedPageSelection = position
         pageSelection = date
         renderAximoPlan(date)
-        activity.navView.bottomBar.fabEnable = items[position] != today
+        activity.navView.bottomBar.fabEnable = date != today
         if (activity.navView.bottomBar.fabEnable && !fabShown) {
             activity.gainAttentionFAB()
             fabShown = true
