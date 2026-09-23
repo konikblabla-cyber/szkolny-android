@@ -17,12 +17,11 @@ object AximoAppearanceApplier {
     }
 
     private fun applyView(view: View, style: AximoAppearanceStyle, accent: Int, isRoot: Boolean) {
-        // The appearance picker contains its own 20 preview cards; never flatten them into the selected style.\n        if (view.id == R.id.styleGrid) return
-        val isAppearanceRoot = view.id == R.id.appearanceRoot
+        // The appearance picker contains its own 20 preview cards; never flatten them into the selected style.
+        if (view.id == R.id.styleGrid) return
         val drawable = view.background?.mutate()
         val bg = (drawable as? ColorDrawable)?.color
         when {
-            isRoot && !isAppearanceRoot && bg == android.graphics.Color.TRANSPARENT -> view.setBackgroundColor(style.background)
             bg in ROOT_BACKGROUNDS -> view.setBackgroundColor(style.background)
             bg in SURFACE_BACKGROUNDS -> view.setBackgroundColor(style.surface)
             drawable is GradientDrawable && view.id != View.NO_ID -> {
