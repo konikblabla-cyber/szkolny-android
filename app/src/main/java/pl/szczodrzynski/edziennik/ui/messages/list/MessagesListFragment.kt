@@ -53,6 +53,10 @@ class MessagesListFragment : BaseFragment<MessagesListFragmentBinding, MainActiv
             app.db.teacherDao().getAllNow(App.profileId)
         }
 
+        b.composeButton.setOnClickListener {
+            activity.navigate(navTarget = NavTarget.MESSAGE_COMPOSE)
+        }
+
         adapter = MessagesAdapter(activity, teachers, onMessageClick = {
             val (target, args) =
                 if (it.isDraft) {
