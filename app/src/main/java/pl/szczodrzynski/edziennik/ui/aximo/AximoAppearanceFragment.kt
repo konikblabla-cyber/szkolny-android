@@ -143,10 +143,12 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
     }
 
     private fun saveAccent(value: String) {
-        prefs.edit().putString("accent", value).apply()
+        val accentColor = accentColorFor(value)
+        prefs.edit()
+            .putString("accent", value)
+            .putInt("accentColor", accentColor)
+            .apply()
         applyCurrentAppearance()
-        val styleIndex = prefs.getInt("style", AximoAppearanceStyle.AXIMO.ordinal)
-        prefs.edit().putInt("accentColor", accentColorFor(value)).apply()
         app.config.ui.themeColor = when (value) {
             "blue" -> Theme.BLUE
             "green" -> Theme.GREEN
@@ -171,9 +173,10 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
 
     private fun saveBackground(value: String) {
         prefs.edit().putString("background", value).apply()
-        applyCurrentAppearance()
         if (value != "custom") app.config.ui.appBackground = null
         setBackground(value)
+        activity.setAppBackground()
+        applyCurrentAppearance()
         requireActivity().recreate()
     }
 
