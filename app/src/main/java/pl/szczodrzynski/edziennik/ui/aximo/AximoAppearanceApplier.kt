@@ -6,6 +6,7 @@ import android.graphics.drawable.GradientDrawable
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import pl.szczodrzynski.edziennik.R
 
 object AximoAppearanceApplier {
     fun apply(root: View, context: android.content.Context) {
@@ -16,9 +17,11 @@ object AximoAppearanceApplier {
     }
 
     private fun applyView(view: View, style: AximoAppearanceStyle, accent: Int, isRoot: Boolean) {
+        // The appearance picker contains its own 20 preview cards; never flatten them into the selected style.\n        if (view.id == R.id.styleGrid) return
         val drawable = view.background?.mutate()
         val bg = (drawable as? ColorDrawable)?.color
         when {
+            isRoot && bg == android.graphics.Color.TRANSPARENT -> view.setBackgroundColor(style.background)
             bg in ROOT_BACKGROUNDS -> view.setBackgroundColor(style.background)
             bg in SURFACE_BACKGROUNDS -> view.setBackgroundColor(style.surface)
             drawable is GradientDrawable && view.id != View.NO_ID -> {
