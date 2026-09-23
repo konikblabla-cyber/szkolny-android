@@ -7,6 +7,7 @@ package pl.szczodrzynski.edziennik.ui.home
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.graphics.drawable.GradientDrawable
 import android.view.View
 import android.widget.Toast
 import androidx.core.view.AccessibilityDelegateCompat
@@ -46,9 +47,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
 ) {
     companion object {
         fun swapCards(fromPosition: Int, toPosition: Int, cardAdapter: HomeCardAdapter): Boolean {
-            if (fromPosition !in cardAdapter.items.indices || toPosition !in cardAdapter.items.indices) {
-                return false
-            }
             val fromCard = cardAdapter.items[fromPosition]
             val toCard = cardAdapter.items[toPosition]
             if (fromCard.id >= 100 || toCard.id >= 100) {
@@ -62,9 +60,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
             val homeCards = App.profile.config.ui.homeCards.toMutableList()
             val fromIndex = homeCards.indexOfFirst { it.cardId == fromCard.id }
             val toIndex = homeCards.indexOfFirst { it.cardId == toCard.id }
-            if (fromIndex < 0 || toIndex < 0) {
-                return false
-            }
             val fromPair = homeCards[fromIndex]
             homeCards[fromIndex] = homeCards[toIndex]
             homeCards[toIndex] = fromPair
@@ -73,9 +68,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
         }
 
         fun removeCard(position: Int, cardAdapter: HomeCardAdapter) {
-            if (position !in cardAdapter.items.indices)
-                return
             val homeCards = App.profile.config.ui.homeCards.toMutableList()
+            if (position >= homeCards.size)
+                return
             val card = cardAdapter.items[position]
             if (card.id >= 100) {
                 // debug & archive cards are not removable
@@ -287,7 +282,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
             b.todaySummaryCard,
             b.focusStatusCard,
             b.quickActions,
-            b.dayToolsCard,
             b.configHint
         )
         entranceViews.forEachIndexed { index, view ->
@@ -307,12 +301,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
             b.quickGrades,
             b.quickTomorrow,
             b.quickMessages,
-            b.dayAttendanceCard,
-            b.dayGradesCard,
-            b.dayMessagesCard,
-            b.dayHomeworkCard,
-            b.dayTomorrowCard,
-            b.daySearchCard,
             b.configureCards
         ).forEach { view ->
             view.setOnTouchListener { v, event ->
@@ -364,22 +352,6 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
         b.quickHomework.onClick { activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.HOMEWORK) }
         b.quickGrades.onClick { activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.GRADES) }
         b.quickMessages.onClick { activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.MESSAGES) }
-        b.dayGradesCard.onClick { activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.GRADES) }
-        b.dayMessagesCard.onClick { activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.MESSAGES) }
-        b.dayHomeworkCard.onClick { activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.HOMEWORK) }
-        b.dayTomorrowCard.onClick {
-            activity.navigate(
-                navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.TIMETABLE,
-                args = android.os.Bundle().apply { putBoolean("aximoTomorrow", true) }
-            )
-        }
-        b.dayAttendanceCard.onClick {
-            activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.ATTENDANCE)
-        }
-        b.daySearchCard.setOnClickListener {
-            activity.bottomSheet.open()
-        }
-
         b.quickTomorrow.onClick {
             activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.TIMETABLE,
                 args = android.os.Bundle().apply { putBoolean("aximoTomorrow", true) })
