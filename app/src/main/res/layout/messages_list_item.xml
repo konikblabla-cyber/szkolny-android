@@ -1,31 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent" android:layout_height="wrap_content"
-    android:layout_marginHorizontal="2dp" android:layout_marginBottom="8dp"
-    app:cardBackgroundColor="#182033" app:cardCornerRadius="20dp" app:cardElevation="0dp"
-    app:strokeColor="#293650" app:strokeWidth="1dp">
+    android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="2dp" android:layout_marginBottom="10dp"
+    app:cardBackgroundColor="#121B33" app:cardCornerRadius="22dp" app:cardElevation="0dp" app:strokeColor="#293A63" app:strokeWidth="1dp">
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="14dp">
-        <ImageView android:id="@+id/messageProfileBackground" android:layout_width="46dp" android:layout_height="46dp"
-            android:layout_marginEnd="12dp" app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/bg_circle"/>
+        android:layout_width="match_parent" android:layout_height="wrap_content" android:padding="15dp">
+        <ImageView android:id="@+id/messageProfileBackground" android:layout_width="48dp" android:layout_height="48dp" android:layout_marginEnd="12dp"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent" app:srcCompat="@drawable/bg_circle"/>
         <TextView android:id="@+id/messageSender" android:layout_width="0dp" android:layout_height="wrap_content"
-            android:ellipsize="end" android:maxLines="1" android:textColor="#F5F3FA" android:textSize="15sp" android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@+id/messageAttachmentImage" app:layout_constraintStart_toEndOf="@id/messageProfileBackground" app:layout_constraintTop_toTopOf="parent" tools:text="Allegro"/>
+            android:ellipsize="end" android:maxLines="1" android:textColor="#F4F1FF" android:textSize="15sp" android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/messageAttachmentImage" app:layout_constraintStart_toEndOf="@id/messageProfileBackground" app:layout_constraintTop_toTopOf="parent" tools:text="Wychowawca"/>
         <TextView android:id="@+id/messageDate" android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:textColor="#888CA0" android:textSize="10sp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent" tools:text="09:41"/>
-        <com.mikepenz.iconics.view.IconicsImageView android:id="@+id/messageAttachmentImage" android:layout_width="16dp" android:layout_height="16dp"
-            android:layout_marginEnd="4dp" app:iiv_color="#9296AA" app:iiv_icon="cmd-attachment" app:layout_constraintBottom_toBottomOf="@id/messageDate"
-            app:layout_constraintEnd_toStartOf="@id/messageDate" app:layout_constraintTop_toTopOf="@id/messageDate"/>
-        <com.mikepenz.iconics.view.IconicsTextView android:id="@+id/messageSubject" android:layout_width="0dp" android:layout_height="wrap_content"
-            android:layout_marginTop="3dp" android:ellipsize="end" android:maxLines="1" android:textColor="#BEB6FF" android:textSize="12sp"
-            app:layout_constraintEnd_toStartOf="@id/messageStar" app:layout_constraintStart_toEndOf="@id/messageProfileBackground" app:layout_constraintTop_toBottomOf="@id/messageSender" tools:text="Nowe wiadomości"/>
-        <TextView android:id="@+id/messageBody" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginTop="3dp"
-            android:autoLink="all" android:ellipsize="end" android:maxLines="2" android:textColor="#B6BAC8" android:textSize="12sp"
+            android:textColor="#7F8BA8" android:textSize="10sp" app:layout_constraintEnd_toEndOf="parent" app:layout_constraintTop_toTopOf="parent" tools:text="09:41"/>
+        <com.mikepenz.iconics.view.IconicsImageView android:id="@+id/messageAttachmentImage" android:layout_width="16dp" android:layout_height="16dp" android:layout_marginEnd="4dp"
+            app:iiv_color="#8F9DBB" app:iiv_icon="cmd-attachment" app:layout_constraintBottom_toBottomOf="@id/messageDate" app:layout_constraintEnd_toStartOf="@id/messageDate" app:layout_constraintTop_toTopOf="@id/messageDate"/>
+        <com.mikepenz.iconics.view.IconicsTextView android:id="@+id/messageSubject" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginTop="5dp"
+            android:ellipsize="end" android:maxLines="1" android:textColor="#B58CFF" android:textSize="13sp" android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@id/messageStar" app:layout_constraintStart_toEndOf="@id/messageProfileBackground" app:layout_constraintTop_toBottomOf="@id/messageSender" tools:text="Nowa wiadomość"/>
+        <TextView android:id="@+id/messageBody" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginTop="5dp"
+            android:autoLink="all" android:ellipsize="end" android:maxLines="2" android:textColor="#AEB8CF" android:textSize="12sp"
             app:layout_constraintEnd_toStartOf="@id/messageStar" app:layout_constraintStart_toEndOf="@id/messageProfileBackground" app:layout_constraintTop_toBottomOf="@id/messageSubject" app:layout_constraintBottom_toBottomOf="parent" tools:text="Treść wiadomości..."/>
-        <com.mikepenz.iconics.view.IconicsImageView android:id="@+id/messageStar" android:layout_width="30dp" android:layout_height="30dp"
-            android:background="?selectableItemBackgroundBorderless" android:padding="5dp" app:iiv_color="#989CAF" app:iiv_icon="cmd-star-outline" app:iiv_size="20dp"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"/>
+        <com.mikepenz.iconics.view.IconicsImageView android:id="@+id/messageStar" android:layout_width="34dp" android:layout_height="34dp" android:background="?selectableItemBackgroundBorderless" android:padding="6dp"
+            app:iiv_color="#9EA9C5" app:iiv_icon="cmd-star-outline" app:iiv_size="20dp" app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintEnd_toEndOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </com.google.android.material.card.MaterialCardView>
