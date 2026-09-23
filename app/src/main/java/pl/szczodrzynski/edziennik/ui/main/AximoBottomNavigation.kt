@@ -7,6 +7,7 @@ import android.util.AttributeSet
 import android.view.Gravity
 import android.view.HapticFeedbackConstants
 import android.view.View
+import android.view.MotionEvent
 import android.widget.FrameLayout
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -47,6 +48,8 @@ class AximoBottomNavigation @JvmOverloads constructor(
     private val menuViews = mutableListOf<TextView>()
     private var open = false
     private var selected = -1
+    private var downX = 0f
+    private var downY = 0f
 
     private val appearance: AximoAppearanceStyle
         get() = AximoAppearanceStyle.fromOrdinal(
@@ -97,6 +100,32 @@ class AximoBottomNavigation @JvmOverloads constructor(
         // tab when MainActivity restores a fragment during launch.
         post {
             (context as? MainActivity)?.let { setActiveTarget(it.navTarget) }
+        }
+
+        // Long-press the bottom bar to reveal the radial Aximo menu.
+        bar.setOnLongClickListener {
+            performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
+            if (open) closeMenu() else openMenu()
+            true
+        }
+        bar.setOnTouchListener { _, event ->
+            when (event.actionMasked) {
+                MotionEvent.ACTION_DOWN -> {
+                    downX = event.x
+                    downY = event.y
+                    false
+                }
+                MotionEvent.ACTION_UP -> {
+                    val moved = sqrt((event.x - downX) * (event.x - downX) + (event.y - downY) * (event.y - downY))
+                    if (moved < dp(12) && !open) {
+                        bar.animate().scaleX(.985f).scaleY(.985f).setDuration(55).withEndAction {
+                            bar.animate().scaleX(1f).scaleY(1f).setDuration(100).start()
+                        }.start()
+                    }
+                    false
+                }
+            }
+            false
         }
 
         menuItems.forEach { item ->
