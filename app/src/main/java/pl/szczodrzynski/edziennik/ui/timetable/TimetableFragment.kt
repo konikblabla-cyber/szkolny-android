@@ -361,6 +361,10 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
 
     override fun onResume() {
         super.onResume()
+        // The timetable has its own NestedScrollView. The global SwipeRefreshLayout
+        // must not steal vertical gestures from it (otherwise scrolling to the top
+        // can trigger an unwanted refresh instead of moving the timetable).
+        activity.swipeRefreshLayout.isEnabled = false
         ContextCompat.registerReceiver(
             activity,
             broadcastReceiver,
@@ -376,6 +380,7 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
     }
 
     override fun onPause() {
+        activity.swipeRefreshLayout.isEnabled = true
         super.onPause()
         activity.unregisterReceiver(broadcastReceiver)
     }
