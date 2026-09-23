@@ -204,8 +204,12 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
         )
 
         lessons.forEachIndexed { index, lesson ->
-            val startMillis = lesson.displayStartTime?.let { date.getAsCalendar(it).timeInMillis } ?: 0L
-            val endMillis = lesson.displayEndTime?.let { date.getAsCalendar(it).timeInMillis } ?: (startMillis + 45 * 60_000L)
+            val startMillis = runCatching {
+                lesson.displayStartTime?.let { date.getAsCalendar(it).timeInMillis }
+            }.getOrNull() ?: 0L
+            val endMillis = runCatching {
+                lesson.displayEndTime?.let { date.getAsCalendar(it).timeInMillis }
+            }.getOrNull()?.takeIf { it > startMillis } ?: (startMillis + 45 * 60_000L)
             val now = System.currentTimeMillis()
             val current = now in startMillis until endMillis
             val accent = accentColors[index % accentColors.size]
@@ -298,6 +302,10 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
                 }
                 card.addView(chevron)
             }
+            card.setOnClickListener {
+                if (!isAdded) return@setOnClickListener
+                LessonDetailsDialog(activity = activity, lesson = lesson).show()
+            }
             b.aximoLessonContainer.addView(card)
         }
     }
@@ -356,7 +364,7 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
 
             val monthDayCount = listOf(31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31)
 
-            val yearStart = app.profile.dateSemester1Start.clone() ?: return@async
+            val yearStart = app.profile.dateSemester1Start?.clone() ?: today.clone()
             val yearEnd = app.profile.dateYearEnd
             while (yearStart.value <= yearEnd.value) {
                 items += yearStart.clone()
@@ -390,7 +398,7 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
             ?: items.indexOfFirst { it == today }
 
         super.onViewReady(savedInstanceState)
-        renderAximoPlan(items.getOrNull(savedPageSelection) ?: today)
+        renderAximoPlan(items.getOrNull(savedPageSelection) ?: items.firstOrNull() ?: today)
     }
 
     override suspend fun onFabClick() {
