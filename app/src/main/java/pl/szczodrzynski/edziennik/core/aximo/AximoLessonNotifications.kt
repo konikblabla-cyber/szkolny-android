@@ -27,6 +27,7 @@ object AximoLessonNotifications {
     private const val ACTION_NEXT = "pl.szczodrzynski.edziennik.aximo.OPEN_NEXT_LESSON"
     private const val REQUEST_BASE = 470000
     private const val PERSISTENT_REQUEST_CODE = 479999
+    const val EXTRA_PERSISTENT = "aximoPersistentNotification"
     private const val MINUTE = 60_000L
     private const val EXTRA_LESSON_ID = "aximoLessonId"
     private const val EXTRA_LESSON_START = "aximoLessonStart"
@@ -165,6 +166,7 @@ object AximoLessonNotifications {
         val intent = Intent(context, AximoLessonSilenceReceiver::class.java)
             .setAction(ACTION_NOTIFY)
             .putExtra(AximoLessonSilence.EXTRA_PROFILE, profileId)
+            .putExtra(EXTRA_PERSISTENT, true)
         val pending = PendingIntent.getBroadcast(
             context, PERSISTENT_REQUEST_CODE, intent,
             PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
