@@ -480,18 +480,6 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
         renderAximoPlan(initialDate)
     }
 
-    override fun onResume() {
-        super.onResume()
-        // Plan lekcji has its own horizontal ViewPager/vertical content.
-        // Never let the global pull-to-refresh gesture steal vertical scrolling.
-        activity.swipeRefreshLayout.isEnabled = false
-    }
-
-    override fun onPause() {
-        activity.swipeRefreshLayout.isEnabled = false
-        super.onPause()
-    }
-
     override suspend fun onFabClick() {
         showDate(today, animate = true)
     }
