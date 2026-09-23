@@ -270,7 +270,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
             HomeConfigDialog(activity, reloadOnDismiss = true).show()
         }
 
-        // Ekran główny korzysta z własnego, pełnoekranowego motywu referencyjnego.
+        applyAximoSettings()\n\n        // Ekran główny korzysta z własnego, pełnoekranowego motywu referencyjnego.
         // Nie nadpisujemy jego kart presetem kolorystycznym, ponieważ tło i karta powitalna
         // są elementami projektu 1:1.
 
@@ -440,6 +440,20 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
         })
         itemTouchHelper.attachToRecyclerView(b.list)
     }
+    fun applyAximoSettings() {
+        val p = requireContext().getSharedPreferences("aximo_settings", 0)
+        b.homeGreeting.visibility = if (p.getBoolean("home_greeting", true)) View.VISIBLE else View.GONE
+        b.homeDate.visibility = if (p.getBoolean("home_greeting", true)) View.VISIBLE else View.GONE
+        b.nowCard.visibility = if (p.getBoolean("home_timetable", true)) View.VISIBLE else View.GONE
+        b.quickActions.visibility = if (p.getBoolean("home_quick_actions", true)) View.VISIBLE else View.GONE
+        b.quickPlan.visibility = if (p.getBoolean("home_timetable", true)) View.VISIBLE else View.GONE
+        b.quickHomework.visibility = if (p.getBoolean("home_homework", true)) View.VISIBLE else View.GONE
+        b.quickGrades.visibility = if (p.getBoolean("home_grades", true)) View.VISIBLE else View.GONE
+        b.quickMessages.visibility = if (p.getBoolean("home_messages", true)) View.VISIBLE else View.GONE
+        b.todaySummaryCard.visibility = if (p.getBoolean("home_attendance", true)) View.VISIBLE else View.GONE
+        b.focusStatusCard.visibility = if (p.getBoolean("home_timetable", true)) View.VISIBLE else View.GONE
+    }
+
     private fun dpForHome(value: Int): Float =
         value * resources.displayMetrics.density
 
