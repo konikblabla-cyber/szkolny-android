@@ -1274,6 +1274,13 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             val prefs = getSharedPreferences("aximo_appearance", MODE_PRIVATE)
             val background = prefs.getString("background", "default") ?: "default"
             val style = AximoAppearanceStyle.fromOrdinal(prefs.getInt("style", AximoAppearanceStyle.AXIMO.ordinal))
+
+            // Aximo supports a true global black canvas. It bypasses wallpapers so every screen uses the same background.
+            if (background == "black") {
+                b.root.background = android.graphics.ColorDrawable(android.graphics.Color.BLACK)
+                return
+            }
+
             val colors = when (background) {
                 "mountains" -> intArrayOf(0xFF09091B.toInt(), 0xFF21163D.toInt(), 0xFF10192A.toInt())
                 "sea" -> intArrayOf(0xFF07151F.toInt(), 0xFF123A48.toInt(), 0xFF091C2B.toInt())
