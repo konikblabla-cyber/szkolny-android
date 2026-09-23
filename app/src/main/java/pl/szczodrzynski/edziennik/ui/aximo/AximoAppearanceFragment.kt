@@ -31,7 +31,7 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
             prefs.edit().putString("background", "custom").apply()
             app.config.ui.appBackground = file.absolutePath
             b.appearanceSaved.text = "Własne zdjęcie zapisane ✓"
-            requireActivity().recreate()
+            activity.refreshAximoAppearance()
         } catch (_: Exception) {
             b.appearanceSaved.text = "Nie udało się zapisać zdjęcia"
         }
@@ -131,7 +131,8 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
         b.appearanceSaved.text = "Styl: " + style.title + " · zapisano ✓"
         updatePreview(index)
         applyCurrentAppearance()
-        requireActivity().recreate()
+        buildStyleGrid(index)
+        activity.refreshAximoAppearance()
     }
 
     private fun saveTheme(value: String) {
@@ -143,7 +144,8 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
             else -> null
         }
         setTheme(value)
-        requireActivity().recreate()
+        app.uiManager.applyTheme(activity)
+        activity.refreshAximoAppearance()
     }
 
     private fun saveAccent(value: String) {
@@ -162,7 +164,7 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
             else -> Theme.PURPLE
         }
         setAccent(value)
-        requireActivity().recreate()
+        activity.refreshAximoAppearance()
     }
 
     private fun accentColorFor(value: String): Int = when (value) {
@@ -181,7 +183,7 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
         setBackground(value)
         activity.setAppBackground()
         applyCurrentAppearance()
-        requireActivity().recreate()
+        activity.refreshAximoAppearance()
     }
 
     private fun setTheme(value: String) {
