@@ -103,6 +103,8 @@ class AximoBottomNavigation @JvmOverloads constructor(
         }
 
         // Long-press the bottom bar to reveal the radial Aximo menu.
+        bar.isClickable = true
+        bar.isLongClickable = true
         bar.setOnLongClickListener {
             performHapticFeedback(HapticFeedbackConstants.LONG_PRESS)
             if (open) closeMenu() else openMenu()
@@ -219,7 +221,6 @@ class AximoBottomNavigation @JvmOverloads constructor(
 
     private fun closeMenu() {
         open = false
-        selected = -1
         menuViews.forEach { view ->
             view.animate().alpha(0f).scaleX(.55f).scaleY(.55f).setDuration(100)
                 .withEndAction { if (!open) view.visibility = View.INVISIBLE }.start()
