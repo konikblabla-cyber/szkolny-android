@@ -47,6 +47,13 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
             Category("Zaawansowane", "Opcje techniczne i zachowanie aplikacji.", b.categoryAdvanced)
         )
 
+        b.settingsPlan.setOnClickListener { activity.navigate(navTarget = NavTarget.TIMETABLE) }
+        b.settingsGrades.setOnClickListener { activity.navigate(navTarget = NavTarget.GRADES) }
+        b.settingsAttendance.setOnClickListener { activity.navigate(navTarget = NavTarget.ATTENDANCE) }
+        b.settingsMessages.setOnClickListener { activity.navigate(navTarget = NavTarget.MESSAGES) }
+        b.settingsHomework.setOnClickListener { activity.navigate(navTarget = NavTarget.HOMEWORK) }
+        b.settingsAppearance.setOnClickListener { activity.navigate(navTarget = NavTarget.APPEARANCE) }
+
         val tabBar = b.settingsTabs
         categories.forEachIndexed { index, category ->
             val tab = TextView(requireContext()).apply {
