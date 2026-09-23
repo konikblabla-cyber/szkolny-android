@@ -45,6 +45,22 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/homeMessagesHit"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="60dp"
+                android:background="@drawable/aximo_icon_button_background"
+                android:gravity="center"
+                android:text="✉"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp"
+                android:clickable="true"
+                android:focusable="true"
+                android:contentDescription="Wiadomości" />
+
+            <TextView
                 android:id="@+id/homeSettingsHit"
                 android:layout_width="52dp"
                 android:layout_height="52dp"
