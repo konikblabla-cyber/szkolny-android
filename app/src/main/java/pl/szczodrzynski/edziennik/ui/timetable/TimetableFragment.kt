@@ -480,6 +480,25 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
         renderAximoPlan(initialDate)
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Plan lekcji has its own horizontal ViewPager/vertical content.
+        // Never let the global pull-to-refresh gesture steal vertical scrolling.
+        activity.swipeRefreshLayout.isEnabled = false
+    }
+
+    override fun onPause() {
+        activity.swipeRefreshLayout.isEnabled = false
+        super.onPause()
+    }
+
+    override fun onDestroyView() {
+        activity.swipeRefreshLayout.isEnabled = requireContext()
+            .getSharedPreferences("aximo_settings", Context.MODE_PRIVATE)
+            .getBoolean("diary_swipe_refresh", true)
+        super.onDestroyView()
+    }
+
     override suspend fun onFabClick() {
         showDate(today, animate = true)
     }
