@@ -8,6 +8,7 @@ import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.graphics.BitmapFactory
 import android.graphics.drawable.BitmapDrawable
+import android.graphics.drawable.GradientDrawable
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
@@ -1222,14 +1223,34 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
     fun setAppBackground() {
         try {
-            b.root.background = app.config.ui.appBackground?.let {
-                if (it.endsWith(".gif"))
-                    GifDrawable(it)
-                else
-                    BitmapDrawable.createFromPath(it)
+            val custom = app.config.ui.appBackground
+            if (!custom.isNullOrBlank()) {
+                b.root.background = if (custom.endsWith(".gif", true)) {
+                    GifDrawable(custom)
+                } else {
+                    BitmapDrawable.createFromPath(custom)
+                }
+                return
             }
+
+            val prefs = getSharedPreferences("aximo_appearance", MODE_PRIVATE)
+            val background = prefs.getString("background", "default") ?: "default"
+            val styleIndex = prefs.getInt("style", pl.szczodrzynski.edziennik.ui.aximo.AximoAppearanceStyle.AXIMO.ordinal)
+            val style = pl.szczodrzynski.edziennik.ui.aximo.AximoAppearanceStyle.fromOrdinal(styleIndex)
+
+            val colors = when (background) {
+                "mountains" -> intArrayOf(0xFF141226.toInt(), 0xFF251C42.toInt(), 0xFF10192A.toInt())
+                "sea" -> intArrayOf(0xFF101A24.toInt(), 0xFF172C38.toInt(), 0xFF111D2A.toInt())
+                "city" -> intArrayOf(0xFF17131F.toInt(), 0xFF30203A.toInt(), 0xFF10121F.toInt())
+                "abstract" -> intArrayOf(style.background, style.surface, style.accentSoft)
+                else -> intArrayOf(style.background, style.surface, style.surfaceAlt)
+            }
+            b.root.background = GradientDrawable(
+                GradientDrawable.Orientation.TL_BR,
+                colors
+            )
         } catch (e: Exception) {
-            Timber.e(e)
+            Timber.e(e, "Aximo background could not be applied")
         }
     }
 
