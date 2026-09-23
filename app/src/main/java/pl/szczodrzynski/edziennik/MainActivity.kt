@@ -1233,12 +1233,18 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         try {
             val custom = app.config.ui.appBackground
             if (!custom.isNullOrBlank()) {
-                b.root.background = if (custom.endsWith(".gif", true)) {
-                    GifDrawable(custom)
+                val customDrawable = if (custom.endsWith(".gif", true)) {
+                    runCatching { GifDrawable(custom) }.getOrNull()
                 } else {
-                    BitmapDrawable.createFromPath(custom)
+                    runCatching { BitmapDrawable.createFromPath(custom) }.getOrNull()
                 }
-                return
+                if (customDrawable != null) {
+                    b.root.background = customDrawable
+                    return
+                }
+                // A deleted/corrupted custom image must never leave the whole app
+                // without a usable background.
+                app.config.ui.appBackground = null
             }
 
             val prefs = getSharedPreferences("aximo_appearance", MODE_PRIVATE)
