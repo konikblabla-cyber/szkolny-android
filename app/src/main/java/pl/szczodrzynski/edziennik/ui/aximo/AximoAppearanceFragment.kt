@@ -51,6 +51,7 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
         setAccent(accent)
         setBackground(background)
         buildStyleGrid(style)
+        applyCurrentAppearance()
         updatePreview(style)
 
         b.themeDark.setOnClickListener { saveTheme("dark") }
@@ -104,6 +105,15 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
         }
     }
 
+    private fun applyCurrentAppearance() {
+        val style = AximoAppearanceStyle.fromOrdinal(prefs.getInt("style", AximoAppearanceStyle.AXIMO.ordinal))
+        val accent = prefs.getInt("accentColor", style.accent)
+        b.root.setBackgroundColor(style.background)
+        b.styleGrid.setBackgroundColor(style.background)
+        b.accentRow.background = GradientDrawable().apply { setColor(style.surface); cornerRadius = 20f }
+        b.appearanceSaved.setTextColor(accent)
+    }
+
     private fun updatePreview(index: Int) {
         val s = AximoAppearanceStyle.fromOrdinal(index)
         b.styleGrid.setBackgroundColor(s.background)
@@ -112,14 +122,17 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
 
     private fun saveStyle(index: Int) {
         prefs.edit().putInt("style", index).apply()
+        prefs.edit().putInt("accentColor", AximoAppearanceStyle.fromOrdinal(index).accent).apply()
         val style = AximoAppearanceStyle.fromOrdinal(index)
         b.appearanceSaved.text = "Styl: " + style.title + " · zapisano ✓"
         updatePreview(index)
+        applyCurrentAppearance()
         requireActivity().recreate()
     }
 
     private fun saveTheme(value: String) {
         prefs.edit().putString("theme", value).apply()
+        applyCurrentAppearance()
         app.config.ui.themeNightMode = when (value) {
             "light" -> false
             "dark" -> true
@@ -131,6 +144,7 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
 
     private fun saveAccent(value: String) {
         prefs.edit().putString("accent", value).apply()
+        applyCurrentAppearance()
         val styleIndex = prefs.getInt("style", AximoAppearanceStyle.AXIMO.ordinal)
         prefs.edit().putInt("accentColor", accentColorFor(value)).apply()
         app.config.ui.themeColor = when (value) {
@@ -157,6 +171,7 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
 
     private fun saveBackground(value: String) {
         prefs.edit().putString("background", value).apply()
+        applyCurrentAppearance()
         if (value != "custom") app.config.ui.appBackground = null
         setBackground(value)
         requireActivity().recreate()
