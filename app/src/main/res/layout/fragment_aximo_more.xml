@@ -2,30 +2,30 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#02091A">
+    android:background="#05081A">
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:paddingBottom="108dp">
+        android:overScrollMode="never">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingStart="16dp"
-            android:paddingTop="24dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="120dp">
+            android:paddingStart="18dp"
+            android:paddingTop="20dp"
+            android:paddingEnd="18dp"
+            android:paddingBottom="126dp">
 
             <TextView
                 android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Więcej"
-                android:textColor="#F7F7FF"
-                android:textSize="24sp"
+                android:textColor="#F7F5FF"
+                android:textSize="25sp"
                 android:textStyle="bold"/>
 
             <TextView
@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="3dp"
                 android:text="Dodatkowe funkcje Aximo"
-                android:textColor="#AAB4D6"
+                android:textColor="#8F9DBB"
                 android:textSize="12sp"/>
 
             <GridLayout
@@ -41,90 +41,59 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:columnCount="2"
-                android:rowCount="3"
                 android:alignmentMode="alignMargins"
+                android:columnCount="2"
                 android:columnOrderPreserved="false">
 
-                <LinearLayout
-                    android:id="@+id/notesCard"
-                    style="@style/AximoMoreCard"
-                    android:layout_columnWeight="1">
+                <LinearLayout android:id="@+id/notesCard" style="@style/AximoMoreCard" android:layout_columnWeight="1">
                     <TextView style="@style/AximoMoreIcon" android:text="▤"/>
                     <TextView style="@style/AximoMoreTitle" android:text="Notatki"/>
                     <TextView style="@style/AximoMoreSub" android:text="Szybkie notatki"/>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/calendarCard"
-                    style="@style/AximoMoreCard"
-                    android:layout_columnWeight="1">
+                <LinearLayout android:id="@+id/calendarCard" style="@style/AximoMoreCard" android:layout_columnWeight="1">
                     <TextView style="@style/AximoMoreIcon" android:text="▣"/>
                     <TextView style="@style/AximoMoreTitle" android:text="Kalendarz"/>
                     <TextView style="@style/AximoMoreSub" android:text="Ważne daty"/>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/tasksCard"
-                    style="@style/AximoMoreCard"
-                    android:layout_columnWeight="1">
+                <LinearLayout android:id="@+id/tasksCard" style="@style/AximoMoreCard" android:layout_columnWeight="1">
                     <TextView style="@style/AximoMoreIcon" android:text="☑"/>
                     <TextView style="@style/AximoMoreTitle" android:text="Zadania"/>
                     <TextView style="@style/AximoMoreSub" android:text="Do zrobienia"/>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/gradesCard"
-                    style="@style/AximoMoreCard"
-                    android:layout_columnWeight="1">
+                <LinearLayout android:id="@+id/gradesCard" style="@style/AximoMoreCard" android:layout_columnWeight="1">
                     <TextView style="@style/AximoMoreIcon" android:text="✦"/>
                     <TextView style="@style/AximoMoreTitle" android:text="Oceny"/>
                     <TextView style="@style/AximoMoreSub" android:text="Twoje wyniki"/>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/settingsCard"
-                    style="@style/AximoMoreCard"
-                    android:layout_columnWeight="1">
+                <LinearLayout android:id="@+id/settingsCard" style="@style/AximoMoreCard" android:layout_columnWeight="1">
                     <TextView style="@style/AximoMoreIcon" android:text="⚙"/>
                     <TextView style="@style/AximoMoreTitle" android:text="Ustawienia"/>
                     <TextView style="@style/AximoMoreSub" android:text="Personalizacja"/>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/appearanceCard"
-                    style="@style/AximoMoreCard"
-                    android:visibility="gone"
-                    android:layout_columnWeight="1">
+                <LinearLayout android:id="@+id/appearanceCard" style="@style/AximoMoreCard" android:visibility="gone" android:layout_columnWeight="1">
                     <TextView style="@style/AximoMoreIcon" android:text="◉"/>
                     <TextView style="@style/AximoMoreTitle" android:text="Wygląd"/>
                     <TextView style="@style/AximoMoreSub" android:text="Motyw i kolory"/>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/helpCard"
-                    style="@style/AximoMoreCard"
-                    android:layout_columnWeight="1">
+                <LinearLayout android:id="@+id/helpCard" style="@style/AximoMoreCard" android:layout_columnWeight="1">
                     <TextView style="@style/AximoMoreIcon" android:text="?"/>
                     <TextView style="@style/AximoMoreTitle" android:text="Pomoc"/>
                     <TextView style="@style/AximoMoreSub" android:text="FAQ i wsparcie"/>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/profileCard"
-                    style="@style/AximoMoreCard"
-                    android:visibility="gone"
-                    android:layout_columnWeight="1">
+                <LinearLayout android:id="@+id/profileCard" style="@style/AximoMoreCard" android:visibility="gone" android:layout_columnWeight="1">
                     <TextView style="@style/AximoMoreIcon" android:text="●"/>
                     <TextView style="@style/AximoMoreTitle" android:text="Profil"/>
                     <TextView style="@style/AximoMoreSub" android:text="Twoje konto"/>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/silenceCard"
-                    style="@style/AximoMoreCard"
-                    android:visibility="gone"
-                    android:layout_columnWeight="1">
+                <LinearLayout android:id="@+id/silenceCard" style="@style/AximoMoreCard" android:visibility="gone" android:layout_columnWeight="1">
                     <TextView style="@style/AximoMoreIcon" android:text="☾"/>
                     <TextView style="@style/AximoMoreTitle" android:text="Wyciszanie"/>
                     <TextView style="@style/AximoMoreSub" android:text="Tryb szkolny"/>
@@ -134,7 +103,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="136dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="14dp"
                 android:background="@drawable/aximo_more_quote"
                 android:gravity="center_vertical"
                 android:orientation="vertical"
