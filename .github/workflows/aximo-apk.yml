@@ -3,16 +3,16 @@ name: Build Aximo APK
 on:
   workflow_dispatch:
   push:
-    branches: ["develop"]
+    branches: ["feature/modern-diary-ui"]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout current develop
+      - name: Checkout restored Aximo branch
         uses: actions/checkout@v4
         with:
-          ref: develop
+          ref: feature/modern-diary-ui
 
       - name: Setup JDK 17
         uses: actions/setup-java@v4
@@ -28,18 +28,9 @@ jobs:
           chmod +x ./gradlew
           ./gradlew :app:assembleUnofficialDebug --stacktrace --no-daemon
 
-      - name: Locate APK
-        run: |
-          echo "APK files:"
-          find . -type f -name "*.apk" -print
-
       - name: Upload Aximo APK
         uses: actions/upload-artifact@v4
         with:
           name: Aximo-debug-apk
           path: "app/build/outputs/apk/unofficial/debug/app-unofficial-debug.apk"
           if-no-files-found: error
-
-# rebuild after Aximo appearance updates
-
-# rebuild after dialog compatibility fix
