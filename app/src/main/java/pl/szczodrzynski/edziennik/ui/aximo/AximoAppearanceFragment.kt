@@ -108,7 +108,8 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
     private fun applyCurrentAppearance() {
         val style = AximoAppearanceStyle.fromOrdinal(prefs.getInt("style", AximoAppearanceStyle.AXIMO.ordinal))
         val accent = prefs.getInt("accentColor", style.accent)
-        b.root.setBackgroundColor(style.background)
+        activity.setAppBackground()
+        b.root.setBackgroundColor(android.graphics.Color.TRANSPARENT)
         b.styleGrid.setBackgroundColor(style.background)
         b.accentRow.background = GradientDrawable().apply { setColor(style.surface); cornerRadius = 20f }
         b.appearanceSaved.setTextColor(accent)
