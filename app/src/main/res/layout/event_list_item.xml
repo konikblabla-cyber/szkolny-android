@@ -3,16 +3,16 @@
 <data><import type="android.view.View"/><variable name="simpleMode" type="Boolean"/></data>
 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="2dp" android:layout_marginBottom="8dp" android:gravity="center_vertical" android:orientation="horizontal">
 <com.google.android.material.card.MaterialCardView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1"
- app:cardBackgroundColor="#201A31" app:cardCornerRadius="19dp" app:cardElevation="0dp" app:strokeColor="#352C4A" app:strokeWidth="1dp">
+ app:cardBackgroundColor="#121B33" app:cardCornerRadius="19dp" app:cardElevation="0dp" app:strokeColor="#293A63" app:strokeWidth="1dp">
 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
 <View android:id="@+id/typeColor" android:layout_width="10dp" android:layout_height="10dp" android:layout_marginEnd="8dp" android:background="@drawable/unread_red_circle"/>
-<com.mikepenz.iconics.view.IconicsImageView android:id="@+id/attachmentIcon" android:layout_width="18dp" android:layout_height="18dp" android:layout_marginEnd="8dp" app:iiv_color="#9690A8" app:iiv_icon="cmd-attachment"/>
-<TextView android:id="@+id/details" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:maxLines="2" android:textColor="#AFA9BE" android:textSize="10sp" tools:text="sprawdzian • 9:05 • historia i społeczeństwo"/>
+<com.mikepenz.iconics.view.IconicsImageView android:id="@+id/attachmentIcon" android:layout_width="18dp" android:layout_height="18dp" android:layout_marginEnd="8dp" app:iiv_color="#8F9DBB" app:iiv_icon="cmd-attachment"/>
+<TextView android:id="@+id/details" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:maxLines="2" android:textColor="#9AA7C4" android:textSize="10sp" tools:text="sprawdzian • 9:05 • historia i społeczeństwo"/>
 <View android:id="@+id/unread" android:layout_width="9dp" android:layout_height="9dp" android:layout_marginStart="6dp" android:background="@drawable/unread_red_circle" android:visibility="gone" tools:visibility="visible"/>
 </LinearLayout>
-<com.mikepenz.iconics.view.IconicsTextView android:id="@+id/topic" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:ellipsize="end" android:maxLines="3" android:textColor="#F0EDF6" android:textSize="14sp" android:textStyle="bold" tools:text="Rozdział II: Panowanie Piastów i Jagiellonów."/>
-<com.mikepenz.iconics.view.IconicsTextView android:id="@+id/addedBy" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:ellipsize="middle" android:isVisible="@{!simpleMode}" android:singleLine="true" android:textColor="#898397" android:textSize="10sp" tools:text="Udostępniono przez klasę"/>
+<com.mikepenz.iconics.view.IconicsTextView android:id="@+id/topic" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:ellipsize="end" android:maxLines="3" android:textColor="#F4F1FF" android:textSize="14sp" android:textStyle="bold" tools:text="Rozdział II: Panowanie Piastów i Jagiellonów."/>
+<com.mikepenz.iconics.view.IconicsTextView android:id="@+id/addedBy" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:ellipsize="middle" android:isVisible="@{!simpleMode}" android:singleLine="true" android:textColor="#71809F" android:textSize="10sp" tools:text="Udostępniono przez klasę"/>
 </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
 <com.google.android.material.button.MaterialButton android:id="@+id/editButton" style="?materialIconButtonSecondaryStyle" android:layout_width="44dp" android:layout_height="44dp" android:layout_marginStart="6dp" android:fontFamily="@font/community_material_font_v5_8_55" android:minWidth="0dp" android:text="" android:textSize="19sp" tools:visibility="visible"/>
