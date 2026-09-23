@@ -1,289 +1,273 @@
 package pl.szczodrzynski.edziennik.ui.aximo
 
-import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.net.Uri
 import android.os.Bundle
-import android.view.Gravity
 import android.view.View
-import android.widget.CompoundButton
-import android.widget.LinearLayout
-import android.widget.Switch
+import android.widget.SeekBar
+import android.widget.GridLayout
 import android.widget.TextView
-import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import pl.szczodrzynski.edziennik.MainActivity
-import pl.szczodrzynski.edziennik.R
-import pl.szczodrzynski.edziennik.databinding.FragmentAximoSettingsBinding
+import pl.szczodrzynski.edziennik.data.enums.Theme
+import pl.szczodrzynski.edziennik.databinding.FragmentAximoAppearanceBinding
 import pl.szczodrzynski.edziennik.ui.base.fragment.BaseFragment
-import pl.szczodrzynski.edziennik.core.aximo.AximoLessonSilence
-import pl.szczodrzynski.edziennik.core.aximo.AximoLessonNotifications
-import pl.szczodrzynski.edziennik.data.enums.NavTarget
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
 
-class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainActivity>(
-    inflater = FragmentAximoSettingsBinding::inflate,
+class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, MainActivity>(
+    inflater = FragmentAximoAppearanceBinding::inflate,
 ) {
-    private val prefs by lazy { requireContext().getSharedPreferences("aximo_settings", 0) }
+    private val prefs by lazy {
+        requireContext().getSharedPreferences("aximo_appearance", 0)
+    }
 
-    private data class Category(
-        val title: String,
-        val description: String,
-        val container: LinearLayout
-    )
+    private var selectedWallpaperSlot = 0
+
+    private val imagePicker = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        uri ?: return@registerForActivityResult
+        try {
+            val file = File(requireContext().filesDir, "aximo_custom_background_$" + selectedWallpaperSlot + ".jpg")
+            requireContext().contentResolver.openInputStream(uri)?.use { input ->
+                FileOutputStream(file).use { output -> input.copyTo(output) }
+            }
+            prefs.edit().putString("custom_$" + selectedWallpaperSlot, file.absolutePath).apply()
+            prefs.edit().putString("background", "custom_$" + selectedWallpaperSlot).apply()
+            app.config.ui.appBackground = file.absolutePath
+            b.appearanceSaved.text = "Własna tapeta " + (selectedWallpaperSlot + 1) + " zapisana ✓"
+            refreshWallpaperSlots()
+            activity.refreshAximoAppearance()
+        } catch (_: Exception) {
+            b.appearanceSaved.text = "Nie udało się zapisać tapety"
+        }
+    }
 
     override suspend fun onViewReady(savedInstanceState: Bundle?) {
-        b.backButton.setOnClickListener { activity.onBackPressedDispatcher.onBackPressed() }
+        b.backButton.setOnClickListener {
+            activity.onBackPressedDispatcher.onBackPressed()
+        }
 
-        val categories = listOf(
-            Category("Ekran główny", "Co ma być widoczne po uruchomieniu Aximo.", b.categoryHome),
-            Category("Nawigacja", "Sposób poruszania się po najważniejszych częściach dziennika.", b.categoryNavigation),
-            Category("Dziennik", "Zachowanie planu, odświeżania i danych dziennika.", b.categoryDiary),
-            Category("Oceny i frekwencja", "Jak Aximo pokazuje wyniki, średnie i obecności.", b.categoryGrades),
-            Category("Wiadomości i zadania", "Szybki dostęp do wiadomości, prac domowych i informacji.", b.categoryMessages),
-            Category("Powiadomienia", "Wybierz dokładnie, o czym Aximo ma Ci przypominać.", b.categoryNotifications),
-            Category("Tryb szkolny", "Automatyczne zachowanie telefonu podczas lekcji.", b.categorySchool),
-            Category("Personalizacja", "Dodatkowe możliwości dopasowania Aximo do siebie.", b.categoryPersonal),
-            Category("Zaawansowane", "Opcje techniczne i zachowanie aplikacji.", b.categoryAdvanced)
-        )
+        val theme = prefs.getString("theme", "dark") ?: "dark"
+        val accent = prefs.getString("accent", "purple") ?: "purple"
+        val background = prefs.getString("background", "default") ?: "default"
+        val style = prefs.getInt("style", AximoAppearanceStyle.AXIMO.ordinal)
 
-        val tabBar = b.settingsTabs
-        categories.forEachIndexed { index, category ->
-            val tab = TextView(requireContext()).apply {
-                text = category.title
+        setTheme(theme)
+        setAccent(accent)
+        setBackground(background)
+        buildStyleGrid(style)
+        applyCurrentAppearance()
+        updatePreview(style)
+
+        b.themeDark.setOnClickListener { saveTheme("dark") }
+        b.themeLight.setOnClickListener { saveTheme("light") }
+        b.themeAuto.setOnClickListener { saveTheme("auto") }
+
+        mapOf(
+            b.accentPurple to "purple", b.accentBlue to "blue", b.accentCyan to "cyan",
+            b.accentGreen to "green", b.accentYellow to "yellow", b.accentOrange to "orange",
+            b.accentPink to "pink"
+        ).forEach { (view, value) -> view.setOnClickListener { saveAccent(value) } }
+
+        mapOf(
+            b.bgDefault to "default", b.bgMountains to "mountains",
+            b.bgSea to "sea", b.bgCity to "city", b.bgAbstract to "abstract"
+        ).forEach { (view, value) -> view.setOnClickListener { saveBackground(value) } }
+
+        val customSlots = listOf(b.customBg1, b.customBg2, b.customBg3, b.customBg4, b.customBg5)
+        customSlots.forEachIndexed { index, view ->
+            view.setOnClickListener {
+                selectedWallpaperSlot = index
+                val path = prefs.getString("custom_" + index, null)
+                if (path != null && File(path).exists()) {
+                    prefs.edit().putString("background", "custom_" + index).apply()
+                    app.config.ui.appBackground = path
+                    setBackground("custom_" + index)
+                    b.appearanceSaved.text = "Wybrano własną tapetę " + (index + 1) + " ✓"
+                    activity.refreshAximoAppearance()
+                } else {
+                    imagePicker.launch("image/*")
+                }
+            }
+        }
+        refreshWallpaperSlots()
+
+        val savedRoundness = prefs.getInt("cardRoundness", 18)
+        b.cardRoundness.progress = savedRoundness
+        b.cardRoundnessValue.text = "$savedRoundness dp"
+        b.cardRoundness.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                val value = progress.coerceIn(4, 28)
+                b.cardRoundnessValue.text = "$value dp"
+                if (fromUser) {
+                    prefs.edit().putInt("cardRoundness", value).apply()
+                    activity.refreshAximoAppearance()
+                }
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
+            override fun onStopTrackingTouch(seekBar: SeekBar?) = Unit
+        })
+
+        b.animationsEnabled.isChecked = prefs.getBoolean("animationsEnabled", true)
+        b.animationsEnabled.setOnCheckedChangeListener { _, checked ->
+            prefs.edit().putBoolean("animationsEnabled", checked).apply()
+            b.appearanceSaved.text = if (checked) "Animacje włączone ✓" else "Animacje wyłączone ✓"
+        }
+
+        b.softCards.isChecked = prefs.getBoolean("softCards", false)
+        b.softCards.setOnCheckedChangeListener { _, checked ->
+            prefs.edit().putBoolean("softCards", checked).apply()
+            activity.refreshAximoAppearance()
+            b.appearanceSaved.text = if (checked) "Delikatne karty włączone ✓" else "Delikatne karty wyłączone ✓"
+        }
+    }
+
+    private fun buildStyleGrid(selected: Int) {
+        b.styleGrid.removeAllViews()
+        val density = resources.displayMetrics.density
+        fun dp(value: Int): Int = (value * density).toInt()
+
+        AximoAppearanceStyle.entries.forEachIndexed { index, style ->
+            val card = TextView(requireContext()).apply {
+                text = "  " + style.title + "\n  " + if (index == selected) "✓ Wybrany" else "Dotknij, aby wybrać"
+                setTextColor(style.text)
                 textSize = 13f
-                setTextColor(Color.WHITE)
-                gravity = Gravity.CENTER
-                setPadding(dp(16), 0, dp(16), 0)
-                background = tabBackground(index == 0)
-                setOnClickListener { showCategory(categories, index) }
-            }
-            tabBar.addView(tab, LinearLayout.LayoutParams(-2, dp(40)).apply {
-                marginStart = if (index == 0) 0 else dp(7)
-            })
-        }
-
-        addHomeSettings(b.categoryHome)
-        addNavigationSettings(b.categoryNavigation)
-        addDiarySettings(b.categoryDiary)
-        addGradeSettings(b.categoryGrades)
-        addMessageSettings(b.categoryMessages)
-        addNotificationSettings(b.categoryNotifications)
-        addSchoolSettings(b.categorySchool)
-        addPersonalSettings(b.categoryPersonal)
-        addAdvancedSettings(b.categoryAdvanced)
-
-        showCategory(categories, 0)
-    }
-
-    private fun addHomeSettings(c: LinearLayout) {
-        addSwitch(c, "Karta planu lekcji", "Pokazuj dzisiejszy plan na ekranie głównym.", "home_timetable", true)
-        addSwitch(c, "Karta ocen", "Pokazuj najważniejsze oceny i średnią.", "home_grades", true)
-        addSwitch(c, "Karta frekwencji", "Pokazuj procent obecności.", "home_attendance", true)
-        addSwitch(c, "Karta zadań", "Pokazuj najbliższe prace domowe.", "home_homework", true)
-        addSwitch(c, "Karta wiadomości", "Pokazuj najnowsze wiadomości.", "home_messages", true)
-        addSwitch(c, "Powitanie i data", "Pokazuj dzień tygodnia oraz powitanie.", "home_greeting", true)
-        addSwitch(c, "Szybkie akcje", "Pokazuj skróty do najczęściej używanych ekranów.", "home_quick_actions", true)
-        addAction(c, "Ustaw wygląd ekranu głównego", "Motywy, tło, kolory i układ kart.", NavTarget.APPEARANCE)
-    }
-
-    private fun addNavigationSettings(c: LinearLayout) {
-        addSwitch(c, "Dolna nawigacja", "Pokazuj pasek na dole ekranu.", "nav_bottom", true)
-        addSwitch(c, "Menu radialne", "Przytrzymaj dolny przycisk, aby otworzyć okrągłe menu.", "nav_radial", true)
-        addSwitch(c, "Plan w nawigacji", "Dodaj Plan lekcji do szybkiego dostępu.", "nav_timetable", true)
-        addSwitch(c, "Oceny w nawigacji", "Dodaj Oceny do szybkiego dostępu.", "nav_grades", true)
-        addSwitch(c, "Frekwencja w nawigacji", "Dodaj Frekwencję do szybkiego dostępu.", "nav_attendance", true)
-        addSwitch(c, "Wiadomości w nawigacji", "Dodaj Wiadomości do szybkiego dostępu.", "nav_messages", true)
-        addSwitch(c, "Zadania w nawigacji", "Dodaj Zadania domowe do szybkiego dostępu.", "nav_homework", true)
-        addSwitch(c, "Ustawienia w nawigacji", "Szybko otwieraj ten panel.", "nav_settings", true)
-        addAction(c, "Edytuj układ skrótów", "Otwórz dodatkowe ustawienia szybkiego dostępu.", NavTarget.MORE)
-    }
-
-    private fun addDiarySettings(c: LinearLayout) {
-        addSwitch(c, "Odświeżanie gestem", "Przeciągnięcie w dół odświeża dane.", "diary_swipe_refresh", true)
-        addSwitch(c, "Automatyczne przewijanie do dziś", "Plan lekcji otwieraj od bieżącego dnia.", "diary_scroll_today", true)
-    }
-
-    private fun addGradeSettings(c: LinearLayout) {
-        addAction(c, "Otwórz oceny", "Przejdź bezpośrednio do listy ocen.", NavTarget.GRADES)
-        addAction(c, "Otwórz frekwencję", "Przejdź bezpośrednio do obecności i nieobecności.", NavTarget.ATTENDANCE)
-    }
-
-    private fun addMessageSettings(c: LinearLayout) {
-        addSwitch(c, "Zadania na ekranie głównym", "Pokazuj najbliższe zadania bez otwierania sekcji.", "homework_on_home", true)
-    }
-
-    private fun addNotificationSettings(c: LinearLayout) {
-        addSwitch(c, "Powiadomienie o następnej lekcji", "Pokazuj aktualną i następną lekcję.", "notify_next_lesson", true)
-        addAction(c, "Uprawnienia powiadomień", "Sprawdź lub nadaj dostęp Androidowi.", null) {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU &&
-                requireContext().checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
-                requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 47002)
-            } else Toast.makeText(activity, "Powiadomienia są już dostępne.", Toast.LENGTH_SHORT).show()
-        }
-        addAction(c, "Precyzyjne przypomnienia", "Dostęp Androida potrzebny do punktualnych alarmów.", null) {
-            if (AximoLessonNotifications.canScheduleExactAlarms(requireContext()))
-                Toast.makeText(activity, "Dostęp jest już przyznany.", Toast.LENGTH_SHORT).show()
-            else AximoLessonNotifications.openExactAlarmSettings(activity)
-        }
-    }
-
-    private fun addSchoolSettings(c: LinearLayout) {
-        addSwitch(c, "Tryb szkolny", "Automatycznie reaguj na godziny lekcji.", "school_mode", true)
-        addAction(c, "Dostęp systemowy trybu szkolnego", "Opcjonalny dostęp do specjalnych trybów Androida.", null) {
-            if (AximoLessonSilence.hasNotificationPolicyAccess(requireContext()))
-                Toast.makeText(activity, "Dostęp jest już przyznany.", Toast.LENGTH_SHORT).show()
-            else AximoLessonSilence.openNotificationPolicyAccessSettings(activity)
-        }
-    }
-
-    private fun addPersonalSettings(c: LinearLayout) {
-        addAction(c, "Pełna personalizacja wyglądu", "Motywy, kolory, 5 teł, przezroczystość i styl kart.", NavTarget.APPEARANCE)
-        addAction(c, "Profil i konto", "Szkoła, konto oraz synchronizacja.", NavTarget.PROFILE_MANAGER)
-    }
-
-    private fun addAdvancedSettings(c: LinearLayout) {
-        addAction(c, "Układ i szybki dostęp", "Dodatkowe ustawienia skrótów i sekcji.", NavTarget.MORE)
-        addAction(c, "Pomoc i wsparcie", "Instrukcja i zgłaszanie problemów.", NavTarget.HELP)
-        addAction(c, "O Aximo", "Wersja aplikacji i informacje.", NavTarget.ABOUT)
-    }
-
-    private fun addSwitch(
-        container: LinearLayout,
-        title: String,
-        summary: String,
-        key: String,
-        default: Boolean
-    ) {
-        val row = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.HORIZONTAL
-            gravity = Gravity.CENTER_VERTICAL
-            setPadding(dp(16), dp(13), dp(10), dp(13))
-            background = cardBackground()
-            isClickable = true
-        }
-        val textBox = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL
-        }
-        val titleView = TextView(requireContext()).apply {
-            text = title
-            textSize = 15f
-            setTextColor(Color.WHITE)
-        }
-        val summaryView = TextView(requireContext()).apply {
-            text = summary
-            textSize = 12f
-            setTextColor(Color.rgb(127, 138, 168))
-            setPadding(0, dp(3), 0, 0)
-        }
-        textBox.addView(titleView)
-        textBox.addView(summaryView)
-        row.addView(textBox, LinearLayout.LayoutParams(0, -2, 1f))
-        val sw = Switch(requireContext()).apply {
-            isChecked = prefs.getBoolean(key, default)
-            buttonTintListCompat()
-        }
-        row.addView(sw, LinearLayout.LayoutParams(-2, -2))
-        val toggle: () -> Unit = {
-            sw.isChecked = !sw.isChecked
-        }
-        row.setOnClickListener { toggle() }
-        sw.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
-            prefs.edit().putBoolean(key, checked).apply()
-            activity.b.aximoBottomNavigation.refreshSettings()
-            (activity.supportFragmentManager.findFragmentById(R.id.fragment) as? pl.szczodrzynski.edziennik.ui.home.HomeFragment)?.applyAximoSettings()
-            if (key == "diary_swipe_refresh") {
-                activity.swipeRefreshLayout.isEnabled = checked && activity.supportFragmentManager.findFragmentById(R.id.fragment) !is pl.szczodrzynski.edziennik.ui.timetable.TimetableFragment
-            }
-            when (key) {
-                "school_mode" -> {
-                    val app = requireContext().applicationContext as pl.szczodrzynski.edziennik.App
-                    app.config.sync.automaticSilenceEnabled = checked
-                    if (pl.szczodrzynski.edziennik.App.profileId != 0) {
-                        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                            AximoLessonSilence.scheduleTodayAndTomorrow(requireContext(), pl.szczodrzynski.edziennik.App.profileId)
-                        }
-                    }
+                setPadding(dp(10), dp(10), dp(10), dp(10))
+                gravity = android.view.Gravity.CENTER_VERTICAL
+                background = GradientDrawable(
+                    GradientDrawable.Orientation.TL_BR,
+                    intArrayOf(style.surfaceAlt, style.surface)
+                ).apply {
+                    cornerRadius = dp(18).toFloat()
+                    setStroke(if (index == selected) dp(3) else dp(1), if (index == selected) style.accent else style.accentSoft)
                 }
-                "notify_next_lesson" -> {
-                    val app = requireContext().applicationContext as pl.szczodrzynski.edziennik.App
-                    app.config.sync.lessonNotificationsEnabled = checked
-                    if (pl.szczodrzynski.edziennik.App.profileId != 0) {
-                        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
-                            AximoLessonNotifications.scheduleTodayAndTomorrow(requireContext(), pl.szczodrzynski.edziennik.App.profileId)
-                        }
-                    }
-                }
+                isClickable = true
+                isFocusable = true
+                setOnClickListener { saveStyle(index) }
             }
-        }
-        val lp = LinearLayout.LayoutParams(-1, -2)
-        lp.topMargin = dp(8)
-        container.addView(row, lp)
-    }
-
-    private fun addAction(
-        container: LinearLayout,
-        title: String,
-        summary: String,
-        target: NavTarget?,
-        action: (() -> Unit)? = null
-    ) {
-        val row = LinearLayout(requireContext()).apply {
-            orientation = LinearLayout.VERTICAL
-            setPadding(dp(16), dp(14), dp(16), dp(14))
-            background = cardBackground()
-            isClickable = true
-            setOnClickListener {
-                if (action != null) action()
-                else if (target != null) activity.navigate(navTarget = target)
+            val lp = GridLayout.LayoutParams().apply {
+                width = 0
+                height = dp(78)
+                columnSpec = GridLayout.spec(index % 2, 1f)
+                rowSpec = GridLayout.spec(index / 2)
+                setMargins(0, 0, dp(6), dp(7))
             }
-        }
-        row.addView(TextView(requireContext()).apply {
-            text = title
-            textSize = 15f
-            setTextColor(Color.WHITE)
-        })
-        row.addView(TextView(requireContext()).apply {
-            text = summary + "   ›"
-            textSize = 12f
-            setTextColor(Color.rgb(165, 108, 255))
-            setPadding(0, dp(3), 0, 0)
-        })
-        val lp = LinearLayout.LayoutParams(-1, -2)
-        lp.topMargin = dp(8)
-        container.addView(row, lp)
-    }
-
-    private fun showCategory(categories: List<Category>, selected: Int) {
-        categories.forEachIndexed { index, category ->
-            category.container.visibility = if (index == selected) View.VISIBLE else View.GONE
-            category.container.alpha = if (index == selected) 0f else 1f
-            if (index == selected) category.container.animate().alpha(1f).setDuration(180).start()
-        }
-        b.categoryTitle.text = categories[selected].title
-        b.categoryDescription.text = categories[selected].description
-        for (i in 0 until b.settingsTabs.childCount) {
-            b.settingsTabs.getChildAt(i).background = tabBackground(i == selected)
+            b.styleGrid.addView(card, lp)
         }
     }
 
-    private fun tabBackground(selected: Boolean) = GradientDrawable().apply {
-        cornerRadius = dp(20).toFloat()
-        setColor(if (selected) Color.rgb(105, 55, 190) else Color.rgb(18, 23, 47))
-        setStroke(dp(1), if (selected) Color.rgb(165, 108, 255) else Color.rgb(43, 51, 82))
+    private fun applyCurrentAppearance() {
+        val style = AximoAppearanceStyle.fromOrdinal(prefs.getInt("style", AximoAppearanceStyle.AXIMO.ordinal))
+        val accent = prefs.getInt("accentColor", style.accent)
+        activity.setAppBackground()
+        b.root.setBackgroundColor(android.graphics.Color.TRANSPARENT)
+        b.styleGrid.setBackgroundColor(style.background)
+        b.accentRow.background = GradientDrawable().apply { setColor(style.surface); cornerRadius = 20f }
+        b.appearanceSaved.setTextColor(accent)
     }
 
-    private fun cardBackground() = GradientDrawable().apply {
-        cornerRadius = dp(18).toFloat()
-        setColor(Color.rgb(12, 17, 38))
-        setStroke(dp(1), Color.rgb(31, 39, 67))
+    private fun updatePreview(index: Int) {
+        val s = AximoAppearanceStyle.fromOrdinal(index)
+        b.styleGrid.setBackgroundColor(s.background)
+        b.appearanceSaved.setTextColor(s.accent)
     }
 
-    private fun dp(value: Int): Int = (value * resources.displayMetrics.density).toInt()
+    private fun saveStyle(index: Int) {
+        prefs.edit().putInt("style", index).apply()
+        prefs.edit().putInt("accentColor", AximoAppearanceStyle.fromOrdinal(index).accent).apply()
+        val style = AximoAppearanceStyle.fromOrdinal(index)
+        b.appearanceSaved.text = "Styl: " + style.title + " · zapisano ✓"
+        updatePreview(index)
+        applyCurrentAppearance()
+        buildStyleGrid(index)
+        activity.refreshAximoAppearance()
+    }
 
-    private fun Switch.buttonTintListCompat() {
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.M) {
-            thumbTintList = android.content.res.ColorStateList.valueOf(Color.rgb(210, 205, 225))
-            trackTintList = android.content.res.ColorStateList.valueOf(Color.rgb(80, 65, 110))
+    private fun saveTheme(value: String) {
+        prefs.edit().putString("theme", value).apply()
+        applyCurrentAppearance()
+        app.config.ui.themeNightMode = when (value) {
+            "light" -> false
+            "dark" -> true
+            else -> null
+        }
+        setTheme(value)
+        app.uiManager.applyTheme(activity)
+        activity.refreshAximoAppearance()
+    }
+
+    private fun saveAccent(value: String) {
+        val accentColor = accentColorFor(value)
+        prefs.edit()
+            .putString("accent", value)
+            .putInt("accentColor", accentColor)
+            .apply()
+        applyCurrentAppearance()
+        app.config.ui.themeColor = when (value) {
+            "blue" -> Theme.BLUE
+            "green" -> Theme.GREEN
+            "cyan" -> Theme.TEAL
+            "orange" -> Theme.RED
+            "pink" -> Theme.RED
+            else -> Theme.PURPLE
+        }
+        setAccent(value)
+        activity.refreshAximoAppearance()
+    }
+
+    private fun accentColorFor(value: String): Int = when (value) {
+        "blue" -> 0xFF5B8DFF.toInt()
+        "cyan" -> 0xFF42C9D8.toInt()
+        "green" -> 0xFF61C58A.toInt()
+        "yellow" -> 0xFFD7B451.toInt()
+        "orange" -> 0xFFD58A50.toInt()
+        "pink" -> 0xFFD77ABF.toInt()
+        else -> 0xFF8D72FF.toInt()
+    }
+
+    private fun saveBackground(value: String) {
+        prefs.edit().putString("background", value).apply()
+        if (value != "custom") app.config.ui.appBackground = null
+        setBackground(value)
+        activity.setAppBackground()
+        applyCurrentAppearance()
+        activity.refreshAximoAppearance()
+    }
+
+    private fun setTheme(value: String) {
+        val selected = when (value) {
+            "light" -> b.themeLight
+            "auto" -> b.themeAuto
+            else -> b.themeDark
+        }
+        listOf(b.themeDark, b.themeLight, b.themeAuto).forEach {
+            it.alpha = if (it == selected) 1f else 0.55f
+        }
+    }
+
+    private fun setAccent(value: String) {
+        val views = listOf(b.accentPurple,b.accentBlue,b.accentCyan,b.accentGreen,b.accentYellow,b.accentOrange,b.accentPink)
+        val names = listOf("purple","blue","cyan","green","yellow","orange","pink")
+        views.forEachIndexed { i, v ->
+            v.scaleX = if (names[i] == value) 1.18f else 1f
+            v.scaleY = if (names[i] == value) 1.18f else 1f
+            v.alpha = if (names[i] == value) 1f else 0.72f
+        }
+    }
+
+    private fun setBackground(value: String) {
+        val views: List<View> = listOf(b.bgDefault,b.bgMountains,b.bgSea,b.bgCity,b.bgAbstract,b.customBg1,b.customBg2,b.customBg3,b.customBg4,b.customBg5)
+        val names = listOf("default","mountains","sea","city","abstract","custom_0","custom_1","custom_2","custom_3","custom_4")
+        views.forEachIndexed { i, v ->
+            v.alpha = if (names[i] == value) 1f else 0.58f
+        }
+    }
+    private fun refreshWallpaperSlots() {
+        val slots = listOf(b.customBg1, b.customBg2, b.customBg3, b.customBg4, b.customBg5)
+        slots.forEachIndexed { index, view ->
+            val path = prefs.getString("custom_" + index, null)
+            view.text = if (path != null && File(path).exists()) "✓ " + (index + 1) else "+ " + (index + 1)
+            view.alpha = if (prefs.getString("background", "default") == "custom_" + index) 1f else 0.72f
         }
     }
 }
