@@ -34,6 +34,7 @@ import pl.szczodrzynski.edziennik.ext.getSchoolYearConstrains
 import pl.szczodrzynski.edziennik.ext.getStudentData
 import pl.szczodrzynski.edziennik.ui.base.fragment.PagerFragment
 import pl.szczodrzynski.edziennik.ui.dialogs.settings.TimetableConfigDialog
+import pl.szczodrzynski.edziennik.ui.aximo.AximoAppearanceStyle
 import pl.szczodrzynski.edziennik.ui.event.EventManualDialog
 import pl.szczodrzynski.edziennik.utils.models.Date
 import pl.szczodrzynski.edziennik.utils.models.Week
@@ -150,6 +151,17 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
     private val items = mutableListOf<Date>()
     private var fabShown = false
     private fun renderAximoPlan(date: Date) {
+        val styleIndex = requireContext().getSharedPreferences("aximo_appearance", Context.MODE_PRIVATE).getInt("style", AximoAppearanceStyle.AXIMO.ordinal)
+        val style = AximoAppearanceStyle.fromOrdinal(styleIndex)
+        val bg = style.background
+        val surface = style.surface
+        val surfaceAlt = style.surfaceAlt
+        val accentMain = style.accent
+        val accentSoft = style.accentSoft
+        val primaryText = style.text
+        val mutedText = blend(style.text, style.background, 0.52f)
+        b.aximoPlanScroll.setBackgroundColor(bg)
+
         if (!isAdded) return
 
         b.aximoPlanDate.text = "${Week.getFullDayName(date.weekDay)}, ${date.stringDm}"
@@ -165,8 +177,8 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
                 setPadding(4.dp, 5.dp, 4.dp, 5.dp)
                 background = android.graphics.drawable.GradientDrawable().apply {
                     cornerRadius = 18.dp.toFloat()
-                    setColor(if (selected) 0xFF7346D8.toInt() else 0xFF111B35.toInt())
-                    setStroke(1.dp, if (selected) 0xFFA982FF.toInt() else 0xFF26345A.toInt())
+                    setColor(if (selected) accentMain else surface)
+                    setStroke(1.dp, if (selected) primaryText else accentSoft)
                 }
                 setOnClickListener {
                     val index = items.indexOfFirst { it == day }
@@ -177,14 +189,14 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
                 text = Week.getFullDayName(day.weekDay).take(2).uppercase()
                 textSize = 10f
                 gravity = Gravity.CENTER
-                setTextColor(if (selected) 0xFFFFFFFF.toInt() else 0xFF8F9DBB.toInt())
+                setTextColor(if (selected) primaryText else mutedText)
             }
             val dayNumber = TextView(requireContext()).apply {
                 text = day.day.toString()
                 textSize = 17f
                 gravity = Gravity.CENTER
                 setTypeface(typeface, android.graphics.Typeface.BOLD)
-                setTextColor(if (selected) 0xFFFFFFFF.toInt() else 0xFFE8ECF8.toInt())
+                setTextColor(if (selected) primaryText else style.text)
             }
             chip.addView(dayName, LinearLayout.LayoutParams(-1, 18.dp))
             chip.addView(dayNumber, LinearLayout.LayoutParams(-1, 24.dp))
@@ -194,17 +206,14 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
         val lessons = try {
             app.db.timetableDao().getAllForDateNow(App.profileId, date)
                 .filter { it.type != Lesson.TYPE_CANCELLED && it.type != Lesson.TYPE_NO_LESSONS }
-                .sortedBy { it.displayStartTime?.toString() ?: "" }
+                .sortedBy { it.displayStartTime?.getValue() ?: Int.MAX_VALUE }
         } catch (_: Exception) { emptyList() }
 
         b.aximoLessonContainer.removeAllViews()
         b.aximoPlanCount.text = "${lessons.size} lekcji"
         b.aximoEmptyState.visibility = if (lessons.isEmpty()) View.VISIBLE else View.GONE
 
-        val accentColors = intArrayOf(
-            0xFF62D99C.toInt(), 0xFF55A8FF.toInt(), 0xFFE36CFF.toInt(),
-            0xFFFFA45B.toInt(), 0xFF46D9E8.toInt(), 0xFF76D46A.toInt()
-        )
+        val accentColors = intArrayOf(style.accent, style.accentSoft, lighten(style.accent, 0.22f), lighten(style.accentSoft, 0.28f))
 
         lessons.forEachIndexed { index, lesson ->
             val startMillis = runCatching {
@@ -224,8 +233,8 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
                 setPadding(0, 0, 12.dp, 0)
                 background = android.graphics.drawable.GradientDrawable().apply {
                     cornerRadius = 20.dp.toFloat()
-                    setColor(if (current) 0xFF171F40.toInt() else 0xFF0D1730.toInt())
-                    setStroke(1.dp, if (current) accent else 0xFF1D2B4D.toInt())
+                    setColor(if (current) surfaceAlt else surface)
+                    setStroke(1.dp, if (current) accent else accentSoft)
                 }
                 layoutParams = LinearLayout.LayoutParams(-1, -2).apply { bottomMargin = 10.dp }
             }
@@ -240,10 +249,10 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
                 text = "${index + 1}"
                 gravity = Gravity.CENTER
                 textSize = 12f
-                setTextColor(0xFFE9EDFA.toInt())
+                setTextColor(primaryText)
                 background = android.graphics.drawable.GradientDrawable().apply {
                     shape = android.graphics.drawable.GradientDrawable.OVAL
-                    setColor(0xFF182441.toInt())
+                    setColor(surfaceAlt)
                 }
                 layoutParams = LinearLayout.LayoutParams(32.dp, 32.dp).apply {
                     marginStart = 12.dp
@@ -254,10 +263,10 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
 
             val time = TextView(requireContext()).apply {
                 layoutParams = LinearLayout.LayoutParams(58.dp, -2)
-                text = "${lesson.displayStartTime ?: "--:--"}\n${lesson.displayEndTime ?: "--:--"}"
+                text = "${lesson.displayStartTime?.getStringHM() ?: "--:--"}\n${lesson.displayEndTime?.getStringHM() ?: "--:--"}"
                 textSize = 11f
                 gravity = Gravity.CENTER
-                setTextColor(0xFFB9C4DF.toInt())
+                setTextColor(mutedText)
             }
             card.addView(time)
 
@@ -268,13 +277,13 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
             val subject = TextView(requireContext()).apply {
                 text = lesson.displaySubjectName?.takeIf { it.isNotBlank() } ?: "Lekcja"
                 textSize = 16f
-                setTextColor(0xFFFFFFFF.toInt())
+                setTextColor(primaryText)
                 setTypeface(typeface, android.graphics.Typeface.BOLD)
             }
             val room = TextView(requireContext()).apply {
                 text = lesson.displayClassroom?.takeIf { it.isNotBlank() }?.let { "Sala $it" } ?: "Sala —"
                 textSize = 12f
-                setTextColor(0xFF8F9DBB.toInt())
+                setTextColor(mutedText)
                 layoutParams = LinearLayout.LayoutParams(-2, -2).apply { topMargin = 4.dp }
             }
             details.addView(subject)
@@ -300,7 +309,7 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
                     text = "›"
                     textSize = 24f
                     gravity = Gravity.CENTER
-                    setTextColor(0xFF657493.toInt())
+                    setTextColor(mutedText)
                     layoutParams = LinearLayout.LayoutParams(24.dp, 40.dp)
                 }
                 card.addView(chevron)
@@ -312,6 +321,15 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
             b.aximoLessonContainer.addView(card)
         }
     }
+    private fun blend(foreground: Int, background: Int, amount: Float): Int {
+        val a = amount.coerceIn(0f, 1f)
+        val fr = android.graphics.Color.red(foreground); val fg = android.graphics.Color.green(foreground); val fb = android.graphics.Color.blue(foreground)
+        val br = android.graphics.Color.red(background); val bg = android.graphics.Color.green(background); val bb = android.graphics.Color.blue(background)
+        return android.graphics.Color.rgb((fr * a + br * (1f - a)).toInt(), (fg * a + bg * (1f - a)).toInt(), (fb * a + bb * (1f - a)).toInt())
+    }
+
+    private fun lighten(color: Int, amount: Float): Int = blend(0xFFFFFFFF.toInt(), color, amount)
+
     private val Int.dp: Int get() = (this * resources.displayMetrics.density).toInt()
 
     private val broadcastReceiver = object : BroadcastReceiver() {
