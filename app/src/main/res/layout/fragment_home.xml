@@ -189,6 +189,92 @@ Wiadomości"/>
             </LinearLayout>
         </HorizontalScrollView>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
+            android:text="Centrum dnia"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold"/>
+
+        <LinearLayout
+            android:id="@+id/dayToolsCard"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="vertical"
+            android:background="@drawable/aximo_section_background"
+            android:padding="12dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="92dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/dayAttendanceCard"
+                    style="@style/AximoHomeQuickCard"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="◉
+Frekwencja"/>
+
+                <TextView
+                    android:id="@+id/dayGradesCard"
+                    style="@style/AximoHomeQuickCard"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="★
+Oceny"/>
+
+                <TextView
+                    android:id="@+id/dayMessagesCard"
+                    style="@style/AximoHomeQuickCard"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="✉
+Wiadomości"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="92dp"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/dayHomeworkCard"
+                    style="@style/AximoHomeQuickCard"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="✓
+Zadania"/>
+
+                <TextView
+                    android:id="@+id/dayTomorrowCard"
+                    style="@style/AximoHomeQuickCard"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="→
+Jutro"/>
+
+                <TextView
+                    android:id="@+id/daySearchCard"
+                    style="@style/AximoHomeQuickCard"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="⌕
+Szukaj"/>
+            </LinearLayout>
+        </LinearLayout>
+
         <LinearLayout
             android:id="@+id/focusStatusCard"
             android:layout_width="match_parent"
