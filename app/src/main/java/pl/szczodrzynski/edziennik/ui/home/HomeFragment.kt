@@ -361,9 +361,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
                 args = android.os.Bundle().apply { putBoolean("aximoTomorrow", true) }
             )
         }
-        b.dayAttendanceCard.setOnClickListener {
-            activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.HOME)
-            Toast.makeText(activity, "Frekwencję znajdziesz w menu Aximo", Toast.LENGTH_SHORT).show()
+        b.dayAttendanceCard.onClick {
+            activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.ATTENDANCE)
         }
         b.daySearchCard.setOnClickListener {
             activity.bottomSheet.open()
