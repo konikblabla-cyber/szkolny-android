@@ -193,16 +193,26 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/bgCustom"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:background="@drawable/aximo_icon_button_background"
-            android:gravity="center"
-            android:text="＋ Wybierz własne zdjęcie"
-            android:textColor="#D4BEFF"
-            android:textSize="13sp"
-            android:textStyle="bold" />
+            android:text="Własne tapety"
+            android:textColor="#AFA3C8"
+            android:textSize="12sp" />
+
+        <GridLayout
+            android:id="@+id/customWallpaperGrid"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:columnCount="5"
+            android:useDefaultMargins="false">
+            <TextView android:id="@+id/customBg1" android:layout_width="0dp" android:layout_height="58dp" android:layout_columnWeight="1" android:layout_marginEnd="4dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="+ 1" android:textColor="#D4BEFF" android:textSize="11sp" />
+            <TextView android:id="@+id/customBg2" android:layout_width="0dp" android:layout_height="58dp" android:layout_columnWeight="1" android:layout_marginStart="2dp" android:layout_marginEnd="4dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="+ 2" android:textColor="#D4BEFF" android:textSize="11sp" />
+            <TextView android:id="@+id/customBg3" android:layout_width="0dp" android:layout_height="58dp" android:layout_columnWeight="1" android:layout_marginStart="2dp" android:layout_marginEnd="4dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="+ 3" android:textColor="#D4BEFF" android:textSize="11sp" />
+            <TextView android:id="@+id/customBg4" android:layout_width="0dp" android:layout_height="58dp" android:layout_columnWeight="1" android:layout_marginStart="2dp" android:layout_marginEnd="4dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="+ 4" android:textColor="#D4BEFF" android:textSize="11sp" />
+            <TextView android:id="@+id/customBg5" android:layout_width="0dp" android:layout_height="58dp" android:layout_columnWeight="1" android:layout_marginStart="2dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="+ 5" android:textColor="#D4BEFF" android:textSize="11sp" />
+        </GridLayout>
 
         <TextView
             android:id="@+id/appearanceSaved"
