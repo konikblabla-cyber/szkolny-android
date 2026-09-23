@@ -177,6 +177,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
         b.homeSettingsHit.setOnClickListener {
             activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.SETTINGS)
         }
+        b.homeMessagesHit.setOnClickListener {
+            activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.MESSAGES)
+        }
 
         if (!manager.isNotificationPermissionGranted) {
             manager.requestNotificationsPermission(activity, 0, false){}
