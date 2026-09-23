@@ -158,7 +158,10 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
         val accentSoft = style.accentSoft
         val primaryText = style.text
         val mutedText = blend(style.text, style.background, 0.52f)
-        b.aximoPlanScroll.setBackgroundColor(bg)
+        // Timetable intentionally uses a stable black canvas: the animated app wallpaper
+        // stays available everywhere else, but the plan remains calm and easy to scan.
+        b.aximoPlanScroll.setBackgroundColor(android.graphics.Color.BLACK)
+        b.timetableLayout.setBackgroundColor(android.graphics.Color.BLACK)
 
         if (!isAdded) return
 
@@ -365,6 +368,15 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
         // must not steal vertical gestures from it (otherwise scrolling to the top
         // can trigger an unwanted refresh instead of moving the timetable).
         activity.swipeRefreshLayout.isEnabled = false
+        b.aximoPlanScroll.setOnTouchListener { view, event ->
+            when (event.actionMasked) {
+                android.view.MotionEvent.ACTION_DOWN,
+                android.view.MotionEvent.ACTION_MOVE -> view.parent?.requestDisallowInterceptTouchEvent(true)
+                android.view.MotionEvent.ACTION_UP,
+                android.view.MotionEvent.ACTION_CANCEL -> view.parent?.requestDisallowInterceptTouchEvent(false)
+            }
+            false
+        }
         ContextCompat.registerReceiver(
             activity,
             broadcastReceiver,
