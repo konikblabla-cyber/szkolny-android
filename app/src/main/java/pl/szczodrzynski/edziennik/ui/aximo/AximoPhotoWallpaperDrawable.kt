@@ -136,6 +136,7 @@ class AximoPhotoWallpaperDrawable(
     companion object {
         // Stable Unsplash photo URLs; downloaded once and then used offline.
         private val PHOTO_URLS = mapOf(
+            "default" to "https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=1600&q=82",
             "mountains" to "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee?auto=format&fit=crop&w=1600&q=82",
             "sea" to "https://images.unsplash.com/photo-1507525428034-b723cf961d3e?auto=format&fit=crop&w=1600&q=82",
             "aurora" to "https://images.unsplash.com/photo-1483347756197-71ef80e95f73?auto=format&fit=crop&w=1600&q=82",
