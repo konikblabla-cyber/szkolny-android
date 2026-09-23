@@ -408,7 +408,10 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
         // gone. While the timetable is visible, its own NestedScrollView owns
         // vertical gestures and pull-to-refresh is disabled.
         activity.swipeRefreshLayout.setOnChildScrollUpCallback(null)
-        activity.swipeRefreshLayout.isEnabled = true
+        val refreshEnabled = requireContext()
+            .getSharedPreferences("aximo_settings", Context.MODE_PRIVATE)
+            .getBoolean("diary_swipe_refresh", true)
+        activity.swipeRefreshLayout.isEnabled = refreshEnabled
         super.onDestroyView()
     }
 
@@ -462,7 +465,16 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
         val selectedDate = arguments?.getString("timetableDate", "")
             ?.let { if (it.isBlank()) null else Date.fromY_m_d(it) }
         val openTomorrow = arguments?.getBoolean("aximoTomorrow", false) == true
-        val requestedDate = selectedDate ?: if (openTomorrow) today.clone().stepForward(0, 0, 1) else today
+        val scrollToToday = requireContext()
+            .getSharedPreferences("aximo_settings", Context.MODE_PRIVATE)
+            .getBoolean("diary_scroll_today", true)
+        val rememberedDate = pageSelection?.takeIf { remembered ->
+            items.any { item -> item == remembered }
+        }
+        val requestedDate = selectedDate
+            ?: if (openTomorrow) today.clone().stepForward(0, 0, 1)
+            else if (scrollToToday) today
+            else rememberedDate ?: today
         savedPageSelection = items.indexOfFirst { it == requestedDate }.takeIf { it >= 0 }
             ?: items.indexOfFirst { it == today }.takeIf { it >= 0 }
             ?: 0
