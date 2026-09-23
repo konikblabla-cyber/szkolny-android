@@ -70,7 +70,7 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
         ).forEach { (view, value) -> view.setOnClickListener { saveAccent(value) } }
 
         mapOf(
-            b.bgDefault to "default", b.bgMountains to "mountains",
+            b.bgBlack to "black", b.bgDefault to "default", b.bgMountains to "mountains",
             b.bgSea to "sea", b.bgCity to "aurora", b.bgAbstract to "cosmos",
             b.bgSunset to "sunset", b.bgForest to "forest", b.bgRain to "rain",
             b.bgEmber to "ember", b.bgLavender to "lavender", b.bgNeon to "neon",
@@ -268,12 +268,12 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
 
     private fun setBackground(value: String) {
         val views: List<View> = listOf(
-            b.bgDefault,b.bgMountains,b.bgSea,b.bgCity,b.bgAbstract,
+            b.bgBlack,b.bgDefault,b.bgMountains,b.bgSea,b.bgCity,b.bgAbstract,
             b.bgSunset,b.bgForest,b.bgRain,b.bgEmber,b.bgLavender,b.bgNeon,b.bgMist,b.bgStars,
             b.customBg1,b.customBg2,b.customBg3,b.customBg4,b.customBg5
         )
         val names = listOf(
-            "default","mountains","sea","aurora","cosmos",
+            "black","default","mountains","sea","aurora","cosmos",
             "sunset","forest","rain","ember","lavender","neon","mist","stars",
             "custom_0","custom_1","custom_2","custom_3","custom_4"
         )
