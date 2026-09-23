@@ -55,7 +55,9 @@ class AximoLessonSilenceReceiver : BroadcastReceiver() {
                                 intent.getLongExtra("aximoLessonId", -1L),
                                 intent.getLongExtra("aximoLessonStart", -1L)
                             )
-                            AximoLessonNotifications.scheduleTodayAndTomorrow(appContext, profileId)
+                            if (!intent.getBooleanExtra(AximoLessonNotifications.EXTRA_PERSISTENT, false)) {
+                                AximoLessonNotifications.scheduleTodayAndTomorrow(appContext, profileId)
+                            }
                         }
                     }
                 }
