@@ -353,6 +353,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
             activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.SILENCE)
         }
 
+        b.homeAttendanceShortcut.onClick { activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.ATTENDANCE) }
+        b.homeCalendarShortcut.onClick { activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.AGENDA) }
+        b.homeMoreShortcut.onClick { activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.MORE) }
+
         b.quickPlan.onClick { activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.TIMETABLE) }
         b.quickHomework.onClick { activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.HOMEWORK) }
         b.quickGrades.onClick { activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.GRADES) }
