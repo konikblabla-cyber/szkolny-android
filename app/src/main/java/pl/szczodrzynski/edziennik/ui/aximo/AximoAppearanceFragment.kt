@@ -273,7 +273,7 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
             b.customBg1,b.customBg2,b.customBg3,b.customBg4,b.customBg5
         )
         val names = listOf(
-            "default","mountains","sea","city","abstract",
+            "default","mountains","sea","aurora","cosmos",
             "sunset","forest","rain","ember","lavender","neon","mist","stars",
             "custom_0","custom_1","custom_2","custom_3","custom_4"
         )
