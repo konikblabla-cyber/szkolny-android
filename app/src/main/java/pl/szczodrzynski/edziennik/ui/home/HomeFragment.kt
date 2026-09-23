@@ -282,6 +282,7 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
             b.todaySummaryCard,
             b.focusStatusCard,
             b.quickActions,
+            b.dayToolsCard,
             b.configHint
         )
         entranceViews.forEachIndexed { index, view ->
@@ -301,6 +302,12 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
             b.quickGrades,
             b.quickTomorrow,
             b.quickMessages,
+            b.dayAttendanceCard,
+            b.dayGradesCard,
+            b.dayMessagesCard,
+            b.dayHomeworkCard,
+            b.dayTomorrowCard,
+            b.daySearchCard,
             b.configureCards
         ).forEach { view ->
             view.setOnTouchListener { v, event ->
