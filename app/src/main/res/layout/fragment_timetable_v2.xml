@@ -3,7 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#02091A">
+    android:background="#02091A"
+    android:fitsSystemWindows="true">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/timetableLayout"
@@ -46,7 +47,7 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="56dp"
+                    android:layout_height="64dp"
                     android:gravity="center_vertical">
 
                     <TextView
@@ -56,7 +57,8 @@
                         android:text="A"
                         android:textColor="#FFFFFF"
                         android:textSize="21sp"
-                        android:textStyle="bold" />
+                        android:textStyle="bold"
+                        android:background="@drawable/aximo_plan_day_chip" />
 
                     <TextView
                         android:layout_width="0dp"
@@ -65,7 +67,7 @@
                         android:layout_weight="1"
                         android:text="Plan lekcji"
                         android:textColor="#F7F5FF"
-                        android:textSize="25sp"
+                        android:textSize="24sp"
                         android:textStyle="bold" />
 
                     <TextView
