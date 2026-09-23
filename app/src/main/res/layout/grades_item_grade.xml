@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="2dp"
     android:layout_marginBottom="7dp"
-    android:backgroundTint="#211B35"
+    android:backgroundTint="#0F1830"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?selectableItemBackground"
@@ -17,7 +17,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:padding="12dp">
+        android:padding="13dp">
 
         <pl.szczodrzynski.edziennik.ui.grades.GradeView
             android:id="@+id/gradeName"
@@ -31,7 +31,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
+            android:layout_marginStart="13dp"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -66,7 +66,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:textColor="#88839A"
+                    android:textColor="#7482A3"
                     android:textSize="10sp"
                     tools:text="14.10.2015"/>
             </LinearLayout>
@@ -81,7 +81,7 @@
                     android:id="@+id/gradeWeight"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="#AFA8BE"
+                    android:textColor="#9AA7C4"
                     android:textSize="10sp"
                     tools:text="waga 30"/>
 
@@ -93,7 +93,7 @@
                     android:layout_weight="1"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textColor="#BDB7CD"
+                    android:textColor="#8F9DBB"
                     android:textSize="10sp"
                     tools:text="Kartkówki - K1"/>
 
@@ -104,7 +104,7 @@
                     android:layout_marginStart="8dp"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textColor="#807A91"
+                    android:textColor="#6F7C9B"
                     android:textSize="10sp"
                     tools:text="Jan Kowalski"/>
             </LinearLayout>
