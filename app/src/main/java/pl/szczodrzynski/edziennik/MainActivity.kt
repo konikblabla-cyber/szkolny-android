@@ -1229,6 +1229,27 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         }, 3000)
     }
 
+    /**
+     * Re-apply Aximo appearance to the currently visible UI immediately.
+     * This avoids forcing the user to leave and reopen the app after changing a style.
+     */
+    fun refreshAximoAppearance() {
+        setAppBackground()
+        val style = AximoAppearanceStyle.fromOrdinal(
+            getSharedPreferences("aximo_appearance", MODE_PRIVATE)
+                .getInt("style", AximoAppearanceStyle.AXIMO.ordinal)
+        )
+        window.statusBarColor = style.background
+        window.navigationBarColor = style.background
+        b.root.post {
+            AximoAppearanceApplier.apply(b.root, this)
+            supportFragmentManager.findFragmentById(R.id.fragment)?.view?.let {
+                AximoAppearanceApplier.apply(it, this)
+            }
+        }
+        b.aximoBottomNavigation.postInvalidate()
+    }
+
     fun setAppBackground() {
         try {
             val custom = app.config.ui.appBackground
