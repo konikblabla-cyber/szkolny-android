@@ -167,8 +167,6 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
 
     private fun addSchoolSettings(c: LinearLayout) {
         addSwitch(c, "Tryb szkolny", "Automatycznie reaguj na godziny lekcji.", "school_mode", true)
-        addSwitch(c, "Wycisz przed lekcją", "Wycisz telefon 10 minut przed rozpoczęciem.", "school_mute_before", true)
-        addSwitch(c, "Przywróć dźwięk po lekcjach", "Przywróć normalny dźwięk po zakończeniu całego dnia.", "school_restore_after", true)
         addSwitch(c, "Pokazuj status trybu szkolnego", "Pokaż, czy automatyzacja jest aktywna.", "school_status", true)
         addSwitch(c, "Pomijaj dni wolne", "Nie uruchamiaj automatyzacji w dni wolne.", "school_skip_free_days", true)
         addSwitch(c, "Uwzględniaj zastępstwa", "Dopasuj wyciszanie do aktualnego planu.", "school_substitutions", true)
@@ -255,13 +253,13 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
             prefs.edit().putBoolean(key, checked).apply()
             activity.b.aximoBottomNavigation.refreshSettings()
             (activity.supportFragmentManager.findFragmentById(R.id.fragment) as? pl.szczodrzynski.edziennik.ui.home.HomeFragment)?.applyAximoSettings()
+            if (key == "diary_swipe_refresh") {
+                activity.swipeRefreshLayout.isEnabled = checked && activity.supportFragmentManager.findFragmentById(R.id.fragment) !is pl.szczodrzynski.edziennik.ui.timetable.TimetableFragment
+            }
             when (key) {
-                "school_mode", "school_mute_before", "school_restore_after" -> {
+                "school_mode" -> {
                     val app = requireContext().applicationContext as pl.szczodrzynski.edziennik.App
-                    app.config.sync.automaticSilenceEnabled =
-                        prefs.getBoolean("school_mode", true) &&
-                        prefs.getBoolean("school_mute_before", true) &&
-                        prefs.getBoolean("school_restore_after", true)
+                    app.config.sync.automaticSilenceEnabled = checked
                     if (pl.szczodrzynski.edziennik.App.profileId != 0) {
                         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                             AximoLessonSilence.scheduleTodayAndTomorrow(requireContext(), pl.szczodrzynski.edziennik.App.profileId)
