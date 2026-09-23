@@ -4,6 +4,7 @@ import android.graphics.drawable.GradientDrawable
 import android.net.Uri
 import android.os.Bundle
 import android.view.View
+import android.widget.SeekBar
 import android.widget.GridLayout
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
@@ -90,6 +91,35 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
             }
         }
         refreshWallpaperSlots()
+
+        val savedRoundness = prefs.getInt("cardRoundness", 18)
+        b.cardRoundness.progress = savedRoundness
+        b.cardRoundnessValue.text = "$savedRoundness dp"
+        b.cardRoundness.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                val value = progress.coerceIn(4, 28)
+                b.cardRoundnessValue.text = "$value dp"
+                if (fromUser) {
+                    prefs.edit().putInt("cardRoundness", value).apply()
+                    activity.refreshAximoAppearance()
+                }
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
+            override fun onStopTrackingTouch(seekBar: SeekBar?) = Unit
+        })
+
+        b.animationsEnabled.isChecked = prefs.getBoolean("animationsEnabled", true)
+        b.animationsEnabled.setOnCheckedChangeListener { _, checked ->
+            prefs.edit().putBoolean("animationsEnabled", checked).apply()
+            b.appearanceSaved.text = if (checked) "Animacje włączone ✓" else "Animacje wyłączone ✓"
+        }
+
+        b.softCards.isChecked = prefs.getBoolean("softCards", false)
+        b.softCards.setOnCheckedChangeListener { _, checked ->
+            prefs.edit().putBoolean("softCards", checked).apply()
+            activity.refreshAximoAppearance()
+            b.appearanceSaved.text = if (checked) "Delikatne karty włączone ✓" else "Delikatne karty wyłączone ✓"
+        }
     }
 
     private fun buildStyleGrid(selected: Int) {
