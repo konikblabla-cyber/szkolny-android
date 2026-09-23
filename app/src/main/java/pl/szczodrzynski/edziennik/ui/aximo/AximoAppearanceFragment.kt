@@ -71,7 +71,7 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
 
         mapOf(
             b.bgDefault to "default", b.bgMountains to "mountains",
-            b.bgSea to "sea", b.bgCity to "city", b.bgAbstract to "abstract"
+            b.bgSea to "sea", b.bgCity to "aurora", b.bgAbstract to "cosmos"
         ).forEach { (view, value) -> view.setOnClickListener { saveBackground(value) } }
 
         val customSlots = listOf(b.customBg1, b.customBg2, b.customBg3, b.customBg4, b.customBg5)
