@@ -98,7 +98,7 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
                 EventManualDialog(
                     activity,
                     App.profileId,
-                    defaultDate = items[savedPageSelection]
+                    defaultDate = items.getOrNull(savedPageSelection) ?: Date.getToday()
                 ).show()
             },
         BottomSheetPrimaryItem(true)
@@ -123,15 +123,18 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
 
     override fun getPageCount() = items.size
     override fun getPageFragment(position: Int) = TimetableDayFragment().apply {
+        val safePosition = position.coerceIn(0, (items.size - 1).coerceAtLeast(0))
+        if (items.isEmpty()) return@apply
         arguments = Bundle(
-            "date" to items[position].value,
+            "date" to items[safePosition].value,
             "startHour" to startHour,
             "endHour" to endHour,
         )
     }
 
     override fun getPageTitle(position: Int): String {
-        val date = items[position]
+        if (items.isEmpty()) return ""
+        val date = items.getOrNull(position) ?: items.firstOrNull() ?: return ""
         var pageTitle = Week.getFullDayName(date.weekDay)
         if (date > weekEnd || date < weekStart) {
             pageTitle += ", ${date.stringDm}"
@@ -402,11 +405,15 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
     }
 
     override suspend fun onFabClick() {
-        b.viewPager.setCurrentItem(items.indexOfFirst { it == today }, true)
+        val index = items.indexOfFirst { it == today }
+        if (index >= 0) b.viewPager.setCurrentItem(index, true)
     }
 
     override suspend fun onPageSelected(position: Int) {
-        renderAximoPlan(items[position])
+        val date = items.getOrNull(position) ?: return
+        savedPageSelection = position
+        pageSelection = date
+        renderAximoPlan(date)
         activity.navView.bottomBar.fabEnable = items[position] != today
         if (activity.navView.bottomBar.fabEnable && !fabShown) {
             activity.gainAttentionFAB()
