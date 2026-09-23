@@ -2,6 +2,7 @@ package pl.szczodrzynski.edziennik.ui.aximo
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.GradientDrawable
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -12,13 +13,20 @@ object AximoAppearanceApplier {
         val prefs = context.getSharedPreferences("aximo_appearance", 0)
         val style = AximoAppearanceStyle.fromOrdinal(prefs.getInt("style", AximoAppearanceStyle.AXIMO.ordinal))
         val accent = prefs.getInt("accentColor", style.accent)
-        applyView(root, style, accent, true)
+        val roundness = prefs.getInt("cardRoundness", 18).coerceIn(4, 28)
+        val softCards = prefs.getBoolean("softCards", false)
+        applyView(root, style, accent, true, roundness, softCards)
     }
 
-    private fun applyView(view: View, style: AximoAppearanceStyle, accent: Int, isRoot: Boolean) {
+    private fun applyView(view: View, style: AximoAppearanceStyle, accent: Int, isRoot: Boolean, roundness: Int, softCards: Boolean) {
         // The appearance picker contains its own 20 preview cards; never flatten them into the selected style.
         if (view.id == R.id.styleGrid) return
         val drawable = view.background?.mutate()
+        if (drawable is GradientDrawable && view.id != R.id.styleGrid) {
+            drawable.cornerRadius = roundness * view.resources.displayMetrics.density
+            if (softCards) drawable.alpha = 205 else drawable.alpha = 255
+            view.background = drawable
+        }
         val bg = (drawable as? ColorDrawable)?.color
         when {
             bg in ROOT_BACKGROUNDS -> view.setBackgroundColor(style.background)
@@ -34,7 +42,7 @@ object AximoAppearanceApplier {
             }
         }
         if (view is ViewGroup) {
-            for (i in 0 until view.childCount) applyView(view.getChildAt(i), style, accent, false)
+            for (i in 0 until view.childCount) applyView(view.getChildAt(i), style, accent, false, roundness, softCards)
         }
     }
 
