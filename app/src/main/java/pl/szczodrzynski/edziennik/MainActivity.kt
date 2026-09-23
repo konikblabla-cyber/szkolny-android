@@ -1278,7 +1278,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
             // Aximo supports a true global black canvas. It bypasses wallpapers so every screen uses the same background.
             if (background == "black") {
-                b.root.background = android.graphics.ColorDrawable(android.graphics.Color.BLACK)
+                b.root.setBackgroundColor(android.graphics.Color.BLACK)
                 return
             }
 
