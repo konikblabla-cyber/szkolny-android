@@ -115,7 +115,7 @@
                 android:layout_marginTop="8dp"
                 android:text="Plan lekcji"
                 android:textColor="#FFFFFF"
-                android:textSize="29sp"
+                android:textSize="26sp"
                 android:textStyle="bold"/>
             <TextView
                 android:id="@+id/nowLessonDetails"
