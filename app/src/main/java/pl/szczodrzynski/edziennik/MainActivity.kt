@@ -1274,16 +1274,49 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             val style = pl.szczodrzynski.edziennik.ui.aximo.AximoAppearanceStyle.fromOrdinal(styleIndex)
 
             val colors = when (background) {
-                "mountains" -> intArrayOf(0xFF141226.toInt(), 0xFF251C42.toInt(), 0xFF10192A.toInt())
-                "sea" -> intArrayOf(0xFF101A24.toInt(), 0xFF172C38.toInt(), 0xFF111D2A.toInt())
-                "city" -> intArrayOf(0xFF17131F.toInt(), 0xFF30203A.toInt(), 0xFF10121F.toInt())
+                "mountains" -> intArrayOf(0xFF09091B.toInt(), 0xFF21163D.toInt(), 0xFF10192A.toInt())
+                "sea" -> intArrayOf(0xFF07151F.toInt(), 0xFF123A48.toInt(), 0xFF091C2B.toInt())
+                "city" -> intArrayOf(0xFF0D0917.toInt(), 0xFF2A1734.toInt(), 0xFF0C101D.toInt())
+                "aurora" -> intArrayOf(0xFF07131F.toInt(), 0xFF123B3B.toInt(), 0xFF17113A.toInt())
+                "cosmos" -> intArrayOf(0xFF040516.toInt(), 0xFF14082E.toInt(), 0xFF090B28.toInt())
                 "abstract" -> intArrayOf(style.background, style.surface, style.accentSoft)
                 else -> intArrayOf(style.background, style.surface, style.surfaceAlt)
             }
-            b.root.background = GradientDrawable(
-                GradientDrawable.Orientation.TL_BR,
-                colors
-            )
+            val base = GradientDrawable(GradientDrawable.Orientation.TL_BR, colors)
+            val layers = mutableListOf<android.graphics.drawable.Drawable>(base)
+            if (background == "mountains") {
+                layers += resources.getDrawable(R.drawable.aximo_home_landscape, theme)
+            } else {
+                val glowColors = when (background) {
+                    "cosmos" -> intArrayOf(0x668D72FF, 0x555B8DFF, 0x445CCBFF)
+                    "aurora" -> intArrayOf(0x5542D8B0, 0x558D72FF, 0x4438A6FF)
+                    "sea" -> intArrayOf(0x5542C9D8, 0x443C9CFF, 0x3332E0C4)
+                    "city" -> intArrayOf(0x556D42FF, 0x44D77ABF, 0x3342A8FF)
+                    else -> intArrayOf(0x558D72FF, 0x445B8DFF, 0x3342C9D8)
+                }
+                glowColors.forEach { color ->
+                    layers += GradientDrawable(
+                        GradientDrawable.Orientation.TL_BR,
+                        intArrayOf(color, android.graphics.Color.TRANSPARENT)
+                    )
+                }
+            }
+            val wallpaper = android.graphics.drawable.LayerDrawable(layers.toTypedArray())
+            if (background != "mountains") {
+                val positions = arrayOf(
+                    intArrayOf(0, 0, 420, 520),
+                    intArrayOf(260, 180, 0, 0),
+                    intArrayOf(0, 520, 420, 0)
+                )
+                for (i in positions.indices) {
+                    val layer = i + 1
+                    if (layer < wallpaper.numberOfLayers) {
+                        val p = positions[i]
+                        wallpaper.setLayerInset(layer, p[0], p[1], p[2], p[3])
+                    }
+                }
+            }
+            b.root.background = wallpaper
         } catch (e: Exception) {
             Timber.e(e, "Aximo background could not be applied")
         }
