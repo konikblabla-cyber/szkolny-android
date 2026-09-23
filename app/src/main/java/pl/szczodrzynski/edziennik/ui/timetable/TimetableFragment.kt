@@ -83,9 +83,7 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
                     .apply {
                         addOnPositiveButtonClickListener { millis ->
                             val dateSelected = Date.fromMillisUtc(millis)
-                            val index = items.indexOfFirst { it == dateSelected }
-                            if (index != -1)
-                                b.viewPager.setCurrentItem(index, true)
+                            showDate(dateSelected, animate = true)
                         }
                     }
                     .show(activity.supportFragmentManager, TAG)
@@ -181,8 +179,7 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
                     setStroke(1.dp, if (selected) primaryText else accentSoft)
                 }
                 setOnClickListener {
-                    val index = items.indexOfFirst { it == day }
-                    if (index >= 0) b.viewPager.setCurrentItem(index, true)
+                    showDate(day, animate = true)
                 }
             }
             val dayName = TextView(requireContext()).apply {
@@ -321,6 +318,17 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
             b.aximoLessonContainer.addView(card)
         }
     }
+    private fun showDate(date: Date, animate: Boolean = false) {
+        val index = items.indexOfFirst { it == date }
+        if (index < 0) return
+        savedPageSelection = index
+        pageSelection = items[index]
+        renderAximoPlan(items[index])
+        if (animate && b.viewPager.currentItem != index) {
+            b.viewPager.setCurrentItem(index, true)
+        }
+    }
+
     private fun blend(foreground: Int, background: Int, amount: Float): Int {
         val a = amount.coerceIn(0f, 1f)
         val fr = android.graphics.Color.red(foreground); val fg = android.graphics.Color.green(foreground); val fb = android.graphics.Color.blue(foreground)
@@ -424,15 +432,17 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
         val openTomorrow = arguments?.getBoolean("aximoTomorrow", false) == true
         val requestedDate = selectedDate ?: if (openTomorrow) today.clone().stepForward(0, 0, 1) else today
         savedPageSelection = items.indexOfFirst { it == requestedDate }.takeIf { it >= 0 }
-            ?: items.indexOfFirst { it == today }
+            ?: items.indexOfFirst { it == today }.takeIf { it >= 0 }
+            ?: 0
+        pageSelection = items.getOrNull(savedPageSelection)
 
         super.onViewReady(savedInstanceState)
-        renderAximoPlan(items.getOrNull(savedPageSelection) ?: items.firstOrNull() ?: today)
+        val initialDate = items.getOrNull(savedPageSelection) ?: items.firstOrNull() ?: today
+        renderAximoPlan(initialDate)
     }
 
     override suspend fun onFabClick() {
-        val index = items.indexOfFirst { it == today }
-        if (index >= 0) b.viewPager.setCurrentItem(index, true)
+        showDate(today, animate = true)
     }
 
     override suspend fun onPageSelected(position: Int) {
