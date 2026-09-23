@@ -158,10 +158,9 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
         val accentSoft = blend(style.accent, android.graphics.Color.BLACK, 0.52f)
         val primaryText = android.graphics.Color.WHITE
         val mutedText = android.graphics.Color.rgb(166, 166, 180)
-        // Timetable intentionally uses a stable black canvas: the animated app wallpaper
-        // stays available everywhere else, but the plan remains calm and easy to scan.
-        b.aximoPlanScroll.setBackgroundColor(android.graphics.Color.BLACK)
-        b.timetableLayout.setBackgroundColor(android.graphics.Color.BLACK)
+        // Keep the timetable transparent so the global Aximo background choice is visible here too.
+        b.aximoPlanScroll.setBackgroundColor(android.graphics.Color.TRANSPARENT)
+        b.timetableLayout.setBackgroundColor(android.graphics.Color.TRANSPARENT)
 
         if (!isAdded) return
 
