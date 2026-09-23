@@ -352,6 +352,23 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
         b.quickHomework.onClick { activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.HOMEWORK) }
         b.quickGrades.onClick { activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.GRADES) }
         b.quickMessages.onClick { activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.MESSAGES) }
+        b.dayGradesCard.onClick { activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.GRADES) }
+        b.dayMessagesCard.onClick { activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.MESSAGES) }
+        b.dayHomeworkCard.onClick { activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.HOMEWORK) }
+        b.dayTomorrowCard.onClick {
+            activity.navigate(
+                navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.TIMETABLE,
+                args = android.os.Bundle().apply { putBoolean("aximoTomorrow", true) }
+            )
+        }
+        b.dayAttendanceCard.setOnClickListener {
+            activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.HOME)
+            Toast.makeText(activity, "Frekwencję znajdziesz w menu Aximo", Toast.LENGTH_SHORT).show()
+        }
+        b.daySearchCard.setOnClickListener {
+            activity.bottomSheet.open()
+        }
+
         b.quickTomorrow.onClick {
             activity.navigate(navTarget = pl.szczodrzynski.edziennik.data.enums.NavTarget.TIMETABLE,
                 args = android.os.Bundle().apply { putBoolean("aximoTomorrow", true) })
