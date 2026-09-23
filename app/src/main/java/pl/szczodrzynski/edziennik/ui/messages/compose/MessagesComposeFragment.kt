@@ -125,7 +125,10 @@ class MessagesComposeFragment : BaseFragment<MessagesComposeFragmentBinding, Mai
     }
 
     private suspend fun getRecipientList() {
-        if (app.data.messagesConfig.syncRecipientList && System.currentTimeMillis() - app.profile.lastReceiversSync > 1 * DAY * 1000) {
+        if (app.data.messagesConfig.syncRecipientList && (
+                System.currentTimeMillis() - app.profile.lastReceiversSync > 1 * DAY * 1000 ||
+                app.db.teacherDao().getAllNow(App.profileId).none { it.loginId != null }
+            )) {
             activity.snackbar("Pobieranie listy odbiorców...")
             EdziennikTask.recipientListGet(App.profileId).enqueue(activity)
         }
