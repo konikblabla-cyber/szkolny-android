@@ -102,6 +102,8 @@ import pl.szczodrzynski.edziennik.ui.main.ErrorSnackbar
 import pl.szczodrzynski.edziennik.ui.main.MainSnackbar
 import pl.szczodrzynski.edziennik.ui.messages.list.MessagesFragment
 import pl.szczodrzynski.edziennik.ui.timetable.TimetableFragment
+import pl.szczodrzynski.edziennik.ui.aximo.AximoAppearanceStyle
+import pl.szczodrzynski.edziennik.ui.aximo.AximoAppearanceApplier
 import pl.szczodrzynski.edziennik.utils.BigNightUtil
 import pl.szczodrzynski.edziennik.utils.PausedNavigationData
 import pl.szczodrzynski.edziennik.utils.Utils
@@ -1151,6 +1153,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         transaction.replace(R.id.fragment, fragment)
         transaction.commitAllowingStateLoss()
         b.aximoBottomNavigation.setActiveTarget(navTarget)
+        b.fragment.post { supportFragmentManager.findFragmentById(R.id.fragment)?.view?.let { AximoAppearanceApplier.apply(it, this) } }
 
         // TASK DESCRIPTION
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
