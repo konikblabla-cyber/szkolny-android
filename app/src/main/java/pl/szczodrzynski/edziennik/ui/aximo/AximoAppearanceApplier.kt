@@ -2,6 +2,7 @@ package pl.szczodrzynski.edziennik.ui.aximo
 
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.GradientDrawable
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
@@ -15,9 +16,17 @@ object AximoAppearanceApplier {
     }
 
     private fun applyView(view: View, style: AximoAppearanceStyle, accent: Int, isRoot: Boolean) {
-        val bg = (view.background as? ColorDrawable)?.color
-        if (isRoot || bg in ROOT_BACKGROUNDS) view.setBackgroundColor(style.background)
-        else if (bg in SURFACE_BACKGROUNDS) view.setBackgroundColor(style.surface)
+        val drawable = view.background?.mutate()
+        val bg = (drawable as? ColorDrawable)?.color
+        when {
+            isRoot || bg in ROOT_BACKGROUNDS -> view.setBackgroundColor(style.background)
+            bg in SURFACE_BACKGROUNDS -> view.setBackgroundColor(style.surface)
+            drawable is GradientDrawable && view.id != View.NO_ID -> {
+                // Re-theme existing Aximo cards without replacing their shape/radius.
+                drawable.setColor(style.surface)
+                drawable.setStroke(1, style.accentSoft)
+            }
+        }
 
         if (view is TextView) {
             val color = view.currentTextColor
