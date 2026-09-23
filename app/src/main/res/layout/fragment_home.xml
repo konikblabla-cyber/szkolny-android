@@ -32,7 +32,9 @@
                     android:layout_height="wrap_content"
                     android:text="Poniedziałek, 22 września"
                     android:textColor="#8F9DBB"
-                    android:textSize="12sp"/>
+                    android:textSize="11sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.04"/>
                 <TextView
                     android:id="@+id/homeGreeting"
                     android:layout_width="wrap_content"
@@ -40,7 +42,7 @@
                     android:layout_marginTop="2dp"
                     android:text="Cześć!"
                     android:textColor="#FFFFFF"
-                    android:textSize="25sp"
+                    android:textSize="27sp"
                     android:textStyle="bold"/>
             </LinearLayout>
 
@@ -64,10 +66,11 @@
             android:id="@+id/nowCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/aximo_hero_background"
             android:orientation="vertical"
             android:padding="20dp"
+            android:elevation="3dp"
             android:clickable="true"
             android:focusable="true">
 
@@ -79,7 +82,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="TERAZ / NASTĘPNA LEKCJA"
+                    android:text="●  TERAZ  /  NASTĘPNA LEKCJA"
                     android:textColor="#B58CFF"
                     android:textSize="10sp"
                     android:textStyle="bold"/>
@@ -96,11 +99,13 @@
                 android:id="@+id/nowLesson"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="12dp"
                 android:text="Plan lekcji"
                 android:textColor="#FFFFFF"
-                android:textSize="27sp"
-                android:textStyle="bold"/>
+                android:textSize="29sp"
+                android:textStyle="bold"
+                android:maxLines="2"
+                android:ellipsize="end"/>
             <TextView
                 android:id="@+id/nowLessonDetails"
                 android:layout_width="match_parent"
@@ -156,15 +161,18 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
+                android:layout_marginTop="16dp"
                 android:background="@drawable/aximo_chip_background"
                 android:paddingStart="11dp"
                 android:paddingTop="7dp"
                 android:paddingEnd="11dp"
                 android:paddingBottom="7dp"
-                android:text="Otwórz plan →"
+                android:text="Otwórz plan  →"
                 android:textColor="#FFFFFF"
-                android:textSize="12sp"/>
+                android:textSize="12sp"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true"/>
         </LinearLayout>
 
         <TextView
@@ -173,7 +181,7 @@
             android:layout_marginTop="22dp"
             android:text="Dzisiaj"
             android:textColor="#FFFFFF"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold"/>
 
         <LinearLayout
@@ -183,13 +191,14 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/aximo_section_background"
             android:orientation="horizontal"
-            android:padding="8dp">
-            <LinearLayout android:layout_width="0dp" android:layout_height="76dp" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+            android:padding="8dp"
+            android:elevation="2dp">
+            <LinearLayout android:layout_width="0dp" android:layout_height="82dp" android:layout_weight="1" android:layout_marginEnd="5dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:orientation="vertical">
                 <TextView android:id="@+id/todayLessonsCount" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="#FFFFFF" android:textSize="22sp" android:textStyle="bold"/>
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Lekcje" android:textColor="#7F8BA8" android:textSize="11sp"/>
             </LinearLayout>
             <View android:layout_width="1dp" android:layout_height="48dp" android:layout_gravity="center" android:background="#293653"/>
-            <LinearLayout android:layout_width="0dp" android:layout_height="82dp" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
+            <LinearLayout android:layout_width="0dp" android:layout_height="82dp" android:layout_weight="1" android:layout_marginStart="5dp" android:layout_marginEnd="5dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:orientation="vertical">
                 <TextView android:id="@+id/todayTasksCount" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="#FFFFFF" android:textSize="22sp" android:textStyle="bold"/>
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Zadania" android:textColor="#8793B1" android:textSize="11sp"/>
             </LinearLayout>
@@ -206,7 +215,7 @@
             android:layout_marginTop="22dp"
             android:text="Szybki dostęp"
             android:textColor="#FFFFFF"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold"/>
 
         <HorizontalScrollView
@@ -239,7 +248,7 @@ WIADOMOŚCI"/>
             android:layout_marginTop="22dp"
             android:text="Centrum dnia"
             android:textColor="#FFFFFF"
-            android:textSize="18sp"
+            android:textSize="20sp"
             android:textStyle="bold"/>
 
         <LinearLayout
@@ -249,7 +258,8 @@ WIADOMOŚCI"/>
             android:layout_marginTop="10dp"
             android:orientation="vertical"
             android:background="@drawable/aximo_section_background"
-            android:padding="12dp">
+            android:padding="10dp"
+            android:elevation="2dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -323,8 +333,9 @@ Szukaj"/>
             android:id="@+id/focusStatusCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="18dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/aximo_focus_background"
+            android:elevation="2dp"
             android:orientation="vertical"
             android:padding="16dp"
             android:clickable="true"
