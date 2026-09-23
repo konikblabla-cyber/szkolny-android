@@ -191,6 +191,7 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
+                <TextView android:id="@+id/bgBlack" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Czarne" android:textColor="#F7F1FF" android:textSize="11sp"/>
                 <TextView android:id="@+id/bgDefault" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Domyślne" android:textColor="#F7F1FF" android:textSize="11sp"/>
                 <TextView android:id="@+id/bgMountains" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Góry" android:textColor="#F7F1FF" android:textSize="11sp"/>
                 <TextView android:id="@+id/bgSea" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Ocean" android:textColor="#F7F1FF" android:textSize="11sp"/>
