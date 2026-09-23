@@ -50,6 +50,7 @@ class AximoBottomNavigation @JvmOverloads constructor(
     private var selected = -1
     private var downX = 0f
     private var downY = 0f
+    private val settingsPrefs by lazy { context.getSharedPreferences("aximo_settings", Context.MODE_PRIVATE) }
 
     private val appearance: AximoAppearanceStyle
         get() = AximoAppearanceStyle.fromOrdinal(
@@ -100,6 +101,7 @@ class AximoBottomNavigation @JvmOverloads constructor(
         // tab when MainActivity restores a fragment during launch.
         post {
             (context as? MainActivity)?.let { setActiveTarget(it.navTarget) }
+            refreshSettings()
         }
 
         // Long-press the bottom bar to reveal the radial Aximo menu.
@@ -164,6 +166,23 @@ class AximoBottomNavigation @JvmOverloads constructor(
             }
         }
 
+    fun refreshSettings() {
+        val showBottom = settingsPrefs.getBoolean("nav_bottom", true)
+        visibility = if (showBottom) View.VISIBLE else View.GONE
+        if (!showBottom) closeMenu()
+        val bar = getChildAt(0) as? LinearLayout ?: return
+        bottomItems.forEachIndexed { index, item ->
+            val enabled = item.target != NavTarget.TIMETABLE || settingsPrefs.getBoolean("nav_timetable", true)
+            bar.getChildAt(index).visibility = if (enabled) View.VISIBLE else View.GONE
+        }
+        val radialKeys = listOf("nav_grades", "nav_homework", "nav_attendance", "nav_timetable", "nav_messages", "nav_settings")
+        menuItems.forEachIndexed { index, _ ->
+            val enabled = radialKeys.getOrNull(index)?.let { settingsPrefs.getBoolean(it, true) } ?: true
+            if (!enabled) menuViews[index].alpha = 0f
+            if (!open || !enabled) menuViews[index].visibility = View.INVISIBLE
+        }
+    }
+
     fun setActiveTarget(target: NavTarget?) {
         val bar = getChildAt(0) as? LinearLayout ?: return
         bottomItems.forEachIndexed { index, item ->
@@ -211,8 +230,11 @@ class AximoBottomNavigation @JvmOverloads constructor(
 
     private fun openMenu() {
         if (open) return
+        if (!settingsPrefs.getBoolean("nav_radial", true)) return
         open = true
         menuViews.forEachIndexed { i, view ->
+            val key = listOf("nav_grades", "nav_homework", "nav_attendance", "nav_timetable", "nav_messages", "nav_settings").getOrNull(i)
+            if (key != null && !settingsPrefs.getBoolean(key, true)) return@forEachIndexed
             view.visibility = View.VISIBLE
             view.animate().alpha(1f).scaleX(1f).scaleY(1f)
                 .setStartDelay(i * 18L).setDuration(170).start()
