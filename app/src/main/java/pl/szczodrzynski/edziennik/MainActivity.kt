@@ -180,6 +180,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
         setContentView(b.root)
 
+        // Let the selected Aximo background show through every screen instead of being covered by NavView.\n        b.navView.setBackgroundColor(android.graphics.Color.TRANSPARENT)\n        b.swipeRefreshLayout.setBackgroundColor(android.graphics.Color.TRANSPARENT)\n        b.fragment.setBackgroundColor(android.graphics.Color.TRANSPARENT)\n
         // Keep the Aximo navigation above NavView/SwipeRefreshLayout so taps
         // on Start, Plan, Notifications and More can never be swallowed.
         b.aximoBottomNavigation.bringToFront()
