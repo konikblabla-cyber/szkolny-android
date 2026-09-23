@@ -4,7 +4,7 @@
     android:id="@+id/scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent"
+    android:background="#05081A"
     android:fillViewport="true"
     android:overScrollMode="never">
 
@@ -12,14 +12,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:paddingStart="14dp"
-        android:paddingTop="12dp"
-        android:paddingEnd="14dp"
+        android:paddingStart="16dp"
+        android:paddingTop="20dp"
+        android:paddingEnd="16dp"
         android:paddingBottom="126dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="58dp">
+            android:layout_height="54dp">
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -31,10 +31,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Poniedziałek, 22 września"
-                    android:textColor="#8F9DBB"
-                    android:textSize="11sp"
-                    android:textStyle="bold"
-                    android:letterSpacing="0.04"/>
+                    android:textColor="#9DA9C7"
+                    android:textSize="12sp"/>
                 <TextView
                     android:id="@+id/homeGreeting"
                     android:layout_width="wrap_content"
@@ -42,7 +40,7 @@
                     android:layout_marginTop="2dp"
                     android:text="Cześć!"
                     android:textColor="#FFFFFF"
-                    android:textSize="27sp"
+                    android:textSize="24sp"
                     android:textStyle="bold"/>
             </LinearLayout>
 
@@ -66,11 +64,10 @@
             android:id="@+id/nowCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="14dp"
             android:background="@drawable/aximo_hero_background"
             android:orientation="vertical"
             android:padding="20dp"
-            android:elevation="3dp"
             android:clickable="true"
             android:focusable="true">
 
@@ -82,8 +79,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="●  TERAZ  /  NASTĘPNA LEKCJA"
-                    android:textColor="#B58CFF"
+                    android:text="TERAZ / NASTĘPNA LEKCJA"
+                    android:textColor="#BBA6FF"
                     android:textSize="10sp"
                     android:textStyle="bold"/>
                 <TextView
@@ -91,7 +88,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Sprawdzam…"
-                    android:textColor="#C9D1E8"
+                    android:textColor="#DDE3FF"
                     android:textSize="11sp"/>
             </LinearLayout>
 
@@ -99,80 +96,31 @@
                 android:id="@+id/nowLesson"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="10dp"
                 android:text="Plan lekcji"
                 android:textColor="#FFFFFF"
-                android:textSize="29sp"
-                android:textStyle="bold"
-                android:maxLines="2"
-                android:ellipsize="end"/>
+                android:textSize="25sp"
+                android:textStyle="bold"/>
             <TextView
                 android:id="@+id/nowLessonDetails"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
                 android:text="Ładowanie danych…"
-                android:textColor="#9AA7C4"
+                android:textColor="#B7C0DA"
                 android:textSize="13sp"/>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="34dp"
-                android:layout_marginTop="14dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/aximo_chip_background"
-                    android:gravity="center"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
-                    android:text="● NA ŻYWO"
-                    android:textColor="#FFFFFF"
-                    android:textSize="10sp"
-                    android:textStyle="bold"/>
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="7dp"
-                    android:background="@drawable/aximo_more_card"
-                    android:gravity="center"
-                    android:paddingStart="10dp"
-                    android:paddingEnd="10dp"
-                    android:text="DZISIAJ"
-                    android:textColor="#D4BEFF"
-                    android:textSize="10sp"
-                    android:textStyle="bold"/>
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_marginStart="7dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="Twój szkolny pulpit"
-                    android:textColor="#AEB8D4"
-                    android:textSize="10sp"/>
-            </LinearLayout>
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="15dp"
                 android:background="@drawable/aximo_chip_background"
                 android:paddingStart="11dp"
                 android:paddingTop="7dp"
                 android:paddingEnd="11dp"
                 android:paddingBottom="7dp"
-                android:text="Otwórz plan  →"
+                android:text="Otwórz plan →"
                 android:textColor="#FFFFFF"
-                android:textSize="12sp"
-                android:textStyle="bold"
-                android:clickable="true"
-                android:focusable="true"/>
+                android:textSize="12sp"/>
         </LinearLayout>
 
         <TextView
@@ -181,7 +129,7 @@
             android:layout_marginTop="22dp"
             android:text="Dzisiaj"
             android:textColor="#FFFFFF"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold"/>
 
         <LinearLayout
@@ -191,14 +139,13 @@
             android:layout_marginTop="10dp"
             android:background="@drawable/aximo_section_background"
             android:orientation="horizontal"
-            android:padding="8dp"
-            android:elevation="2dp">
-            <LinearLayout android:layout_width="0dp" android:layout_height="82dp" android:layout_weight="1" android:layout_marginEnd="5dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:orientation="vertical">
+            android:padding="8dp">
+            <LinearLayout android:layout_width="0dp" android:layout_height="82dp" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
                 <TextView android:id="@+id/todayLessonsCount" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="#FFFFFF" android:textSize="22sp" android:textStyle="bold"/>
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Lekcje" android:textColor="#7F8BA8" android:textSize="11sp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Lekcje" android:textColor="#8793B1" android:textSize="11sp"/>
             </LinearLayout>
-            <View android:layout_width="1dp" android:layout_height="48dp" android:layout_gravity="center" android:background="#293653"/>
-            <LinearLayout android:layout_width="0dp" android:layout_height="82dp" android:layout_weight="1" android:layout_marginStart="5dp" android:layout_marginEnd="5dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:orientation="vertical">
+            <View android:layout_width="1dp" android:layout_height="48dp" android:layout_gravity="center" android:background="#25304C"/>
+            <LinearLayout android:layout_width="0dp" android:layout_height="82dp" android:layout_weight="1" android:gravity="center" android:orientation="vertical">
                 <TextView android:id="@+id/todayTasksCount" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="—" android:textColor="#FFFFFF" android:textSize="22sp" android:textStyle="bold"/>
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Zadania" android:textColor="#8793B1" android:textSize="11sp"/>
             </LinearLayout>
@@ -215,14 +162,14 @@
             android:layout_marginTop="22dp"
             android:text="Szybki dostęp"
             android:textColor="#FFFFFF"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textStyle="bold"/>
 
         <HorizontalScrollView
             android:id="@+id/quickActions"
             android:layout_width="match_parent"
-            android:layout_height="82dp"
-            android:layout_marginTop="8dp"
+            android:layout_height="98dp"
+            android:layout_marginTop="10dp"
             android:scrollbars="none"
             android:clipToPadding="false">
             <LinearLayout
@@ -230,112 +177,24 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
                 <TextView android:id="@+id/quickPlan" style="@style/AximoHomeQuickCard" android:text="▣
-PLAN LEKCJI"/>
+Plan"/>
                 <TextView android:id="@+id/quickHomework" style="@style/AximoHomeQuickCard" android:text="✓
-ZADANIA"/>
+Zadania"/>
                 <TextView android:id="@+id/quickGrades" style="@style/AximoHomeQuickCard" android:text="★
-OCENY"/>
-                <TextView android:id="@+id/quickTomorrow" style="@style/AximoHomeQuickCard" android:text="→
-JUTRO"/>
-                <TextView android:id="@+id/quickMessages" style="@style/AximoHomeQuickCard" android:text="✉
-WIADOMOŚCI"/>
-            </LinearLayout>
-        </HorizontalScrollView>
-
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="22dp"
-            android:text="Centrum dnia"
-            android:textColor="#FFFFFF"
-            android:textSize="20sp"
-            android:textStyle="bold"/>
-
-        <LinearLayout
-            android:id="@+id/dayToolsCard"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:orientation="vertical"
-            android:background="@drawable/aximo_section_background"
-            android:padding="10dp"
-            android:elevation="2dp">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="78dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/dayAttendanceCard"
-                    style="@style/AximoHomeQuickCard"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="◉
-Frekwencja"/>
-
-                <TextView
-                    android:id="@+id/dayGradesCard"
-                    style="@style/AximoHomeQuickCard"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="★
 Oceny"/>
-
-                <TextView
-                    android:id="@+id/dayMessagesCard"
-                    style="@style/AximoHomeQuickCard"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="✉
+                <TextView android:id="@+id/quickTomorrow" style="@style/AximoHomeQuickCard" android:text="→
+Jutro"/>
+                <TextView android:id="@+id/quickMessages" style="@style/AximoHomeQuickCard" android:text="✉
 Wiadomości"/>
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="78dp"
-                android:layout_marginTop="8dp"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/dayHomeworkCard"
-                    style="@style/AximoHomeQuickCard"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="✓
-Zadania"/>
-
-                <TextView
-                    android:id="@+id/dayTomorrowCard"
-                    style="@style/AximoHomeQuickCard"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="→
-Jutro"/>
-
-                <TextView
-                    android:id="@+id/daySearchCard"
-                    style="@style/AximoHomeQuickCard"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:text="⌕
-Szukaj"/>
-            </LinearLayout>
-        </LinearLayout>
+        </HorizontalScrollView>
 
         <LinearLayout
             android:id="@+id/focusStatusCard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="18dp"
             android:background="@drawable/aximo_focus_background"
-            android:elevation="2dp"
             android:orientation="vertical"
             android:padding="16dp"
             android:clickable="true"
@@ -344,7 +203,7 @@ Szukaj"/>
                 <TextView android:id="@+id/focusStatusDot" android:layout_width="10dp" android:layout_height="10dp" android:background="@drawable/aximo_focus_dot" android:text=""/>
                 <TextView android:id="@+id/focusStatusText" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:layout_marginStart="10dp" android:text="Tryb szkolny" android:textColor="#FFFFFF" android:textSize="14sp" android:textStyle="bold"/>
             </LinearLayout>
-            <TextView android:id="@+id/focusStatusDetails" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="Automatyczne wyciszanie telefonu" android:textColor="#8F9DBB" android:textSize="12sp"/>
+            <TextView android:id="@+id/focusStatusDetails" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="Automatyczne wyciszanie telefonu" android:textColor="#8F9AB8" android:textSize="12sp"/>
         </LinearLayout>
 
         <LinearLayout
