@@ -76,19 +76,22 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
 
     private fun buildStyleGrid(selected: Int) {
         b.styleGrid.removeAllViews()
+        val density = resources.displayMetrics.density
+        fun dp(value: Int): Int = (value * density).toInt()
+
         AximoAppearanceStyle.entries.forEachIndexed { index, style ->
             val card = TextView(requireContext()).apply {
                 text = "  " + style.title + "\n  " + if (index == selected) "✓ Wybrany" else "Dotknij, aby wybrać"
                 setTextColor(style.text)
                 textSize = 13f
-                setPadding(10, 10, 10, 10)
+                setPadding(dp(10), dp(10), dp(10), dp(10))
                 gravity = android.view.Gravity.CENTER_VERTICAL
                 background = GradientDrawable(
                     GradientDrawable.Orientation.TL_BR,
                     intArrayOf(style.surfaceAlt, style.surface)
                 ).apply {
-                    cornerRadius = 18f
-                    setStroke(if (index == selected) 3 else 1, if (index == selected) style.accent else style.accentSoft)
+                    cornerRadius = dp(18).toFloat()
+                    setStroke(if (index == selected) dp(3) else dp(1), if (index == selected) style.accent else style.accentSoft)
                 }
                 isClickable = true
                 isFocusable = true
@@ -96,10 +99,10 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
             }
             val lp = GridLayout.LayoutParams().apply {
                 width = 0
-                height = 78
+                height = dp(78)
                 columnSpec = GridLayout.spec(index % 2, 1f)
                 rowSpec = GridLayout.spec(index / 2)
-                setMargins(0, 0, 6, 7)
+                setMargins(0, 0, dp(6), dp(7))
             }
             b.styleGrid.addView(card, lp)
         }
