@@ -84,6 +84,11 @@ object AximoLessonNotifications {
             }
         }
 
+        val persistentIntent = Intent(context, AximoLessonSilenceReceiver::class.java).setAction(ACTION_NOTIFY)
+        PendingIntent.getBroadcast(context, PERSISTENT_REQUEST_CODE, persistentIntent, PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE)?.let {
+            alarm.cancel(it); it.cancel()
+        }
+        NotificationManagerCompat.from(context).cancel(NOTIFICATION_ID)
         prefs.edit().putStringSet(SCHEDULED_REQUEST_CODES, emptySet()).apply()
     }
 
@@ -100,7 +105,7 @@ object AximoLessonNotifications {
         }
         val newCodes = mutableSetOf<String>()
         if (!app.config.sync.lessonNotificationsEnabled) {
-            prefs.edit().putStringSet(SCHEDULED_REQUEST_CODES, emptySet()).apply()
+            cancelAll(context)
             return
         }
         val reminderMinutes = app.config.sync.lessonNotificationMinutes.coerceIn(1, 30)
