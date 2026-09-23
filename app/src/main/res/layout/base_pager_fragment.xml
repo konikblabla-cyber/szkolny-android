@@ -11,13 +11,23 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="#081127"
+        android:elevation="0dp">
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/tabLayout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:tabMode="auto" />
+            android:layout_height="54dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:background="#081127"
+            app:tabMode="scrollable"
+            app:tabIndicatorHeight="3dp"
+            app:tabIndicatorColor="#A66CFF"
+            app:tabTextColor="#7F8BA8"
+            app:tabSelectedTextColor="#F5F0FF"
+            app:tabRippleColor="#26A66CFF" />
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.viewpager2.widget.ViewPager2
