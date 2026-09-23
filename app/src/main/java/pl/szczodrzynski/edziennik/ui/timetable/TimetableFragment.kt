@@ -370,21 +370,28 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
 
             val yearStart = app.profile.dateSemester1Start?.clone() ?: today.clone()
             val yearEnd = app.profile.dateYearEnd
-            while (yearStart.value <= yearEnd.value) {
-                items += yearStart.clone()
-                var maxDays = monthDayCount[yearStart.month - 1]
-                if (yearStart.month == 2 && yearStart.isLeap)
-                    maxDays++
-                yearStart.day++
-                if (yearStart.day > maxDays) {
-                    yearStart.day = 1
-                    yearStart.month++
-                }
-                if (yearStart.month > 12) {
-                    yearStart.month = 1
-                    yearStart.year++
+            if (yearStart.value <= yearEnd.value) {
+                while (yearStart.value <= yearEnd.value) {
+                    items += yearStart.clone()
+                    var maxDays = monthDayCount[yearStart.month - 1]
+                    if (yearStart.month == 2 && yearStart.isLeap)
+                        maxDays++
+                    yearStart.day++
+                    if (yearStart.day > maxDays) {
+                        yearStart.day = 1
+                        yearStart.month++
+                    }
+                    if (yearStart.month > 12) {
+                        yearStart.month = 1
+                        yearStart.year++
+                    }
                 }
             }
+
+            // ViewPager2 does not accept a negative current page. Keep one safe
+            // fallback day when school-year dates are missing or inconsistent.
+            if (items.isEmpty())
+                items += today.clone()
 
             val lessonRanges = app.db.lessonRangeDao().getAllNow(App.profileId)
             startHour = lessonRanges.minOfOrNull { it.startTime.hour } ?: DEFAULT_START_HOUR
