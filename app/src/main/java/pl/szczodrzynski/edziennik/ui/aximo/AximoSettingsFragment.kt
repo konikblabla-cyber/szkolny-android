@@ -17,6 +17,8 @@ import pl.szczodrzynski.edziennik.ui.base.fragment.BaseFragment
 import pl.szczodrzynski.edziennik.core.aximo.AximoLessonSilence
 import pl.szczodrzynski.edziennik.core.aximo.AximoLessonNotifications
 import pl.szczodrzynski.edziennik.data.enums.NavTarget
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainActivity>(
     inflater = FragmentAximoSettingsBinding::inflate,
@@ -253,6 +255,29 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
             prefs.edit().putBoolean(key, checked).apply()
             activity.b.aximoBottomNavigation.refreshSettings()
             (activity.supportFragmentManager.findFragmentById(R.id.fragment) as? pl.szczodrzynski.edziennik.ui.home.HomeFragment)?.applyAximoSettings()
+            when (key) {
+                "school_mode", "school_mute_before", "school_restore_after" -> {
+                    val app = requireContext().applicationContext as pl.szczodrzynski.edziennik.App
+                    app.config.sync.automaticSilenceEnabled =
+                        prefs.getBoolean("school_mode", true) &&
+                        prefs.getBoolean("school_mute_before", true) &&
+                        prefs.getBoolean("school_restore_after", true)
+                    if (pl.szczodrzynski.edziennik.App.profileId != 0) {
+                        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                            AximoLessonSilence.scheduleTodayAndTomorrow(requireContext(), pl.szczodrzynski.edziennik.App.profileId)
+                        }
+                    }
+                }
+                "notify_next_lesson" -> {
+                    val app = requireContext().applicationContext as pl.szczodrzynski.edziennik.App
+                    app.config.sync.lessonNotificationsEnabled = checked
+                    if (pl.szczodrzynski.edziennik.App.profileId != 0) {
+                        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                            AximoLessonNotifications.scheduleTodayAndTomorrow(requireContext(), pl.szczodrzynski.edziennik.App.profileId)
+                        }
+                    }
+                }
+            }
         }
         val lp = LinearLayout.LayoutParams(-1, -2)
         lp.topMargin = dp(8)
