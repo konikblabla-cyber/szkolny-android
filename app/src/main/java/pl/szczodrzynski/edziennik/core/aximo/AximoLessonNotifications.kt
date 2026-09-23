@@ -26,6 +26,7 @@ object AximoLessonNotifications {
     private const val NOTIFICATION_ID = 47001
     private const val ACTION_NEXT = "pl.szczodrzynski.edziennik.aximo.OPEN_NEXT_LESSON"
     private const val REQUEST_BASE = 470000
+    private const val PERSISTENT_REQUEST_CODE = 479999
     private const val MINUTE = 60_000L
     private const val EXTRA_LESSON_ID = "aximoLessonId"
     private const val EXTRA_LESSON_START = "aximoLessonStart"
@@ -150,6 +151,22 @@ object AximoLessonNotifications {
                 }
         }
         prefs.edit().putStringSet(SCHEDULED_REQUEST_CODES, newCodes).apply()
+        // Keep one live school-day notification refreshed in the status bar.
+        schedulePersistentRefresh(context, profileId, 1_000L)
+    }
+
+    private fun schedulePersistentRefresh(context: Context, profileId: Int, delayMs: Long) {
+        val alarm = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(context, AximoLessonSilenceReceiver::class.java)
+            .setAction(ACTION_NOTIFY)
+            .putExtra(AximoLessonSilence.EXTRA_PROFILE, profileId)
+        val pending = PendingIntent.getBroadcast(
+            context, PERSISTENT_REQUEST_CODE, intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+        try {
+            alarm.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, System.currentTimeMillis() + delayMs, pending)
+        } catch (_: Exception) {}
     }
 
     fun testNotification(context: Context) {
@@ -251,7 +268,8 @@ object AximoLessonNotifications {
             .setContentTitle(title)
             .setContentText(text)
             .setStyle(NotificationCompat.BigTextStyle().bigText(text))
-            .setContentIntent(openApp)
+            .setContentIntent(openNext)
+            .setOngoing(true)
             .addAction(
                 R.drawable.ic_aximo_launcher,
                 "Otwórz plan",
@@ -264,7 +282,9 @@ object AximoLessonNotifications {
             .setWhen(if (isCurrent) now else currentStart)
             .build()
 
-        val notificationId = if (selectedStart > 0L) (selectedStart xor (selectedStart ushr 32)).toInt() else NOTIFICATION_ID
-        NotificationManagerCompat.from(context).notify(notificationId, notification)
+        // One fixed notification is intentionally updated instead of creating a new
+        // notification for every lesson. This keeps the current lesson/next lesson visible.
+        NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, notification)
+        schedulePersistentRefresh(context, profileId, 60_000L)
     }
 }
