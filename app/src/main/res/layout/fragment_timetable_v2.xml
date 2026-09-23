@@ -4,7 +4,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:clipToPadding="false">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/timetableLayout"
