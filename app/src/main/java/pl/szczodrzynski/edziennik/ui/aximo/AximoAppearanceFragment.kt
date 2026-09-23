@@ -51,6 +51,7 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
         setAccent(accent)
         setBackground(background)
         buildStyleGrid(style)
+        updatePreview(style)
 
         b.themeDark.setOnClickListener { saveTheme("dark") }
         b.themeLight.setOnClickListener { saveTheme("light") }
@@ -103,10 +104,17 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
         }
     }
 
+    private fun updatePreview(index: Int) {
+        val s = AximoAppearanceStyle.fromOrdinal(index)
+        b.styleGrid.setBackgroundColor(s.background)
+        b.appearanceSaved.setTextColor(s.accent)
+    }
+
     private fun saveStyle(index: Int) {
         prefs.edit().putInt("style", index).apply()
         val style = AximoAppearanceStyle.fromOrdinal(index)
         b.appearanceSaved.text = "Styl: " + style.title + " · zapisano ✓"
+        updatePreview(index)
         requireActivity().recreate()
     }
 
@@ -123,6 +131,8 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
 
     private fun saveAccent(value: String) {
         prefs.edit().putString("accent", value).apply()
+        val styleIndex = prefs.getInt("style", AximoAppearanceStyle.AXIMO.ordinal)
+        prefs.edit().putInt("accentColor", accentColorFor(value)).apply()
         app.config.ui.themeColor = when (value) {
             "blue" -> Theme.BLUE
             "green" -> Theme.GREEN
@@ -133,6 +143,16 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
         }
         setAccent(value)
         requireActivity().recreate()
+    }
+
+    private fun accentColorFor(value: String): Int = when (value) {
+        "blue" -> 0xFF5B8DFF.toInt()
+        "cyan" -> 0xFF42C9D8.toInt()
+        "green" -> 0xFF61C58A.toInt()
+        "yellow" -> 0xFFD7B451.toInt()
+        "orange" -> 0xFFD58A50.toInt()
+        "pink" -> 0xFFD77ABF.toInt()
+        else -> 0xFF8D72FF.toInt()
     }
 
     private fun saveBackground(value: String) {
