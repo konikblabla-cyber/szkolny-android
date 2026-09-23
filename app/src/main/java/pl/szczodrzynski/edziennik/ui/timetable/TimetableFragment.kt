@@ -492,13 +492,6 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
         super.onPause()
     }
 
-    override fun onDestroyView() {
-        activity.swipeRefreshLayout.isEnabled = requireContext()
-            .getSharedPreferences("aximo_settings", Context.MODE_PRIVATE)
-            .getBoolean("diary_swipe_refresh", true)
-        super.onDestroyView()
-    }
-
     override suspend fun onFabClick() {
         showDate(today, animate = true)
     }
