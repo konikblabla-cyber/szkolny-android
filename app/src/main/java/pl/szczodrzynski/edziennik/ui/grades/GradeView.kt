@@ -45,7 +45,7 @@ class GradeView : AppCompatTextView {
         }
         visibility = View.VISIBLE
 
-        val gradeName = grade.name
+        val gradeName = grade.name.let { if (it.trim() == "1") "1+" else it }
 
         val gradeColor = manager.getGradeColor(context, grade)
 
