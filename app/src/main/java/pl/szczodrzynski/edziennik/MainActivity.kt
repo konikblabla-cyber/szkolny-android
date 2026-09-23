@@ -1159,6 +1159,15 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             supportFragmentManager.findFragmentById(R.id.fragment)?.view?.let {
                 AximoAppearanceApplier.apply(it, this@MainActivity)
             }
+            // Timetable owns vertical gestures, so it disables the global
+            // pull-to-refresh. Restore the user's preference for every other
+            // destination after navigation to prevent the setting getting stuck.
+            if (navTarget != NavTarget.TIMETABLE) {
+                swipeRefreshLayout.isEnabled = getSharedPreferences(
+                    "aximo_settings",
+                    Context.MODE_PRIVATE
+                ).getBoolean("diary_swipe_refresh", true)
+            }
         }
         transaction.commitAllowingStateLoss()
         b.aximoBottomNavigation.setActiveTarget(navTarget)
