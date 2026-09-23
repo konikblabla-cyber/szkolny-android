@@ -22,7 +22,6 @@ import pl.szczodrzynski.edziennik.databinding.MessagesListFragmentBinding
 import pl.szczodrzynski.edziennik.ext.Bundle
 import pl.szczodrzynski.edziennik.ext.getInt
 import pl.szczodrzynski.edziennik.ui.base.fragment.BaseFragment
-import pl.szczodrzynski.edziennik.utils.SimpleDividerItemDecoration
 
 class MessagesListFragment : BaseFragment<MessagesListFragmentBinding, MainActivity>(
     inflater = MessagesListFragmentBinding::inflate,
@@ -100,7 +99,6 @@ class MessagesListFragment : BaseFragment<MessagesListFragmentBinding, MainActiv
                 b.list.apply {
                     setHasFixedSize(true)
                     layoutManager = LinearLayoutManager(context)
-                    addItemDecoration(SimpleDividerItemDecoration(context))
                     this.adapter = this@MessagesListFragment.adapter
                 }
             }
