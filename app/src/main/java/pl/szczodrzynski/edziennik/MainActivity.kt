@@ -1291,12 +1291,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
                 else -> intArrayOf(style.background, style.surface, style.surfaceAlt)
             }
 
-            val drawable = if (background == "default") {
-                AximoAnimatedWallpaperDrawable(background, colors)
-            } else {
-                AximoPhotoWallpaperDrawable(this, background, colors)
-            }
-            b.root.background = drawable
+            b.root.background = AximoPhotoWallpaperDrawable(this, background, colors)
         } catch (e: Exception) {
             Timber.e(e, "Aximo background could not be applied")
         }
