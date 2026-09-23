@@ -5,6 +5,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.widget.SeekBar
+import android.widget.SeekBar
 import android.widget.GridLayout
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
