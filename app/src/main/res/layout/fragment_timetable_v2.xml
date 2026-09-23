@@ -3,14 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#02091A"
+    android:background="@android:color/transparent"
     android:fitsSystemWindows="true">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:id="@+id/timetableLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#02091A">
+        android:background="@android:color/transparent">
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="1dp"
