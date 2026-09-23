@@ -1151,9 +1151,13 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         }
 
         transaction.replace(R.id.fragment, fragment)
+        transaction.runOnCommit {
+            supportFragmentManager.findFragmentById(R.id.fragment)?.view?.let {
+                AximoAppearanceApplier.apply(it, this@MainActivity)
+            }
+        }
         transaction.commitAllowingStateLoss()
         b.aximoBottomNavigation.setActiveTarget(navTarget)
-        b.fragment.post { supportFragmentManager.findFragmentById(R.id.fragment)?.view?.let { AximoAppearanceApplier.apply(it, this) } }
 
         // TASK DESCRIPTION
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
