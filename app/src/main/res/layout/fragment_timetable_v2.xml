@@ -34,10 +34,10 @@
             android:layout_height="match_parent"
             android:fillViewport="true"
             android:overScrollMode="never"
-            android:paddingStart="16dp"
-            android:paddingTop="18dp"
-            android:paddingEnd="16dp"
-            android:paddingBottom="112dp">
+            android:paddingStart="18dp"
+            android:paddingTop="20dp"
+            android:paddingEnd="18dp"
+            android:paddingBottom="118dp">
 
             <LinearLayout
                 android:id="@+id/aximoPlanContent"
@@ -47,27 +47,27 @@
 
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="64dp"
+                    android:layout_height="72dp"
                     android:gravity="center_vertical">
 
                     <TextView
-                        android:layout_width="42dp"
-                        android:layout_height="42dp"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
                         android:gravity="center"
                         android:text="A"
                         android:textColor="#FFFFFF"
-                        android:textSize="21sp"
+                        android:textSize="23sp"
                         android:textStyle="bold"
                         android:background="@drawable/aximo_plan_day_chip" />
 
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="9dp"
+                        android:layout_marginStart="11dp"
                         android:layout_weight="1"
                         android:text="Plan lekcji"
                         android:textColor="#F7F5FF"
-                        android:textSize="24sp"
+                        android:textSize="26sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -96,8 +96,8 @@
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
-                    android:layout_height="64dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_height="72dp"
+                    android:layout_marginTop="14dp"
                     android:scrollbars="none"
                     android:clipToPadding="false">
 
@@ -112,7 +112,7 @@
                     android:id="@+id/aximoLessonContainer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
+                    android:layout_marginTop="18dp"
                     android:orientation="vertical" />
 
                 <LinearLayout
