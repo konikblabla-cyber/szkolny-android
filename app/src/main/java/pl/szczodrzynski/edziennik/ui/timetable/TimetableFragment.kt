@@ -367,10 +367,6 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
         // must not steal vertical gestures from it (otherwise scrolling to the top
         // can trigger an unwanted refresh instead of moving the timetable).
         activity.swipeRefreshLayout.isEnabled = false
-        // Always report that the timetable can handle the vertical gesture.
-        // This prevents SwipeRefreshLayout from interpreting a swipe at the
-        // top of the timetable as "pull to refresh".
-        activity.swipeRefreshLayout.setOnChildScrollUpCallback { _, _ -> true }
         b.aximoPlanScroll.setOnTouchListener { view, event ->
             when (event.actionMasked) {
                 android.view.MotionEvent.ACTION_DOWN,
@@ -407,7 +403,6 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
         // Restore the global refresh only after the timetable view is actually
         // gone. While the timetable is visible, its own NestedScrollView owns
         // vertical gestures and pull-to-refresh is disabled.
-        activity.swipeRefreshLayout.setOnChildScrollUpCallback(null)
         val refreshEnabled = requireContext()
             .getSharedPreferences("aximo_settings", Context.MODE_PRIVATE)
             .getBoolean("diary_swipe_refresh", true)
