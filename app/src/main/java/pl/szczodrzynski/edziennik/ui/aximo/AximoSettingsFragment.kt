@@ -251,6 +251,8 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
         row.setOnClickListener { toggle() }
         sw.setOnCheckedChangeListener { _: CompoundButton, checked: Boolean ->
             prefs.edit().putBoolean(key, checked).apply()
+            activity.b.aximoBottomNavigation.refreshSettings()
+            (activity.supportFragmentManager.findFragmentById(R.id.fragment) as? pl.szczodrzynski.edziennik.ui.home.HomeFragment)?.applyAximoSettings()
         }
         val lp = LinearLayout.LayoutParams(-1, -2)
         lp.topMargin = dp(8)
