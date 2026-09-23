@@ -7,7 +7,6 @@ package pl.szczodrzynski.edziennik.ui.home
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.graphics.drawable.GradientDrawable
 import android.view.View
 import android.widget.Toast
 import androidx.core.view.AccessibilityDelegateCompat
@@ -47,6 +46,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
 ) {
     companion object {
         fun swapCards(fromPosition: Int, toPosition: Int, cardAdapter: HomeCardAdapter): Boolean {
+            if (fromPosition !in cardAdapter.items.indices || toPosition !in cardAdapter.items.indices) {
+                return false
+            }
             val fromCard = cardAdapter.items[fromPosition]
             val toCard = cardAdapter.items[toPosition]
             if (fromCard.id >= 100 || toCard.id >= 100) {
@@ -60,6 +62,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
             val homeCards = App.profile.config.ui.homeCards.toMutableList()
             val fromIndex = homeCards.indexOfFirst { it.cardId == fromCard.id }
             val toIndex = homeCards.indexOfFirst { it.cardId == toCard.id }
+            if (fromIndex < 0 || toIndex < 0) {
+                return false
+            }
             val fromPair = homeCards[fromIndex]
             homeCards[fromIndex] = homeCards[toIndex]
             homeCards[toIndex] = fromPair
@@ -68,9 +73,9 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
         }
 
         fun removeCard(position: Int, cardAdapter: HomeCardAdapter) {
-            val homeCards = App.profile.config.ui.homeCards.toMutableList()
-            if (position >= homeCards.size)
+            if (position !in cardAdapter.items.indices)
                 return
+            val homeCards = App.profile.config.ui.homeCards.toMutableList()
             val card = cardAdapter.items[position]
             if (card.id >= 100) {
                 // debug & archive cards are not removable
