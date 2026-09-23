@@ -1269,9 +1269,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
 
             val prefs = getSharedPreferences("aximo_appearance", MODE_PRIVATE)
             val background = prefs.getString("background", "default") ?: "default"
-            val styleIndex = prefs.getInt("style", AximoAppearanceStyle.AXIMO.ordinal)
-            val style = AximoAppearanceStyle.fromOrdinal(styleIndex)
-
+            val style = AximoAppearanceStyle.fromOrdinal(prefs.getInt("style", AximoAppearanceStyle.AXIMO.ordinal))
             val colors = when (background) {
                 "mountains" -> intArrayOf(0xFF09091B.toInt(), 0xFF21163D.toInt(), 0xFF10192A.toInt())
                 "sea" -> intArrayOf(0xFF07151F.toInt(), 0xFF123A48.toInt(), 0xFF091C2B.toInt())
@@ -1289,11 +1287,12 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
                 "default" -> intArrayOf(style.background, style.surface, style.surfaceAlt)
                 else -> intArrayOf(style.background, style.surface, style.accentSoft)
             }
-
-            b.root.animate().alpha(0.94f).setDuration(90).withEndAction {
-                b.root.background = AximoAnimatedWallpaperDrawable(background, colors)
-                b.root.animate().alpha(1f).setDuration(220).start()
-            }.start()
+            val animate = prefs.getBoolean("animationsEnabled", true)
+            b.root.background = if (animate) {
+                AximoAnimatedWallpaperDrawable(background, colors)
+            } else {
+                GradientDrawable(GradientDrawable.Orientation.TL_BR, colors)
+            }
         } catch (e: Exception) {
             Timber.e(e, "Aximo background could not be applied")
         }
