@@ -267,8 +267,16 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
     }
 
     private fun setBackground(value: String) {
-        val views: List<View> = listOf(b.bgDefault,b.bgMountains,b.bgSea,b.bgCity,b.bgAbstract,b.customBg1,b.customBg2,b.customBg3,b.customBg4,b.customBg5)
-        val names = listOf("default","mountains","sea","city","abstract","custom_0","custom_1","custom_2","custom_3","custom_4")
+        val views: List<View> = listOf(
+            b.bgDefault,b.bgMountains,b.bgSea,b.bgCity,b.bgAbstract,
+            b.bgSunset,b.bgForest,b.bgRain,b.bgEmber,b.bgLavender,b.bgNeon,b.bgMist,b.bgStars,
+            b.customBg1,b.customBg2,b.customBg3,b.customBg4,b.customBg5
+        )
+        val names = listOf(
+            "default","mountains","sea","city","abstract",
+            "sunset","forest","rain","ember","lavender","neon","mist","stars",
+            "custom_0","custom_1","custom_2","custom_3","custom_4"
+        )
         views.forEachIndexed { i, v ->
             v.alpha = if (names[i] == value) 1f else 0.58f
         }
