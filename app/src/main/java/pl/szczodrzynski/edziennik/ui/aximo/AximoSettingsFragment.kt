@@ -2,6 +2,7 @@ package pl.szczodrzynski.edziennik.ui.aximo
 
 import android.os.Bundle
 import android.widget.Toast
+import android.view.View
 import pl.szczodrzynski.edziennik.MainActivity
 import pl.szczodrzynski.edziennik.R
 import pl.szczodrzynski.edziennik.databinding.FragmentAximoSettingsBinding
@@ -21,6 +22,28 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
         }
 
         b.backButton.setOnClickListener { activity.onBackPressedDispatcher.onBackPressed() }
+        // Premium Aximo touch feedback for every settings action.
+        val settingCards = listOf(
+            b.profileCard, b.notificationsCard, b.notificationPermissionCard,
+            b.silenceCard, b.exactAlarmCard, b.silencePermissionCard,
+            b.appearanceCard, b.layoutCard, b.helpCard, b.aboutCard
+        )
+        settingCards.forEachIndexed { index, card ->
+            card.alpha = 0f
+            card.translationY = 10f * resources.displayMetrics.density
+            card.animate().alpha(1f).translationY(0f)
+                .setStartDelay((index * 28L).coerceAtMost(220L))
+                .setDuration(220L).start()
+            card.setOnTouchListener { v, event ->
+                when (event.actionMasked) {
+                    android.view.MotionEvent.ACTION_DOWN -> v.animate().scaleX(.985f).scaleY(.985f).setDuration(55).start()
+                    android.view.MotionEvent.ACTION_UP,
+                    android.view.MotionEvent.ACTION_CANCEL -> v.animate().scaleX(1f).scaleY(1f).setDuration(100).start()
+                }
+                false
+            }
+        }
+
         b.profileCard.setOnClickListener { activity.navigate(navTarget = NavTarget.PROFILE_MANAGER) }
         b.notificationsCard.setOnClickListener { activity.navigate(navTarget = NavTarget.NOTIFICATION_SETTINGS) }
         b.silenceCard.setOnClickListener { activity.navigate(navTarget = NavTarget.SILENCE) }
