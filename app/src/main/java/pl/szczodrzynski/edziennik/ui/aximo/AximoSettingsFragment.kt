@@ -18,6 +18,7 @@ import pl.szczodrzynski.edziennik.core.aximo.AximoLessonSilence
 import pl.szczodrzynski.edziennik.core.aximo.AximoLessonNotifications
 import pl.szczodrzynski.edziennik.data.enums.NavTarget
 import kotlinx.coroutines.Dispatchers
+import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 
 class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainActivity>(
