@@ -104,6 +104,8 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
     }
 
     private fun addGradeSettings(c: LinearLayout) {
+        addAction(c, "Otwórz oceny", "Przejdź bezpośrednio do listy ocen.", NavTarget.GRADES)
+        addAction(c, "Otwórz frekwencję", "Przejdź bezpośrednio do obecności i nieobecności.", NavTarget.ATTENDANCE)
     }
 
     private fun addMessageSettings(c: LinearLayout) {
