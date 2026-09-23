@@ -179,18 +179,33 @@
             android:textSize="17sp"
             android:textStyle="bold" />
 
-        <LinearLayout
+        <HorizontalScrollView
             android:layout_width="match_parent"
-            android:layout_height="82dp"
+            android:layout_height="92dp"
             android:layout_marginTop="9dp"
-            android:orientation="horizontal">
+            android:scrollbars="none"
+            android:clipToPadding="false">
 
-            <TextView android:id="@+id/bgDefault" android:layout_width="0dp" android:layout_height="match_parent" android:layout_marginEnd="4dp" android:layout_weight="1" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Domyślne" android:textColor="#F7F1FF" android:textSize="11sp"/>
-            <TextView android:id="@+id/bgMountains" android:layout_width="0dp" android:layout_height="match_parent" android:layout_marginStart="4dp" android:layout_marginEnd="4dp" android:layout_weight="1" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Góry" android:textColor="#F7F1FF" android:textSize="11sp"/>
-            <TextView android:id="@+id/bgSea" android:layout_width="0dp" android:layout_height="match_parent" android:layout_marginStart="4dp" android:layout_marginEnd="4dp" android:layout_weight="1" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Ocean" android:textColor="#F7F1FF" android:textSize="11sp"/>
-            <TextView android:id="@+id/bgCity" android:layout_width="0dp" android:layout_height="match_parent" android:layout_marginStart="4dp" android:layout_marginEnd="4dp" android:layout_weight="1" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Aurora" android:textColor="#F7F1FF" android:textSize="11sp"/>
-            <TextView android:id="@+id/bgAbstract" android:layout_width="0dp" android:layout_height="match_parent" android:layout_marginStart="4dp" android:layout_weight="1" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Kosmos" android:textColor="#F7F1FF" android:textSize="10sp"/>
-        </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView android:id="@+id/bgDefault" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Domyślne" android:textColor="#F7F1FF" android:textSize="11sp"/>
+                <TextView android:id="@+id/bgMountains" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Góry" android:textColor="#F7F1FF" android:textSize="11sp"/>
+                <TextView android:id="@+id/bgSea" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Ocean" android:textColor="#F7F1FF" android:textSize="11sp"/>
+                <TextView android:id="@+id/bgCity" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Aurora" android:textColor="#F7F1FF" android:textSize="11sp"/>
+                <TextView android:id="@+id/bgAbstract" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Kosmos" android:textColor="#F7F1FF" android:textSize="10sp"/>
+                <TextView android:id="@+id/bgSunset" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Zachód" android:textColor="#F7F1FF" android:textSize="11sp"/>
+                <TextView android:id="@+id/bgForest" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Las" android:textColor="#F7F1FF" android:textSize="11sp"/>
+                <TextView android:id="@+id/bgRain" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Deszcz" android:textColor="#F7F1FF" android:textSize="11sp"/>
+                <TextView android:id="@+id/bgEmber" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Żar" android:textColor="#F7F1FF" android:textSize="11sp"/>
+                <TextView android:id="@+id/bgLavender" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Lawenda" android:textColor="#F7F1FF" android:textSize="10sp"/>
+                <TextView android:id="@+id/bgNeon" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Neon" android:textColor="#F7F1FF" android:textSize="11sp"/>
+                <TextView android:id="@+id/bgMist" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Mgła" android:textColor="#F7F1FF" android:textSize="11sp"/>
+                <TextView android:id="@+id/bgStars" android:layout_width="94dp" android:layout_height="match_parent" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Gwiazdy" android:textColor="#F7F1FF" android:textSize="11sp"/>
+            </LinearLayout>
+        </HorizontalScrollView>
 
         <TextView
             android:layout_width="wrap_content"
