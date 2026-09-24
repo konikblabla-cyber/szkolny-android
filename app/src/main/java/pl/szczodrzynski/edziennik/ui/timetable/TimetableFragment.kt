@@ -399,17 +399,6 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
         activity.unregisterReceiver(broadcastReceiver)
     }
 
-    override fun onDestroyView() {
-        // Restore the global refresh only after the timetable view is actually
-        // gone. While the timetable is visible, its own NestedScrollView owns
-        // vertical gestures and pull-to-refresh is disabled.
-        val refreshEnabled = requireContext()
-            .getSharedPreferences("aximo_settings", Context.MODE_PRIVATE)
-            .getBoolean("diary_swipe_refresh", true)
-        activity.swipeRefreshLayout.isEnabled = refreshEnabled
-        super.onDestroyView()
-    }
-
     override suspend fun onViewReady(savedInstanceState: Bundle?) {
         if (app.profile.getStudentData("timetableNotPublic", false)) {
             b.timetableLayout.visibility = View.GONE
