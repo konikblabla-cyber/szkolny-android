@@ -87,6 +87,8 @@ object AximoLessonSilence {
     private const val ACTIVE = "active_count"
     private const val PREVIOUS_MODE = "previous_ringer_mode"
     private const val ACTIVE_UNTIL = "active_until"
+    private const val BEFORE_MINUTES = "before_minutes"
+    private const val AFTER_MINUTES = "after_minutes"
 
     fun scheduleTodayAndTomorrow(context: Context, profileId: Int) {
         val app = context.applicationContext as App
@@ -128,8 +130,11 @@ object AximoLessonSilence {
             val first = validLessons.first()
             val last = validLessons.maxByOrNull { it.third } ?: continue
 
-            val silenceStart = first.second - 10 * 60 * 1000L
-            val silenceEnd = last.third + 10 * 60 * 1000L
+            val settings = context.getSharedPreferences("aximo_settings", Context.MODE_PRIVATE)
+            val beforeMinutes = settings.getInt(BEFORE_MINUTES, 10).coerceIn(0, 30)
+            val afterMinutes = settings.getInt(AFTER_MINUTES, 10).coerceIn(0, 30)
+            val silenceStart = first.second - beforeMinutes * 60 * 1000L
+            val silenceEnd = last.third + afterMinutes * 60 * 1000L
 
             val now = System.currentTimeMillis()
             if (silenceEnd <= now) continue
