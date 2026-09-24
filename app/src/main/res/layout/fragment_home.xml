@@ -189,34 +189,78 @@
             android:textSize="18sp"
             android:textStyle="bold"/>
 
-        <HorizontalScrollView
+        <LinearLayout
             android:id="@+id/quickActions"
             android:layout_width="match_parent"
-            android:layout_height="102dp"
+            android:layout_height="194dp"
             android:layout_marginTop="9dp"
-            android:scrollbars="none"
-            android:clipToPadding="false">
+            android:orientation="vertical"
+            android:weightSum="2">
+
             <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 android:orientation="horizontal">
-                <TextView android:id="@+id/quickPlan" style="@style/AximoHomeQuickCard" android:text="▣
-Plan"
-                android:foreground="?attr/selectableItemBackgroundBorderless"/>
-                <TextView android:id="@+id/quickHomework" style="@style/AximoHomeQuickCard" android:text="✓
-Zadania"
-                android:foreground="?attr/selectableItemBackgroundBorderless"/>
-                <TextView android:id="@+id/quickGrades" style="@style/AximoHomeQuickCard" android:text="★
-Oceny"
-                android:foreground="?attr/selectableItemBackgroundBorderless"/>
-                <TextView android:id="@+id/quickTomorrow" style="@style/AximoHomeQuickCard" android:text="→
-Jutro"
-                android:foreground="?attr/selectableItemBackgroundBorderless"/>
-                <TextView android:id="@+id/quickMessages" style="@style/AximoHomeQuickCard" android:text="✉
-Wiadomości"
-                android:foreground="?attr/selectableItemBackgroundBorderless"/>
+
+                <TextView
+                    android:id="@+id/quickPlan"
+                    style="@style/AximoHomeQuickCard"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="▣&#10;Plan"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"/>
+
+                <TextView
+                    android:id="@+id/quickMessages"
+                    style="@style/AximoHomeQuickCard"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="✉&#10;Wiadomości"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"/>
+
+                <TextView
+                    android:id="@+id/quickHomework"
+                    style="@style/AximoHomeQuickCard"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="✓&#10;Zadania"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"/>
             </LinearLayout>
-        </HorizontalScrollView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/quickGrades"
+                    style="@style/AximoHomeQuickCard"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="★&#10;Oceny"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"/>
+
+                <TextView
+                    android:id="@+id/quickTomorrow"
+                    style="@style/AximoHomeQuickCard"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="→&#10;Jutro"
+                    android:foreground="?attr/selectableItemBackgroundBorderless"/>
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"/>
+            </LinearLayout>
+        </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
