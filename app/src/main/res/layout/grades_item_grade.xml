@@ -1,113 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginHorizontal="2dp"
-    android:layout_marginBottom="7dp"
-    android:backgroundTint="#0F1830"
-    android:clickable="true"
-    android:focusable="true"
-    android:foreground="?selectableItemBackground"
-    android:padding="0dp">
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="13dp">
-
-        <pl.szczodrzynski.edziennik.ui.grades.GradeView
-            android:id="@+id/gradeName"
-            android:layout_width="42dp"
-            android:layout_height="42dp"
-            android:background="@drawable/bg_circle"
-            tools:backgroundTint="#4caf50"
-            tools:gravity="center"
-            tools:text="5+"/>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="13dp"
-            android:layout_weight="1"
-            android:orientation="vertical">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_vertical">
-
-                <com.mikepenz.iconics.view.IconicsTextView
-                    android:id="@+id/gradeDescription"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:singleLine="true"
-                    android:textColor="#F4F1FA"
-                    android:textSize="14sp"
-                    android:textStyle="bold"
-                    tools:text="kraje"/>
-
-                <View
-                    android:id="@+id/unread"
-                    android:layout_width="9dp"
-                    android:layout_height="9dp"
-                    android:layout_marginStart="7dp"
-                    android:background="@drawable/unread_red_circle"
-                    android:visibility="gone"
-                    tools:visibility="visible"/>
-
-                <TextView
-                    android:id="@+id/gradeAddedDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:textColor="#7482A3"
-                    android:textSize="10sp"
-                    tools:text="14.10.2015"/>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="2dp" android:layout_marginBottom="9dp"
+    android:clickable="true" android:focusable="true" android:foreground="?selectableItemBackground"
+    app:cardBackgroundColor="#121B33" app:cardCornerRadius="20dp" app:cardElevation="0dp" app:strokeColor="#3A2B58" app:strokeWidth="1dp">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal" android:padding="14dp">
+        <pl.szczodrzynski.edziennik.ui.grades.GradeView android:id="@+id/gradeName" android:layout_width="44dp" android:layout_height="44dp" android:background="@drawable/bg_circle" tools:backgroundTint="#4caf50" tools:gravity="center" tools:text="5+"/>
+        <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="13dp" android:layout_weight="1" android:orientation="vertical">
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
+                <com.mikepenz.iconics.view.IconicsTextView android:id="@+id/gradeDescription" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:ellipsize="end" android:singleLine="true" android:textColor="#F7F1FF" android:textSize="14sp" android:textStyle="bold" tools:text="kraje"/>
+                <View android:id="@+id/unread" android:layout_width="9dp" android:layout_height="9dp" android:layout_marginStart="7dp" android:background="@drawable/unread_red_circle" android:visibility="gone" tools:visibility="visible"/>
+                <TextView android:id="@+id/gradeAddedDate" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:textColor="#858FB0" android:textSize="10sp" tools:text="14.10.2015"/>
             </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="5dp"
-                android:gravity="center_vertical">
-
-                <TextView
-                    android:id="@+id/gradeWeight"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="#9AA7C4"
-                    android:textSize="10sp"
-                    tools:text="waga 30"/>
-
-                <TextView
-                    android:id="@+id/gradeCategory"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textColor="#8F9DBB"
-                    android:textSize="10sp"
-                    tools:text="Kartkówki - K1"/>
-
-                <TextView
-                    android:id="@+id/gradeTeacherName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:ellipsize="end"
-                    android:maxLines="1"
-                    android:textColor="#6F7C9B"
-                    android:textSize="10sp"
-                    tools:text="Jan Kowalski"/>
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:gravity="center_vertical">
+                <TextView android:id="@+id/gradeWeight" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="#A99AC8" android:textSize="10sp" tools:text="waga 30"/>
+                <TextView android:id="@+id/gradeCategory" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:layout_weight="1" android:ellipsize="end" android:maxLines="1" android:textColor="#939DB8" android:textSize="10sp" tools:text="Kartkówki - K1"/>
+                <TextView android:id="@+id/gradeTeacherName" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginStart="8dp" android:ellipsize="end" android:maxLines="1" android:textColor="#737E9C" android:textSize="10sp" tools:text="Jan Kowalski"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>
