@@ -14,43 +14,56 @@ object AximoAppearanceApplier {
         val style = AximoAppearanceStyle.fromOrdinal(prefs.getInt("style", AximoAppearanceStyle.AXIMO.ordinal))
         val accent = prefs.getInt("accentColor", style.accent)
         val roundness = prefs.getInt("cardRoundness", 18).coerceIn(4, 28)
+        val transparency = prefs.getInt("surfaceTransparency", 18).coerceIn(0, 65)
         val softCards = prefs.getBoolean("softCards", false)
-        applyView(root, style, accent, true, roundness, softCards)
+        applyView(root, style, accent, true, roundness, transparency, softCards)
     }
 
-    private fun applyView(view: View, style: AximoAppearanceStyle, accent: Int, isRoot: Boolean, roundness: Int, softCards: Boolean) {
-        // The appearance picker contains its own 20 preview cards; never flatten them into the selected style.
+    private fun applyView(
+        view: View,
+        style: AximoAppearanceStyle,
+        accent: Int,
+        isRoot: Boolean,
+        roundness: Int,
+        transparency: Int,
+        softCards: Boolean
+    ) {
         if (view.id == R.id.styleGrid) return
         val drawable = view.background?.mutate()
         val entryName = runCatching { view.resources.getResourceEntryName(view.id) }.getOrNull().orEmpty()
-        if (drawable is GradientDrawable && view.id != R.id.styleGrid) {
-            drawable.cornerRadius = roundness * view.resources.displayMetrics.density
-            if (softCards) drawable.alpha = 205 else drawable.alpha = 255
 
-            // Apply the selected preset to Aximo surfaces, while deliberately
-            // preserving lesson/notification/subject-specific colored cards.
+        if (drawable is GradientDrawable) {
+            drawable.cornerRadius = roundness * view.resources.displayMetrics.density
+
+            val alpha = if (softCards) {
+                (255 - transparency).coerceIn(70, 255)
+            } else {
+                (255 - transparency).coerceIn(110, 255)
+            }
+            drawable.alpha = alpha
+
             val isAximoSurface = entryName.startsWith("aximo_") &&
                 !entryName.startsWith("aximo_plan_lesson_bg_") &&
                 !entryName.startsWith("aximo_notification_bg_") &&
                 !entryName.contains("subject")
+
             if (isAximoSurface) {
                 drawable.setColor(style.surface)
             }
             view.background = drawable
         }
+
         val bg = (drawable as? ColorDrawable)?.color
         when {
             bg in ROOT_BACKGROUNDS -> view.setBackgroundColor(style.background)
             bg in SURFACE_BACKGROUNDS -> view.setBackgroundColor(style.surface)
         }
+
         if (isRoot) {
-            // Keep the active Aximo wallpaper during a live appearance refresh.
             val currentBackground = view.background
             val isWallpaper = currentBackground is AximoPhotoWallpaperDrawable ||
                 currentBackground is AximoAnimatedWallpaperDrawable
-            if (!isWallpaper) {
-                view.setBackgroundColor(style.background)
-            }
+            if (!isWallpaper) view.setBackgroundColor(style.background)
         }
 
         if (view is TextView) {
@@ -61,8 +74,11 @@ object AximoAppearanceApplier {
                 color in ACCENT_TEXTS -> view.setTextColor(accent)
             }
         }
+
         if (view is ViewGroup) {
-            for (i in 0 until view.childCount) applyView(view.getChildAt(i), style, accent, false, roundness, softCards)
+            for (i in 0 until view.childCount) {
+                applyView(view.getChildAt(i), style, accent, false, roundness, transparency, softCards)
+            }
         }
     }
 
