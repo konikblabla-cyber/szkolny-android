@@ -30,6 +30,10 @@ class AximoLessonSilenceReceiver : BroadcastReceiver() {
                         }
                     }
 
+                    AximoLessonSilence.ACTION_MANUAL_END -> {
+                        AximoLessonSilence.disableAndRestore(appContext)
+                    }
+
                     AximoLessonSilence.ACTION_START -> {
                         AximoLessonSilence.onStart(appContext, intent.getLongExtra(AximoLessonSilence.EXTRA_WINDOW_END, 0L))
                     }
