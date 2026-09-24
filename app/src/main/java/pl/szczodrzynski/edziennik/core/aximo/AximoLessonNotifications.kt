@@ -312,6 +312,7 @@ object AximoGradeMotivationNotifications {
     private const val NOTIFICATION_BASE = 475000
 
     private val OPENERS = listOf(
+        "🎯 Nowy wynik odnotowany!",
         "⭐ Piątka! Brawo!", "🔥 Ale wynik!", "🏆 Świetna robota!", "💪 Kolejny mocny krok!",
         "🚀 Lecimy dalej!", "🎯 Cel coraz bliżej!", "✨ Aximo ma dla Ciebie dobrą wiadomość!",
         "👏 Ten wynik naprawdę cieszy!", "🌟 Kolejna bardzo dobra ocena!", "😎 No i pięknie!",
