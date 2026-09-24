@@ -1174,6 +1174,9 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             // Timetable owns vertical gestures, so it disables the global
             // pull-to-refresh. Restore the user's preference for every other
             // destination after navigation to prevent the setting getting stuck.
+            if (swipeRefreshLayout is pl.szczodrzynski.edziennik.ui.aximo.AximoSwipeRefreshLayout) {
+                swipeRefreshLayout.blockRefreshGestures = navTarget == NavTarget.TIMETABLE
+            }
             if (navTarget != NavTarget.TIMETABLE) {
                 swipeRefreshLayout.isEnabled = getSharedPreferences(
                     "aximo_settings",
