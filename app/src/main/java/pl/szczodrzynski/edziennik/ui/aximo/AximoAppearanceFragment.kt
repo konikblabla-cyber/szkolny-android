@@ -95,6 +95,19 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
         }
         refreshWallpaperSlots()
 
+        // Tło ma własne sterowanie niezależne od animacji interfejsu.
+        val wallpaperAnimation = prefs.getBoolean("wallpaper_animation", false)
+        setWallpaperAnimation(wallpaperAnimation)
+        listOf(b.wallpaperStatic, b.wallpaperAnimated).forEachIndexed { index, view ->
+            view.setOnClickListener {
+                val animated = index == 1
+                prefs.edit().putBoolean("wallpaper_animation", animated).apply()
+                b.appearanceSaved.text = if (animated) "Ruchome tło włączone ✓" else "Tło zatrzymane ✓"
+                setWallpaperAnimation(animated)
+                activity.refreshAximoAppearance()
+            }
+        }
+
         val savedTransparency = prefs.getInt("surfaceTransparency", 18).coerceIn(0, 65)
         b.surfaceTransparency.progress = savedTransparency
         b.surfaceTransparencyValue.text = "$savedTransparency% przezroczystości"
@@ -321,6 +334,15 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
             view.alpha = if (index == style) 1f else 0.58f
             view.scaleX = if (index == style) 1.04f else 1f
             view.scaleY = if (index == style) 1.04f else 1f
+        }
+    }
+
+    private fun setWallpaperAnimation(animated: Boolean) {
+        val views = listOf(b.wallpaperStatic, b.wallpaperAnimated)
+        views.forEachIndexed { index, view ->
+            view.alpha = if ((index == 1) == animated) 1f else 0.58f
+            view.scaleX = if ((index == 1) == animated) 1.03f else 1f
+            view.scaleY = if ((index == 1) == animated) 1.03f else 1f
         }
     }
 
