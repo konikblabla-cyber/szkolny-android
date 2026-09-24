@@ -406,7 +406,7 @@ class MessagesComposeFragment : BaseFragment<MessagesComposeFragmentBinding, Mai
                     .enqueue(activity)
             }
             negative(R.string.cancel)
-        }
+        }.show()
     }
 
     override fun onResume() {
