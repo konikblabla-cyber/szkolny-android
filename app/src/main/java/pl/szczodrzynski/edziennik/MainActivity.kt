@@ -363,6 +363,15 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         }
 
         swipeRefreshLayout.setOnRefreshListener { launch { syncCurrentFeature() } }
+        // The timetable has its own vertical scroller. SwipeRefreshLayout must never
+        // interpret a timetable gesture as pull-to-refresh.
+        swipeRefreshLayout.setOnChildScrollUpCallback { _, child ->
+            if (::navTarget.isInitialized && navTarget == NavTarget.TIMETABLE) {
+                true
+            } else {
+                child?.canScrollVertically(-1) == true
+            }
+        }
         swipeRefreshLayout.setColorSchemeResources(
             R.color.md_blue_500,
             R.color.md_amber_500,
