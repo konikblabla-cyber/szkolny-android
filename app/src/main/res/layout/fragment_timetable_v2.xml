@@ -1,157 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/transparent"
-    android:fitsSystemWindows="true"
-    android:clipToPadding="false">
-
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
-        android:id="@+id/timetableLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@android:color/transparent">
-
-        <com.google.android.material.appbar.AppBarLayout
-            android:layout_width="1dp"
-            android:layout_height="1dp"
-            android:visibility="invisible">
-            <pl.szczodrzynski.edziennik.ui.base.views.RecyclerTabLayout
-                android:id="@+id/tabLayout"
-                android:layout_width="1dp"
-                android:layout_height="1dp" />
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:background="@android:color/transparent" android:fitsSystemWindows="true" android:clipToPadding="false">
+    <androidx.coordinatorlayout.widget.CoordinatorLayout android:id="@+id/timetableLayout" android:layout_width="match_parent" android:layout_height="match_parent" android:background="@android:color/transparent">
+        <com.google.android.material.appbar.AppBarLayout android:layout_width="1dp" android:layout_height="1dp" android:visibility="invisible">
+            <pl.szczodrzynski.edziennik.ui.base.views.RecyclerTabLayout android:id="@+id/tabLayout" android:layout_width="1dp" android:layout_height="1dp"/>
         </com.google.android.material.appbar.AppBarLayout>
-
-        <androidx.viewpager2.widget.ViewPager2
-            android:id="@+id/viewPager"
-            android:layout_width="1dp"
-            android:layout_height="1dp"
-            android:visibility="invisible" />
-
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/aximoPlanScroll"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fillViewport="true"
-            android:overScrollMode="never"
-            android:paddingStart="18dp"
-            android:paddingTop="20dp"
-            android:paddingEnd="18dp"
-            android:paddingBottom="118dp">
-
-            <LinearLayout
-                android:id="@+id/aximoPlanContent"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="72dp"
-                    android:gravity="center_vertical">
-
-                    <TextView
-                        android:layout_width="48dp"
-                        android:layout_height="48dp"
-                        android:gravity="center"
-                        android:text="A"
-                        android:textColor="#FFFFFF"
-                        android:textSize="23sp"
-                        android:textStyle="bold"
-                        android:background="@drawable/aximo_plan_day_chip" />
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="11dp"
-                        android:layout_weight="1"
-                        android:text="Plan lekcji"
-                        android:textColor="#F7F5FF"
-                        android:textSize="26sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:id="@+id/aximoPlanCount"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/aximo_plan_day_chip"
-                        android:paddingStart="10dp"
-                        android:paddingTop="6dp"
-                        android:paddingEnd="10dp"
-                        android:paddingBottom="6dp"
-                        android:textColor="#D9C6FF"
-                        android:textSize="12sp"
-                        tools:text="6 lekcji" />
+        <androidx.viewpager2.widget.ViewPager2 android:id="@+id/viewPager" android:layout_width="1dp" android:layout_height="1dp" android:visibility="invisible"/>
+        <androidx.core.widget.NestedScrollView android:id="@+id/aximoPlanScroll" android:layout_width="match_parent" android:layout_height="match_parent" android:fillViewport="true" android:overScrollMode="never" android:paddingStart="18dp" android:paddingTop="18dp" android:paddingEnd="18dp" android:paddingBottom="118dp">
+            <LinearLayout android:id="@+id/aximoPlanContent" android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="70dp" android:gravity="center_vertical">
+                    <TextView android:layout_width="48dp" android:layout_height="48dp" android:background="@drawable/aximo_plan_day_chip" android:gravity="center" android:text="A" android:textColor="#FFFFFF" android:textSize="23sp" android:textStyle="bold"/>
+                    <TextView android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="11dp" android:layout_weight="1" android:text="Plan lekcji" android:textColor="#F7F1FF" android:textSize="26sp" android:textStyle="bold"/>
+                    <TextView android:id="@+id/aximoPlanCount" android:layout_width="wrap_content" android:layout_height="wrap_content" android:background="@drawable/aximo_chip_background" android:paddingStart="11dp" android:paddingTop="7dp" android:paddingEnd="11dp" android:paddingBottom="7dp" android:textColor="#D9C6FF" android:textSize="12sp" android:textStyle="bold" tools:text="6 lekcji"/>
                 </LinearLayout>
-
-                <TextView
-                    android:id="@+id/aximoPlanDate"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:textColor="#AEB8D4"
-                    android:textSize="15sp"
-                    android:textStyle="bold"
-                    tools:text="Poniedziałek, 22 września" />
-
-                <HorizontalScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="72dp"
-                    android:layout_marginTop="14dp"
-                    android:scrollbars="none"
-                    android:clipToPadding="false">
-
-                    <LinearLayout
-                        android:id="@+id/aximoDayStrip"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:orientation="horizontal" />
+                <TextView android:id="@+id/aximoPlanDate" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:textColor="#B9ADD4" android:textSize="14sp" android:textStyle="bold" tools:text="Poniedziałek, 22 września"/>
+                <HorizontalScrollView android:layout_width="match_parent" android:layout_height="72dp" android:layout_marginTop="13dp" android:clipToPadding="false" android:scrollbars="none">
+                    <LinearLayout android:id="@+id/aximoDayStrip" android:layout_width="wrap_content" android:layout_height="match_parent" android:orientation="horizontal"/>
                 </HorizontalScrollView>
-
-                <LinearLayout
-                    android:id="@+id/aximoLessonContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="18dp"
-                    android:orientation="vertical" />
-
-                <LinearLayout
-                    android:id="@+id/aximoEmptyState"
-                    android:layout_width="match_parent"
-                    android:layout_height="180dp"
-                    android:layout_marginTop="10dp"
-                    android:background="@drawable/aximo_plan_day_chip"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="Brak lekcji"
-                        android:textColor="#F4F0FF"
-                        android:textSize="18sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:text="W tym dniu nie ma zaplanowanych zajęć."
-                        android:textColor="#9EA4BC"
-                        android:textSize="13sp" />
+                <LinearLayout android:id="@+id/aximoLessonContainer" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="17dp" android:orientation="vertical"/>
+                <LinearLayout android:id="@+id/aximoEmptyState" android:layout_width="match_parent" android:layout_height="180dp" android:layout_marginTop="10dp" android:background="@drawable/aximo_section_background" android:gravity="center" android:orientation="vertical" android:visibility="gone">
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Brak lekcji" android:textColor="#F4F0FF" android:textSize="18sp" android:textStyle="bold"/>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="W tym dniu nie ma zaplanowanych zajęć." android:textColor="#A2A8BE" android:textSize="13sp"/>
                 </LinearLayout>
             </LinearLayout>
         </androidx.core.widget.NestedScrollView>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-    <LinearLayout
-        android:id="@+id/timetableNotPublicLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="gone"
-        tools:visibility="gone" />
+    <LinearLayout android:id="@+id/timetableNotPublicLayout" android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center" android:orientation="vertical" android:visibility="gone" tools:visibility="gone"/>
 </FrameLayout>
