@@ -391,7 +391,7 @@ object AximoGradeMotivationNotifications {
             val body = "$subject • ocena $gradeText • średnia: $averageText\n$phrase"
 
             val openGrades = Intent(context, MainActivity::class.java)
-                .putExtra("fragmentId", NavTarget.GRADES)
+                .putExtra("fragmentId", NavTarget.GRADES.toString())
                 .putExtra("gradesSubjectId", grade.subjectId)
                 .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
             val openPending = PendingIntent.getActivity(
