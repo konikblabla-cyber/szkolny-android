@@ -1,25 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent" android:layout_height="match_parent"
-    android:background="@android:color/transparent">
-
-    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent"
-        android:orientation="vertical" android:paddingStart="16dp" android:paddingEnd="16dp"
-        android:paddingTop="18dp">
-
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:text="Kalendarz" android:textColor="#F7F7FF" android:textSize="25sp" android:textStyle="bold"/>
-        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-            android:layout_marginTop="3dp" android:text="Wydarzenia, lekcje i ważne daty"
-            android:textColor="#9BA8C4" android:textSize="12sp"/>
-
-        <com.applandeo.materialcalendarview.CalendarView
-            android:id="@+id/agenda_calendar_view" android:layout_width="match_parent" android:layout_height="0dp"
-            android:layout_weight="1" android:layout_marginTop="14dp"
-            android:background="#111A32" app:headerColor="#8D72FF"/>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:background="@android:color/transparent">
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:paddingStart="18dp" android:paddingEnd="18dp" android:paddingTop="20dp" android:paddingBottom="8dp">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Kalendarz" android:textColor="#F7F1FF" android:textSize="26sp" android:textStyle="bold"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Wydarzenia, lekcje i ważne daty" android:textColor="#98A4BF" android:textSize="12sp"/>
+        <com.applandeo.materialcalendarview.CalendarView android:id="@+id/agenda_calendar_view" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:layout_marginTop="15dp" android:background="@drawable/aximo_section_background" app:headerColor="#9B6CFF"/>
     </LinearLayout>
-
-    <ProgressBar android:id="@+id/progressBar" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:layout_gravity="center"/>
+    <ProgressBar android:id="@+id/progressBar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center"/>
 </FrameLayout>
