@@ -131,8 +131,24 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
         b.animationsEnabled.isChecked = prefs.getBoolean("animationsEnabled", true)
         b.animationsEnabled.setOnCheckedChangeListener { _, checked ->
             prefs.edit().putBoolean("animationsEnabled", checked).apply()
+            if (!checked) prefs.edit().putInt("animationStyle", 0).apply()
             b.appearanceSaved.text = if (checked) "Animacje włączone ✓" else "Animacje wyłączone ✓"
+            refreshAnimationStyle()
         }
+        listOf(b.animationNone, b.animationSoft, b.animationSmooth, b.animationDynamic).forEachIndexed { index, view ->
+            view.setOnClickListener {
+                prefs.edit().putBoolean("animationsEnabled", index != 0).putInt("animationStyle", index).apply()
+                b.animationsEnabled.isChecked = index != 0
+                b.appearanceSaved.text = when (index) {
+                    0 -> "Animacje wyłączone ✓"
+                    1 -> "Animacje: delikatne ✓"
+                    2 -> "Animacje: płynne ✓"
+                    else -> "Animacje: dynamiczne ✓"
+                }
+                refreshAnimationStyle()
+            }
+        }
+        refreshAnimationStyle()
 
         b.softCards.isChecked = prefs.getBoolean("softCards", false)
         b.softCards.setOnCheckedChangeListener { _, checked ->
@@ -164,11 +180,11 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
                 isClickable = true
                 isFocusable = true
                 setOnClickListener {
-                    val animationsEnabled = prefs.getBoolean("animationsEnabled", true)
-                    if (animationsEnabled) {
-                        animate().scaleX(0.96f).scaleY(0.96f).setDuration(70).withEndAction {
-                            animate().scaleX(1f).scaleY(1f).setDuration(110).start()
-                        }.start()
+                    val animationStyle = prefs.getInt("animationStyle", 2).coerceIn(0, 3)
+                    when (animationStyle) {
+                        1 -> animate().scaleX(0.98f).scaleY(0.98f).setDuration(55).withEndAction { animate().scaleX(1f).scaleY(1f).setDuration(80).start() }.start()
+                        2 -> animate().scaleX(0.96f).scaleY(0.96f).setDuration(70).withEndAction { animate().scaleX(1f).scaleY(1f).setDuration(110).start() }.start()
+                        3 -> animate().scaleX(0.94f).scaleY(0.94f).alpha(0.82f).setDuration(85).withEndAction { animate().scaleX(1f).scaleY(1f).alpha(1f).setDuration(150).start() }.start()
                     }
                     saveStyle(index)
                 }
@@ -298,6 +314,16 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
             v.alpha = if (names[i] == value) 1f else 0.58f
         }
     }
+    private fun refreshAnimationStyle() {
+        val style = prefs.getInt("animationStyle", 2).coerceIn(0, 3)
+        val views = listOf(b.animationNone, b.animationSoft, b.animationSmooth, b.animationDynamic)
+        views.forEachIndexed { index, view ->
+            view.alpha = if (index == style) 1f else 0.58f
+            view.scaleX = if (index == style) 1.04f else 1f
+            view.scaleY = if (index == style) 1.04f else 1f
+        }
+    }
+
     private fun refreshWallpaperSlots() {
         val slots = listOf(b.customBg1, b.customBg2, b.customBg3, b.customBg4, b.customBg5)
         slots.forEachIndexed { index, view ->
