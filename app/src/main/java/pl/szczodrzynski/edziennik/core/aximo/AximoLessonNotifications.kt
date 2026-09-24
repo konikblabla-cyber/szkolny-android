@@ -22,7 +22,7 @@ import pl.szczodrzynski.edziennik.utils.models.Date
 
 object AximoLessonNotifications {
     const val ACTION_NOTIFY = "pl.szczodrzynski.edziennik.aximo.LESSON_NOTIFICATION"
-    private const val CHANNEL_ID = "aximo_lessons"
+    private const val CHANNEL_ID = "aximo_lessons_silent_v2"
     private const val NOTIFICATION_ID = 47001
     private const val ACTION_NEXT = "pl.szczodrzynski.edziennik.aximo.OPEN_NEXT_LESSON"
     private const val REQUEST_BASE = 470000
@@ -38,8 +38,11 @@ object AximoLessonNotifications {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return
         val manager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         manager.createNotificationChannel(
-            NotificationChannel(CHANNEL_ID, "Lekcje Aximo", NotificationManager.IMPORTANCE_HIGH).apply {
-                description = "Przypomnienia o lekcjach, salach i zadaniach domowych"
+            NotificationChannel(CHANNEL_ID, "Lekcje Aximo", NotificationManager.IMPORTANCE_LOW).apply {
+                description = "Ciche informacje o lekcjach, salach i zadaniach domowych"
+                setSound(null, null)
+                enableVibration(false)
+                setShowBadge(true)
             }
         )
     }
@@ -189,7 +192,9 @@ object AximoLessonNotifications {
             .setStyle(NotificationCompat.BigTextStyle().bigText("To jest test panelu developerskiego. Jeśli widzisz to powiadomienie, Aximo może wysyłać przypomnienia."))
             .setAutoCancel(true)
             .setCategory(NotificationCompat.CATEGORY_EVENT)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setSound(null)
+            .setVibrate(null)
             .build()
 
         NotificationManagerCompat.from(context).notify(47099, notification)
@@ -284,7 +289,9 @@ object AximoLessonNotifications {
             )
             .setAutoCancel(true)
             .setCategory(NotificationCompat.CATEGORY_EVENT)
-            .setPriority(NotificationCompat.PRIORITY_HIGH)
+            .setPriority(NotificationCompat.PRIORITY_LOW)
+            .setSound(null)
+            .setVibrate(null)
             .setOnlyAlertOnce(true)
             .setWhen(if (isCurrent) now else currentStart)
             .build()
