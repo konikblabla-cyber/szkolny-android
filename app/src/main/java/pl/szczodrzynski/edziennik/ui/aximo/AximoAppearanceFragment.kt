@@ -108,12 +108,12 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
             }
         }
 
-        val savedTransparency = prefs.getInt("surfaceTransparency", 18).coerceIn(0, 100)
+        val savedTransparency = prefs.getInt("surfaceTransparency", 18).coerceIn(0, 70)
         b.surfaceTransparency.progress = savedTransparency
         b.surfaceTransparencyValue.text = "$savedTransparency% przezroczystości"
         b.surfaceTransparency.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                val value = progress.coerceIn(0, 100)
+                val value = progress.coerceIn(0, 70)
                 b.surfaceTransparencyValue.text = "$value% przezroczystości"
                 if (fromUser) {
                     prefs.edit().putInt("surfaceTransparency", value).apply()
