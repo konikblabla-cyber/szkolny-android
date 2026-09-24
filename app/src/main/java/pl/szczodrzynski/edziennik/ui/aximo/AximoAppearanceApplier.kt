@@ -14,7 +14,7 @@ object AximoAppearanceApplier {
         val style = AximoAppearanceStyle.fromOrdinal(prefs.getInt("style", AximoAppearanceStyle.AXIMO.ordinal))
         val accent = prefs.getInt("accentColor", style.accent)
         val roundness = prefs.getInt("cardRoundness", 18).coerceIn(4, 28)
-        val transparency = prefs.getInt("surfaceTransparency", 18).coerceIn(0, 65)
+        val transparency = prefs.getInt("surfaceTransparency", 18).coerceIn(0, 100)
         val softCards = prefs.getBoolean("softCards", false)
         val animationsEnabled = prefs.getBoolean("animationsEnabled", true)
         val animationStyle = prefs.getInt("animationStyle", 2).coerceIn(0, 3)
@@ -41,9 +41,9 @@ object AximoAppearanceApplier {
             !entryName.contains("subject")
 
         val alpha = if (softCards) {
-            (255 - transparency).coerceIn(70, 255)
+            (255 - transparency).coerceIn(35, 255)
         } else {
-            (255 - transparency).coerceIn(110, 255)
+            (255 - transparency).coerceIn(55, 255)
         }
 
         when (original) {
