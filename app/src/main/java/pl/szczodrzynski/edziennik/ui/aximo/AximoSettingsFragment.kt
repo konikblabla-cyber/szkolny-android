@@ -120,6 +120,7 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
 
     private fun addSchoolSettings(c: LinearLayout) {
         addSwitch(c, "Tryb szkolny", "Automatycznie reaguj na godziny lekcji.", "school_mode", true)
+        addSilenceSchedulePreview(c)
         addChoiceAction(c, "Wycisz przed pierwszą lekcją", "Wybierz, ile minut wcześniej Aximo ma wyciszyć telefon.", "silence_before", intArrayOf(0, 5, 10, 15, 20, 30), 10) { rescheduleSilence() }
         addChoiceAction(c, "Przywróć dźwięk po ostatniej lekcji", "Wybierz, ile minut po lekcjach Aximo ma przywrócić poprzedni tryb.", "silence_after", intArrayOf(0, 5, 10, 15, 20, 30), 10) { rescheduleSilence() }
         addAction(c, "Wycisz telefon teraz", "Wycisz ręcznie na wybrany czas, niezależnie od planu lekcji.", null) {
@@ -140,6 +141,48 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
             if (AximoLessonSilence.hasNotificationPolicyAccess(requireContext()))
                 Toast.makeText(activity, "Dostęp jest już przyznany.", Toast.LENGTH_SHORT).show()
             else AximoLessonSilence.openNotificationPolicyAccessSettings(activity)
+        }
+    }
+
+    private fun addSilenceSchedulePreview(c: LinearLayout) {
+        val app = requireContext().applicationContext as pl.szczodrzynski.edziennik.App
+        val before = prefs.getInt("silence_before", 10).coerceIn(0, 30)
+        val after = prefs.getInt("silence_after", 10).coerceIn(0, 30)
+        val profileId = pl.szczodrzynski.edziennik.App.profileId
+
+        val times = if (profileId != 0) {
+            try {
+                val today = pl.szczodrzynski.edziennik.utils.models.Date.getToday()
+                val lessons = app.db.timetableDao().getAllForDateNow(profileId, today)
+                    .filter {
+                        it.type != pl.szczodrzynski.edziennik.data.db.entity.Lesson.TYPE_CANCELLED &&
+                        it.type != pl.szczodrzynski.edziennik.data.db.entity.Lesson.TYPE_NO_LESSONS
+                    }
+                    .mapNotNull {
+                        val start = it.displayStartTime ?: return@mapNotNull null
+                        val end = it.displayEndTime ?: return@mapNotNull null
+                        today.getAsCalendar(start).timeInMillis to today.getAsCalendar(end).timeInMillis
+                    }
+                if (lessons.isNotEmpty()) {
+                    val start = lessons.minOf { it.first } - before * 60_000L
+                    val end = lessons.maxOf { it.second } + after * 60_000L
+                    val fmt = java.text.SimpleDateFormat("HH:mm", java.util.Locale.getDefault())
+                    "Dzisiaj Aximo wyciszy telefon: ${fmt.format(java.util.Date(start))}–${fmt.format(java.util.Date(end))}"
+                } else "Dzisiaj brak lekcji — wyciszenie nie jest planowane."
+            } catch (_: Exception) {
+                "Nie udało się odczytać dzisiejszego planu lekcji."
+            }
+        } else {
+            "Zaloguj się, aby wyświetlić godziny wyciszenia z planu lekcji."
+        }
+
+        addAction(
+            c,
+            "Wyciszenie według planu",
+            "${times}  •  ${before} min przed / ${after} min po",
+            null
+        ) {
+            Toast.makeText(activity, times, Toast.LENGTH_LONG).show()
         }
     }
 
