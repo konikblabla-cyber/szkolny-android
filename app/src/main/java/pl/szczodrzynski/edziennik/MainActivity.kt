@@ -49,6 +49,7 @@ import org.greenrobot.eventbus.ThreadMode
 import pl.droidsonroids.gif.GifDrawable
 import pl.szczodrzynski.edziennik.core.aximo.AximoLessonSilence
 import pl.szczodrzynski.edziennik.core.aximo.AximoLessonNotifications
+import pl.szczodrzynski.edziennik.core.aximo.AximoGradeMotivationNotifications
 import pl.szczodrzynski.edziennik.core.manager.AvailabilityManager.Error.Type
 import pl.szczodrzynski.edziennik.core.manager.UserActionManager
 import pl.szczodrzynski.edziennik.core.work.AppManagerDetectedEvent
@@ -690,6 +691,10 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
     fun onApiTaskAllFinishedEvent(event: ApiTaskAllFinishedEvent) {
         EventBus.getDefault().removeStickyEvent(event)
         swipeRefreshLayout.isRefreshing = false
+        // Immediately react when sync has delivered new grades.
+        launch(Dispatchers.IO) {
+            AximoGradeMotivationNotifications.notifyNewGrades(this@MainActivity, App.profileId)
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
