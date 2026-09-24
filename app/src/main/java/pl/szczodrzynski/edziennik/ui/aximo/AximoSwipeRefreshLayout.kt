@@ -62,6 +62,10 @@ class AximoSwipeRefreshLayout @JvmOverloads constructor(
             MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
                 activeScrollableChild = null
             }
+
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                activeScrollableChild = null
+            }
         }
 
         return super.onInterceptTouchEvent(ev)
