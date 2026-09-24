@@ -35,13 +35,13 @@ class AximoBottomNavigation @JvmOverloads constructor(
         Item(NavTarget.MORE, "Więcej"),
     )
 
+    // Every radial item has a matching setting below. No decorative/dead shortcuts.
     private val menuItems = listOf(
         Item(NavTarget.GRADES, "Oceny"),
         Item(NavTarget.HOMEWORK, "Zadania"),
         Item(NavTarget.ATTENDANCE, "Frekwencja"),
-        Item(NavTarget.AGENDA, "Kalendarz"),
-        Item(NavTarget.NOTES, "Notatki"),
-        Item(NavTarget.TEACHERS, "Nauczyciele"),
+        Item(NavTarget.TIMETABLE, "Plan"),
+        Item(NavTarget.MESSAGES, "Wiadomości"),
         Item(NavTarget.SETTINGS, "Ustawienia"),
     )
 
@@ -178,7 +178,7 @@ class AximoBottomNavigation @JvmOverloads constructor(
         val radialKeys = listOf("nav_grades", "nav_homework", "nav_attendance", "nav_timetable", "nav_messages", "nav_settings")
         menuItems.forEachIndexed { index, _ ->
             val enabled = radialKeys.getOrNull(index)?.let { settingsPrefs.getBoolean(it, true) } ?: true
-            if (!enabled) menuViews[index].alpha = 0f
+            menuViews[index].alpha = if (enabled) 1f else 0f
             if (!open || !enabled) menuViews[index].visibility = View.INVISIBLE
         }
     }
