@@ -44,8 +44,13 @@ object AximoAppearanceApplier {
             bg in SURFACE_BACKGROUNDS -> view.setBackgroundColor(style.surface)
         }
         if (isRoot) {
-            // Root is always the selected style's base, not a hard-coded purple.
-            view.setBackgroundColor(style.background)
+            // Keep the active Aximo wallpaper during a live appearance refresh.
+            val currentBackground = view.background
+            val isWallpaper = currentBackground is AximoPhotoWallpaperDrawable ||
+                currentBackground is AximoAnimatedWallpaperDrawable
+            if (!isWallpaper) {
+                view.setBackgroundColor(style.background)
+            }
         }
 
         if (view is TextView) {
