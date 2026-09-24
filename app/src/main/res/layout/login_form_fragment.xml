@@ -15,41 +15,56 @@
         android:layout_height="0dp"
         android:layout_weight="1">
 
-        <LinearLayout
-            android:id="@+id/formContainer"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="24dp"
-            android:orientation="vertical">
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:elevation="2dp"
+            app:cardBackgroundColor="?colorSurface"
+            app:cardCornerRadius="20dp"
+            app:strokeColor="?colorOutline"
+            app:strokeWidth="1dp">
+
+            <LinearLayout
+                android:id="@+id/formContainer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="20dp"
+                android:paddingTop="20dp"
+                android:paddingBottom="8dp">
 
             <com.mikepenz.iconics.view.IconicsImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginTop="32dp"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginTop="4dp"
                 app:iiv_color="?colorPrimary"
                 app:iiv_icon="cmd-account-circle-outline"
-                app:iiv_size="32dp"
+                app:iiv_size="48dp"
                 tools:srcCompat="@tools:sample/avatars" />
 
             <TextView
                 android:id="@+id/title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:textAppearance="?textAppearanceHeadlineSmall"
+                android:layout_marginTop="12dp"
+                android:textAppearance="?textAppearanceHeadlineMedium"
                 tools:text="Zaloguj się - VULCAN® UONET+" />
 
             <TextView
                 android:id="@+id/subTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
                 android:textAppearance="?textAppearanceBodyLarge"
                 tools:text="Opolska eSzkoła" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginVertical="4dp"
+                android:layout_marginVertical="12dp"
                 android:background="@drawable/divider" />
 
             <LinearLayout
@@ -116,7 +131,8 @@
                     android:textColor="?colorOnError"
                     tools:text="Nieprawidłowy login lub hasło, konto nie zostało aktywowane, lub dziennik ma problemy egzystencjalne" />
             </LinearLayout>
-        </LinearLayout>
+            </LinearLayout>
+        </com.google.android.material.card.MaterialCardView>
     </ScrollView>
 
     <LinearLayout
