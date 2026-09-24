@@ -19,7 +19,8 @@ import kotlin.math.sin
 class AximoPhotoWallpaperDrawable(
     private val context: Context,
     private val preset: String,
-    private val fallbackColors: IntArray
+    private val fallbackColors: IntArray,
+    private val animateWallpaper: Boolean = true
 ) : Drawable() {
 
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG or Paint.FILTER_BITMAP_FLAG)
@@ -38,7 +39,7 @@ class AximoPhotoWallpaperDrawable(
     }
 
     init {
-        animator.start()
+        if (animateWallpaper) animator.start()
         loadPhoto()
     }
 
@@ -59,12 +60,12 @@ class AximoPhotoWallpaperDrawable(
         val bw = b.width.toFloat()
         val bh = b.height.toFloat()
         val baseScale = maxOf(w / bw, h / bh)
-        val zoom = 1.045f + 0.025f * ((sin(p.toDouble()).toFloat() + 1f) / 2f)
+        val zoom = if (animateWallpaper) 1.045f + 0.025f * ((sin(p.toDouble()).toFloat() + 1f) / 2f) else 1.055f
         val scale = baseScale * zoom
         val drawW = bw * scale
         val drawH = bh * scale
-        val driftX = (drawW - w) * (0.5f + 0.16f * sin((p * 0.7f).toDouble()).toFloat())
-        val driftY = (drawH - h) * (0.5f + 0.10f * sin((p * 0.55f + 1.2f).toDouble()).toFloat())
+        val driftX = if (animateWallpaper) (drawW - w) * (0.5f + 0.16f * sin((p * 0.7f).toDouble()).toFloat()) else (drawW - w) * 0.5f
+        val driftY = if (animateWallpaper) (drawH - h) * (0.5f + 0.10f * sin((p * 0.55f + 1.2f).toDouble()).toFloat()) else (drawH - h) * 0.5f
         val src = Rect(0, 0, b.width, b.height)
         val dst = RectF(-driftX, -driftY, -driftX + drawW, -driftY + drawH)
 
