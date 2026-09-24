@@ -1,0 +1,16 @@
+[
+  {
+    "id": 10,
+    "name": "Dziennik VULCAN — Świnoujście",
+    "description": "Logowanie ucznia przez adres e-mail i hasło",
+    "icon": "https://szkolny-eu.github.io/FSLogin/realms/vulcan/vulcan.net.pl.png",
+    "screenshot": "https://szkolny-eu.github.io/FSLogin/realms/vulcan/vulcan.net.pl_ss.png",
+    "formFields": ["email", "password"],
+    "loginUrl": "https://uonetplus.vulcan.net.pl/swinoujscie/LoginEndpoint.aspx",
+    "realmData": {
+      "type": "Cufs",
+      "host": "vulcan.net.pl",
+      "symbol": "swinoujscie"
+    }
+  }
+]
