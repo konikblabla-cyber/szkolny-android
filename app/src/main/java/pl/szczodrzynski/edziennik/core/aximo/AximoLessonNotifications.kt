@@ -302,3 +302,118 @@ object AximoLessonNotifications {
         schedulePersistentRefresh(context, profileId, 60_000L)
     }
 }
+
+/**
+ * Instant Aximo reactions for newly received grades.
+ * 50 x 40 phrase combinations = 2,000 distinct reactions.
+ */
+object AximoGradeMotivationNotifications {
+    private const val CHANNEL_ID = "pl.szczodrzynski.edziennik.DATA"
+    private const val NOTIFICATION_BASE = 475000
+
+    private val OPENERS = listOf(
+        "Brawo! Wpadła nowa ocena.", "🔥 Ale wynik! Nowa ocena już jest.", "⭐ Jest ocena — dobra robota!",
+        "💪 Kolejny krok do celu!", "🚀 Lecimy dalej — właśnie wpadła ocena!", "🎯 Cel coraz bliżej!",
+        "👏 Dobra robota, kolejna ocena na koncie!", "✨ Aximo ma dla Ciebie nową ocenę.", "🏆 Kolejny szkolny punkt dla Ciebie!",
+        "😎 No i pięknie — pojawiła się ocena!", "⚡ Nowa ocena właśnie wskoczyła!", "💜 Spokojnie, każda ocena to kolejny krok.",
+        "🔥 Tak się buduje dobrą średnią!", "🌟 Kolejny wynik do kolekcji!", "🎉 Mamy nową ocenę!",
+        "🧠 Wiedza zamienia się w wynik!", "📈 Twoja średnia właśnie dostała kolejny impuls.", "💫 Mały wynik, duży krok naprzód!",
+        "🥳 Jest! Aximo zauważyło nową ocenę.", "💎 Kolejna ocena została dodana.", "🏅 Dobra robota — wynik już czeka!",
+        "🎮 Kolejny level zaliczony!", "🚀 Jeszcze jeden krok i jesteśmy dalej.", "🔥 Wynik wylądował — sprawdź średnią!",
+        "💪 Nie zatrzymuj tempa!", "🎯 Właśnie pojawił się nowy szkolny wynik.", "🌌 Kolejna gwiazdka na szkolnym niebie!",
+        "👏 Wynik zapisany — czas lecieć dalej.", "✨ Nowa ocena, nowa motywacja!", "🏆 Aximo melduje: pojawiła się ocena!",
+        "⚡ Szybki komunikat: masz nowy wynik!", "💜 Kolejny powód, żeby się nie poddawać.", "📚 Nauka + konsekwencja = kolejny wynik.",
+        "🎉 Nowa ocena właśnie dołączyła do zestawu!", "🔥 Dzieje się — sprawdź, co wpadło!", "🌟 Wynik jest już w dzienniku.",
+        "💥 Kolejna ocena odhaczona!", "🎯 Twoja droga do celu właśnie się zmieniła.", "😄 Jest dobrze — mamy nową ocenę!",
+        "🚀 Wynik gotowy, czas na następny krok.", "💡 Każda ocena daje Ci więcej informacji.", "🏅 Nowy szkolny wynik właśnie wskoczył.",
+        "🌈 Kolejna ocena — kolejna szansa na progres.", "🔥 Nie zwalniamy, kolejny wynik już jest!", "👏 Aximo właśnie znalazło nową ocenę.",
+        "🎊 Małe powiadomienie, duży krok!", "💪 Trzymamy tempo — kolejna ocena!", "⭐ Wynik zapisany. Tak trzymaj!",
+        "🚀 Kolejna misja szkolna zaliczona!", "💜 Nowa ocena jest już na Twoim koncie!"
+    )
+    private val CLOSERS = listOf(
+        "Tak trzymaj!", "Nie poddawaj się — lecimy dalej!", "Jeszcze jeden krok do celu.",
+        "Każdy wynik buduje końcową średnią.", "Dzisiaj ta ocena, jutro kolejny sukces.", "Masz to — działamy dalej!",
+        "Krok po kroku będzie coraz lepiej.", "Sprawdź średnią i zaplanuj następny ruch.", "Jedna ocena nie definiuje całego semestru.",
+        "Najważniejsze, żeby iść do przodu.", "Dobry moment, żeby sprawdzić swój cel.", "Wynik już jest — teraz następny krok.",
+        "Nie zatrzymuj się na jednym wyniku.", "Twoja średnia ma jeszcze wiele historii do napisania.", "Każda kolejna ocena może coś zmienić.",
+        "Aximo trzyma kciuki za następny wynik.", "Masz przed sobą kolejne możliwości.", "Działamy dalej bez stresu.",
+        "Liczy się cały progres, nie jedna ocena.", "Spokojnie — wszystko buduje się z czasem.", "Kolejny wynik jest już za Tobą.",
+        "Teraz czas na następny szkolny level.", "Zobacz, jak zmieniła się średnia.", "Nie odpuszczamy!",
+        "Mały krok też jest krokiem.", "Cel nadal jest w grze.", "Dobra robota — pora na kolejny etap.",
+        "Wynik zapisany, motywacja zostaje.", "Jeszcze wiele ocen przed Tobą.", "Trzymaj swoje tempo.",
+        "Każdy progres się liczy.", "Sprawdź, ile brakuje Ci do celu.", "Niech ta ocena będzie kolejną cegiełką.",
+        "Jeden wynik nie przekreśla planu.", "Możesz zrobić kolejny krok już przy następnej okazji.", "Twoja praca ma znaczenie.",
+        "Zbieramy wyniki i lecimy dalej.", "To dopiero kolejny etap.", "Nie patrz tylko na jedną ocenę — patrz na cały progres!",
+        "Średnia to maraton, nie jeden sprint."
+    )
+
+    fun notifyNewGrades(context: Context, profileId: Int) {
+        if (!AximoLessonNotifications.hasNotificationPermission(context)) return
+        val app = context.applicationContext as App
+        val pending = try { app.db.gradeDao().getNotNotifiedNow(profileId) } catch (_: Exception) { emptyList() }
+        if (pending.isEmpty()) return
+        val all = try { app.db.gradeDao().getAllNow(profileId) } catch (_: Exception) { emptyList() }
+
+        val averages = all
+            .filter { it.type == Grade.TYPE_NORMAL && it.value in 1f..6f && it.subjectId != 0L }
+            .groupBy { it.subjectId }
+            .mapValues { (_, grades) ->
+                val weightedSum = grades.sumOf { (it.value * it.weight.coerceAtLeast(0f)).toDouble() }
+                val weightSum = grades.sumOf { it.weight.coerceAtLeast(0f).toDouble() }
+                if (weightSum > 0.0) (weightedSum / weightSum).toFloat()
+                else grades.map { it.value }.average().toFloat()
+            }
+
+        val manager = androidx.core.app.NotificationManagerCompat.from(context)
+        pending.sortedBy { it.addedDate }.forEach { grade ->
+            val numeric = grade.type == Grade.TYPE_NORMAL && grade.value in 1f..6f
+            val gradeText = if (numeric) {
+                if (grade.value % 1f == 0f) grade.value.toInt().toString()
+                else String.format(java.util.Locale.getDefault(), "%.1f", grade.value)
+            } else grade.name.ifBlank { "nowa" }
+            val subject = grade.subjectLongName?.takeIf { it.isNotBlank() } ?: "przedmiot"
+            val average = averages[grade.subjectId]
+            val averageText = average?.let { String.format(java.util.Locale.getDefault(), "%.2f", it) } ?: "—"
+
+            val title = when {
+                grade.value >= 6f -> "🏆 Szóstka! Ale wynik!"
+                grade.value >= 5f -> "⭐ Piątka! Brawo!"
+                grade.value >= 4f -> "👍 Czwórka! Jest dobrze!"
+                grade.value >= 3f -> "💪 Trójka — nie poddawaj się!"
+                grade.value >= 2f -> "💜 Dwójka — głowa do góry!"
+                grade.value >= 1f -> "🚀 Jedynka? Odbijamy się!"
+                else -> "✨ Nowa ocena!"
+            }
+
+            val seed = kotlin.math.abs((grade.id xor (grade.id ushr 32)).toInt())
+            val phrase = OPENERS[seed % OPENERS.size] + " " +
+                CLOSERS[(seed / OPENERS.size) % CLOSERS.size]
+            val body = "$subject • ocena $gradeText • średnia: $averageText\n$phrase"
+
+            val openGrades = Intent(context, MainActivity::class.java)
+                .putExtra("fragmentId", NavTarget.GRADES)
+                .putExtra("gradesSubjectId", grade.subjectId)
+                .addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            val openPending = PendingIntent.getActivity(
+                context,
+                NOTIFICATION_BASE + seed,
+                openGrades,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+            val notification = androidx.core.app.NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_aximo_launcher)
+                .setContentTitle(title)
+                .setContentText("$subject • $gradeText • średnia $averageText")
+                .setStyle(androidx.core.app.NotificationCompat.BigTextStyle().bigText(body))
+                .setContentIntent(openPending)
+                .setAutoCancel(true)
+                .setCategory(androidx.core.app.NotificationCompat.CATEGORY_EVENT)
+                .setPriority(androidx.core.app.NotificationCompat.PRIORITY_HIGH)
+                .setWhen(grade.addedDate)
+                .build()
+
+            manager.notify(NOTIFICATION_BASE + seed, notification)
+            try { app.db.metadataDao().setNotified(profileId, grade, true) } catch (_: Exception) {}
+        }
+    }
+}
