@@ -16,7 +16,9 @@ object AximoAppearanceApplier {
         val roundness = prefs.getInt("cardRoundness", 18).coerceIn(4, 28)
         val transparency = prefs.getInt("surfaceTransparency", 18).coerceIn(0, 65)
         val softCards = prefs.getBoolean("softCards", false)
-        applyView(root, style, accent, true, roundness, transparency, softCards)
+        val animationsEnabled = prefs.getBoolean("animationsEnabled", true)
+        val animationStyle = prefs.getInt("animationStyle", 2).coerceIn(0, 3)
+        applyView(root, style, accent, true, roundness, transparency, softCards, animationsEnabled, animationStyle)
     }
 
     private fun applyView(
@@ -26,7 +28,9 @@ object AximoAppearanceApplier {
         isRoot: Boolean,
         roundness: Int,
         transparency: Int,
-        softCards: Boolean
+        softCards: Boolean,
+        animationsEnabled: Boolean,
+        animationStyle: Int
     ) {
         if (view.id == R.id.styleGrid) return
         val original = view.background?.mutate()
@@ -80,9 +84,24 @@ object AximoAppearanceApplier {
             }
         }
 
+        if (!isRoot && animationsEnabled && animationStyle > 0 && view.isShown && view.alpha > 0f) {
+            val duration = when (animationStyle) {
+                1 -> 110L
+                2 -> 170L
+                else -> 240L
+            }
+            val targetAlpha = view.alpha
+            view.animate().cancel()
+            view.alpha = 0.94f
+            view.animate().alpha(targetAlpha)
+                .setDuration(duration)
+                .setInterpolator(android.view.animation.DecelerateInterpolator())
+                .start()
+        }
+
         if (view is ViewGroup) {
             for (i in 0 until view.childCount) {
-                applyView(view.getChildAt(i), style, accent, false, roundness, transparency, softCards)
+                applyView(view.getChildAt(i), style, accent, false, roundness, transparency, softCards, animationsEnabled, animationStyle)
             }
         }
     }
