@@ -36,15 +36,13 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
         b.backButton.setOnClickListener { activity.onBackPressedDispatcher.onBackPressed() }
 
         val categories = listOf(
-            Category("Ekran główny", "Co ma być widoczne po uruchomieniu Aximo.", b.categoryHome),
-            Category("Nawigacja", "Sposób poruszania się po najważniejszych częściach dziennika.", b.categoryNavigation),
-            Category("Dziennik", "Zachowanie planu, odświeżania i danych dziennika.", b.categoryDiary),
-            Category("Oceny i frekwencja", "Jak Aximo pokazuje wyniki, średnie i obecności.", b.categoryGrades),
-            Category("Wiadomości i zadania", "Szybki dostęp do wiadomości, prac domowych i informacji.", b.categoryMessages),
-            Category("Powiadomienia", "Wybierz dokładnie, o czym Aximo ma Ci przypominać.", b.categoryNotifications),
-            Category("Tryb szkolny", "Automatyczne zachowanie telefonu podczas lekcji.", b.categorySchool),
-            Category("Personalizacja", "Dodatkowe możliwości dopasowania Aximo do siebie.", b.categoryPersonal),
-            Category("Zaawansowane", "Opcje techniczne i zachowanie aplikacji.", b.categoryAdvanced)
+            Category("Start", "Wybierz tylko to, co naprawdę chcesz widzieć na ekranie głównym.", b.categoryHome),
+            Category("Nawigacja", "Ustaw, które sekcje mają być dostępne od ręki.", b.categoryNavigation),
+            Category("Dziennik", "Steruj odświeżaniem i zachowaniem planu lekcji.", b.categoryDiary),
+            Category("Powiadomienia", "Ustaw informacje o lekcjach i dostęp Androida.", b.categoryNotifications),
+            Category("Tryb szkolny", "Automatyczne wyciszanie telefonu podczas lekcji.", b.categorySchool),
+            Category("Wygląd", "Motywy, tło, kolory, karty i animacje.", b.categoryPersonal),
+            Category("Konto i pomoc", "Konto, synchronizacja, pomoc i informacje o Aximo.", b.categoryAdvanced)
         )
 
         b.settingsPlan.setOnClickListener { activity.navigate(navTarget = NavTarget.TIMETABLE) }
@@ -73,11 +71,9 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
         addHomeSettings(b.categoryHome)
         addNavigationSettings(b.categoryNavigation)
         addDiarySettings(b.categoryDiary)
-        addGradeSettings(b.categoryGrades)
-        addMessageSettings(b.categoryMessages)
         addNotificationSettings(b.categoryNotifications)
         addSchoolSettings(b.categorySchool)
-        addPersonalSettings(b.categoryPersonal)
+        addAppearanceSettings(b.categoryPersonal)
         addAdvancedSettings(b.categoryAdvanced)
 
         showCategory(categories, 0)
@@ -108,15 +104,6 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
         addSwitch(c, "Automatyczne przewijanie do dziś", "Plan lekcji otwieraj od bieżącego dnia.", "diary_scroll_today", true)
     }
 
-    private fun addGradeSettings(c: LinearLayout) {
-        addAction(c, "Otwórz oceny", "Przejdź bezpośrednio do listy ocen.", NavTarget.GRADES)
-        addAction(c, "Otwórz frekwencję", "Przejdź bezpośrednio do obecności i nieobecności.", NavTarget.ATTENDANCE)
-    }
-
-    private fun addMessageSettings(c: LinearLayout) {
-        addSwitch(c, "Zadania na ekranie głównym", "Pokazuj najbliższe zadania bez otwierania sekcji.", "homework_on_home", true)
-    }
-
     private fun addNotificationSettings(c: LinearLayout) {
         addSwitch(c, "Powiadomienie o następnej lekcji", "Pokazuj aktualną i następną lekcję.", "notify_next_lesson", true)
         addAction(c, "Uprawnienia powiadomień", "Sprawdź lub nadaj dostęp Androidowi.", null) {
@@ -141,12 +128,12 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
         }
     }
 
-    private fun addPersonalSettings(c: LinearLayout) {
-        addAction(c, "Pełna personalizacja wyglądu", "Motywy, kolory, 5 teł, przezroczystość i styl kart.", NavTarget.APPEARANCE)
-        addAction(c, "Profil i konto", "Szkoła, konto oraz synchronizacja.", NavTarget.PROFILE_MANAGER)
+    private fun addAppearanceSettings(c: LinearLayout) {
+        addAction(c, "Otwórz personalizację", "Motyw, tło, kolory, zaokrąglenia, karty i animacje.", NavTarget.APPEARANCE)
     }
 
     private fun addAdvancedSettings(c: LinearLayout) {
+        addAction(c, "Profil i konto", "Szkoła, konto oraz synchronizacja.", NavTarget.PROFILE_MANAGER)
         addAction(c, "Pomoc i wsparcie", "Instrukcja i zgłaszanie problemów.", NavTarget.HELP)
         addAction(c, "O Aximo", "Wersja aplikacji i informacje.", NavTarget.ABOUT)
     }
@@ -288,9 +275,9 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
     }
 
     private fun cardBackground() = GradientDrawable().apply {
-        cornerRadius = dp(18).toFloat()
-        setColor(Color.rgb(12, 17, 38))
-        setStroke(dp(1), Color.rgb(31, 39, 67))
+        cornerRadius = dp(20).toFloat()
+        setColor(Color.rgb(20, 24, 48))
+        setStroke(dp(1), Color.rgb(52, 45, 84))
     }
 
     private fun dp(value: Int): Int = (value * resources.displayMetrics.density).toInt()
