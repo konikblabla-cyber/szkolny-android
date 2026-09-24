@@ -122,6 +122,20 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
         addSwitch(c, "Tryb szkolny", "Automatycznie reaguj na godziny lekcji.", "school_mode", true)
         addChoiceAction(c, "Wycisz przed pierwszą lekcją", "Wybierz, ile minut wcześniej Aximo ma wyciszyć telefon.", "silence_before", intArrayOf(0, 5, 10, 15, 20, 30), 10) { rescheduleSilence() }
         addChoiceAction(c, "Przywróć dźwięk po ostatniej lekcji", "Wybierz, ile minut po lekcjach Aximo ma przywrócić poprzedni tryb.", "silence_after", intArrayOf(0, 5, 10, 15, 20, 30), 10) { rescheduleSilence() }
+        addAction(c, "Wycisz telefon teraz", "Wycisz ręcznie na wybrany czas, niezależnie od planu lekcji.", null) {
+            val values = intArrayOf(15, 30, 60, 120, 240)
+            AlertDialog.Builder(requireContext()).setTitle("Wycisz telefon na").setSingleChoiceItems(
+                values.map { if (it < 60) "$it min" else "${it / 60} godz." }.toTypedArray(), -1
+            ) { dialog, which ->
+                AximoLessonSilence.muteNowFor(requireContext(), values[which])
+                Toast.makeText(activity, "Telefon wyciszony.", Toast.LENGTH_SHORT).show()
+                dialog.dismiss()
+            }.show()
+        }
+        addAction(c, "Odcisz telefon teraz", "Natychmiast przywróć poprzedni tryb dźwięku.", null) {
+            AximoLessonSilence.manualUnmute(requireContext())
+            Toast.makeText(activity, "Przywrócono dźwięk.", Toast.LENGTH_SHORT).show()
+        }
         addAction(c, "Zezwól na automatyczne wyciszanie", "Nadaj Aximo dostęp potrzebny do wyciszania telefonu podczas lekcji.", null) {
             if (AximoLessonSilence.hasNotificationPolicyAccess(requireContext()))
                 Toast.makeText(activity, "Dostęp jest już przyznany.", Toast.LENGTH_SHORT).show()
