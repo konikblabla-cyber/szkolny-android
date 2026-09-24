@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
- android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="2dp" android:layout_marginBottom="8dp"
- app:cardBackgroundColor="#121B33" app:cardCornerRadius="20dp" app:cardElevation="0dp" app:strokeColor="#293A63" app:strokeWidth="1dp">
-<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="14dp">
+ android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginHorizontal="2dp" android:layout_marginBottom="9dp"
+ app:cardBackgroundColor="#121B33" app:cardCornerRadius="21dp" app:cardElevation="0dp" app:strokeColor="#3A2B58" app:strokeWidth="1dp">
+<LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="15dp">
 <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical">
-<TextView android:id="@+id/title" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:ellipsize="end" android:maxLines="2" android:textColor="#F4F1FF" android:textSize="14sp" android:textStyle="bold" tools:text="historia i społeczeństwo"/>
-<View android:id="@+id/unread" android:layout_width="10dp" android:layout_height="10dp" android:layout_marginEnd="6dp" android:background="@drawable/unread_red_circle" android:visibility="gone" tools:visibility="visible"/>
-<TextView android:id="@+id/percentage" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="5dp" android:textColor="#B58CFF" android:textSize="12sp" android:textStyle="bold" tools:text="96,5%"/>
-<com.mikepenz.iconics.view.IconicsImageView android:id="@+id/dropdownIcon" android:layout_width="30dp" android:layout_height="30dp" app:iiv_color="#8F9DBB" app:iiv_icon="cmd-chevron-down" app:iiv_size="20dp" tools:src="@android:drawable/ic_menu_more"/>
+<TextView android:id="@+id/title" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:ellipsize="end" android:maxLines="2" android:textColor="#F7F1FF" android:textSize="14sp" android:textStyle="bold" tools:text="historia i społeczeństwo"/>
+<View android:id="@+id/unread" android:layout_width="9dp" android:layout_height="9dp" android:layout_marginEnd="7dp" android:background="@drawable/unread_red_circle" android:visibility="gone" tools:visibility="visible"/>
+<TextView android:id="@+id/percentage" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginEnd="5dp" android:textColor="#C3A7FF" android:textSize="12sp" android:textStyle="bold" tools:text="96,5%"/>
+<com.mikepenz.iconics.view.IconicsImageView android:id="@+id/dropdownIcon" android:layout_width="30dp" android:layout_height="30dp" app:iiv_color="#9EA9C5" app:iiv_icon="cmd-chevron-down" app:iiv_size="20dp"/>
 </LinearLayout>
-<View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginTop="10dp" android:background="#293A63"/>
-<pl.szczodrzynski.edziennik.ui.attendance.AttendanceBar android:id="@+id/attendanceBar" android:layout_width="match_parent" android:layout_height="12dp" android:layout_marginTop="10dp"/>
+<View android:layout_width="match_parent" android:layout_height="1dp" android:layout_marginTop="11dp" android:background="#332A4A"/>
+<pl.szczodrzynski.edziennik.ui.attendance.AttendanceBar android:id="@+id/attendanceBar" android:layout_width="match_parent" android:layout_height="12dp" android:layout_marginTop="11dp"/>
 </LinearLayout>
 </com.google.android.material.card.MaterialCardView>
