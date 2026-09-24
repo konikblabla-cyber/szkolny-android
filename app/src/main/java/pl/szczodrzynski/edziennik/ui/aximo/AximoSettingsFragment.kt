@@ -345,14 +345,16 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
 
     private fun tabBackground(selected: Boolean) = GradientDrawable().apply {
         cornerRadius = dp(20).toFloat()
-        setColor(if (selected) Color.rgb(105, 55, 190) else Color.rgb(18, 23, 47))
-        setStroke(dp(1), if (selected) Color.rgb(165, 108, 255) else Color.rgb(43, 51, 82))
+        setColor(if (selected) Color.rgb(105, 55, 190) else Color.rgb(24, 23, 43))
+        setStroke(dp(1), if (selected) Color.rgb(190, 135, 255) else Color.rgb(61, 52, 87))
     }
 
     private fun cardBackground() = GradientDrawable().apply {
         cornerRadius = dp(20).toFloat()
-        setColor(Color.rgb(20, 24, 48))
-        setStroke(dp(1), Color.rgb(52, 45, 84))
+        startColor = Color.rgb(31, 25, 55)
+        centerColor = Color.rgb(24, 22, 45)
+        endColor = Color.rgb(18, 18, 35)
+        setStroke(dp(1), Color.rgb(72, 52, 105))
     }
 
     private fun dp(value: Int): Int = (value * resources.displayMetrics.density).toInt()
