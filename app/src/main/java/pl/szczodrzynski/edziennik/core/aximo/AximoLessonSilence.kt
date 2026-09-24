@@ -240,7 +240,17 @@ object AximoLessonSilence {
         val pending = PendingIntent.getBroadcast(context, MANUAL_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
         alarm.cancel(pending)
         val at = System.currentTimeMillis() + durationMinutes * 60_000L
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) alarm.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, at, pending) else alarm.setExact(AlarmManager.RTC_WAKEUP, at, pending)
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && !alarm.canScheduleExactAlarms()) {
+                alarm.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, at, pending)
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarm.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, at, pending)
+            } else {
+                alarm.setExact(AlarmManager.RTC_WAKEUP, at, pending)
+            }
+        } catch (_: SecurityException) {
+            alarm.setAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, at, pending)
+        }
     }
 
     fun manualUnmute(context: Context) {
