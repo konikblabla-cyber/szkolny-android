@@ -90,20 +90,17 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
         addSwitch(c, "Karta zadań", "Pokazuj najbliższe prace domowe.", "home_homework", true)
         addSwitch(c, "Karta wiadomości", "Pokazuj najnowsze wiadomości.", "home_messages", true)
         addSwitch(c, "Powitanie i data", "Pokazuj dzień tygodnia oraz powitanie.", "home_greeting", true)
-        addSwitch(c, "Szybkie akcje", "Pokazuj skróty do najczęściej używanych ekranów.", "home_quick_actions", true)
         addAction(c, "Ustaw wygląd ekranu głównego", "Motywy, tło, kolory i układ kart.", NavTarget.APPEARANCE)
     }
 
     private fun addNavigationSettings(c: LinearLayout) {
-        addSwitch(c, "Dolna nawigacja", "Pokazuj pasek na dole ekranu.", "nav_bottom", true)
-        addSwitch(c, "Menu radialne", "Przytrzymaj dolny przycisk, aby otworzyć okrągłe menu.", "nav_radial", true)
-        addSwitch(c, "Plan w nawigacji", "Dodaj Plan lekcji do szybkiego dostępu.", "nav_timetable", true)
-        addSwitch(c, "Oceny w nawigacji", "Dodaj Oceny do szybkiego dostępu.", "nav_grades", true)
-        addSwitch(c, "Frekwencja w nawigacji", "Dodaj Frekwencję do szybkiego dostępu.", "nav_attendance", true)
-        addSwitch(c, "Wiadomości w nawigacji", "Dodaj Wiadomości do szybkiego dostępu.", "nav_messages", true)
-        addSwitch(c, "Zadania w nawigacji", "Dodaj Zadania domowe do szybkiego dostępu.", "nav_homework", true)
-        addSwitch(c, "Ustawienia w nawigacji", "Szybko otwieraj ten panel.", "nav_settings", true)
-        addAction(c, "Edytuj układ skrótów", "Otwórz dodatkowe ustawienia szybkiego dostępu.", NavTarget.MORE)
+        addSwitch(c, "Menu radialne", "Przytrzymaj dolny przycisk, aby otworzyć szybkie menu.", "nav_radial", true)
+        addSwitch(c, "Plan w nawigacji", "Pokazuj Plan w dolnej nawigacji.", "nav_timetable", true)
+        addSwitch(c, "Oceny w menu", "Pokazuj Oceny w menu radialnym.", "nav_grades", true)
+        addSwitch(c, "Frekwencja w menu", "Pokazuj Frekwencję w menu radialnym.", "nav_attendance", true)
+        addSwitch(c, "Wiadomości w menu", "Pokazuj Wiadomości w menu radialnym.", "nav_messages", true)
+        addSwitch(c, "Zadania w menu", "Pokazuj Zadania w menu radialnym.", "nav_homework", true)
+        addSwitch(c, "Ustawienia w menu", "Pokazuj Ustawienia w menu radialnym.", "nav_settings", true)
     }
 
     private fun addDiarySettings(c: LinearLayout) {
@@ -150,7 +147,6 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
     }
 
     private fun addAdvancedSettings(c: LinearLayout) {
-        addAction(c, "Układ i szybki dostęp", "Dodatkowe ustawienia skrótów i sekcji.", NavTarget.MORE)
         addAction(c, "Pomoc i wsparcie", "Instrukcja i zgłaszanie problemów.", NavTarget.HELP)
         addAction(c, "O Aximo", "Wersja aplikacji i informacje.", NavTarget.ABOUT)
     }
