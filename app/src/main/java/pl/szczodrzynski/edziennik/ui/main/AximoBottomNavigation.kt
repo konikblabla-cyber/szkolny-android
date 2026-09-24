@@ -67,15 +67,17 @@ class AximoBottomNavigation @JvmOverloads constructor(
         val bar = LinearLayout(context).apply {
             orientation = LinearLayout.HORIZONTAL
             gravity = Gravity.CENTER
-            setPadding(dp(7), dp(5), dp(7), dp(5))
+            setPadding(dp(8), dp(6), dp(8), dp(6))
+            clipToPadding = false
             background = GradientDrawable(
                 GradientDrawable.Orientation.LEFT_RIGHT,
                 intArrayOf(Color.argb(245, 4, 9, 27), Color.argb(250, 11, 15, 45), Color.argb(245, 4, 9, 27))
             ).apply {
                 cornerRadius = dp(27).toFloat()
-                setStroke(dp(1), Color.argb(210, 47, 73, 139))
+                setStroke(dp(1), Color.argb(150, 120, 86, 190))
             }
-            elevation = 14f
+            elevation = 10f
+            alpha = .96f
         }
 
         bottomItems.forEach { item ->
@@ -84,15 +86,18 @@ class AximoBottomNavigation @JvmOverloads constructor(
                 performHapticFeedback(HapticFeedbackConstants.CONTEXT_CLICK)
                 navigateTo(item.target)
             }
-            bar.addView(button, LinearLayout.LayoutParams(0, dp(58), 1f))
+            bar.addView(button, LinearLayout.LayoutParams(0, dp(54), 1f).apply {
+                marginStart = dp(2)
+                marginEnd = dp(2)
+            })
         }
 
         addView(
             bar,
-            LayoutParams(LayoutParams.MATCH_PARENT, dp(68), Gravity.BOTTOM).apply {
-                marginStart = dp(2)
-                marginEnd = dp(2)
-                bottomMargin = dp(2)
+            LayoutParams(LayoutParams.MATCH_PARENT, dp(66), Gravity.BOTTOM).apply {
+                marginStart = dp(4)
+                marginEnd = dp(4)
+                bottomMargin = dp(4)
             }
         )
 
@@ -150,7 +155,7 @@ class AximoBottomNavigation @JvmOverloads constructor(
         TextView(context).apply {
             gravity = Gravity.CENTER
             text = item.label
-            textSize = 9f
+            textSize = 10f
             setTextColor(appearance.text)
             setPadding(dp(2), dp(2), dp(2), dp(2))
             background = roundedBackground(Color.TRANSPARENT, Color.TRANSPARENT, 0, 20)
@@ -158,7 +163,7 @@ class AximoBottomNavigation @JvmOverloads constructor(
             item.target.icon?.let { icon ->
                 val drawable = IconicsDrawable(context).apply {
                     this.icon = icon
-                    sizeDp = 20
+                    sizeDp = 19
                     setTint(appearance.text)
                 }
                 setCompoundDrawablesWithIntrinsicBounds(null, drawable, null, null)
@@ -220,9 +225,9 @@ class AximoBottomNavigation @JvmOverloads constructor(
         if (width <= 0 || height <= 0) return
         val cx = width / 2f
         val cy = height - dp(36).toFloat()
-        val radius = dp(112).toFloat()
+        val radius = dp(108).toFloat()
         menuViews.forEachIndexed { i, view ->
-            val angle = Math.toRadians(205.0 + i * 25.0)
+            val angle = Math.toRadians(205.0 + i * 24.0)
             view.x = (cx + cos(angle) * radius - view.width / 2f).toFloat()
             view.y = (cy + sin(angle) * radius - view.height / 2f).toFloat()
         }
