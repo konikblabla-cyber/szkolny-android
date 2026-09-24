@@ -18,8 +18,10 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:gravity="center_vertical">
+            android:layout_height="68dp"
+            android:gravity="center_vertical"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp">
 
             <ImageButton
                 android:id="@+id/backButton"
@@ -42,7 +44,7 @@
                     android:layout_height="wrap_content"
                     android:text="Wygląd Aximo"
                     android:textColor="#F7F1FF"
-                    android:textSize="24sp"
+                    android:textSize="25sp"
                     android:textStyle="bold" />
 
                 <TextView
@@ -66,8 +68,8 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="108dp"
-            android:layout_marginTop="9dp"
+            android:layout_height="112dp"
+            android:layout_marginTop="10dp"
             android:orientation="horizontal">
 
             <LinearLayout
@@ -79,7 +81,8 @@
                 android:background="@drawable/aximo_more_card"
                 android:gravity="center"
                 android:orientation="vertical">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="☾" android:textColor="#C9AEFF" android:textSize="28sp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="☾" android:textColor="#C9AEFF" android:textSize="28sp"
+                android:foreground="?attr/selectableItemBackgroundBorderless"/>
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Ciemny" android:textColor="#F7F1FF" android:textSize="12sp" android:textStyle="bold"/>
             </LinearLayout>
 
@@ -93,7 +96,8 @@
                 android:background="@drawable/aximo_more_card"
                 android:gravity="center"
                 android:orientation="vertical">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="☀" android:textColor="#FFD36E" android:textSize="28sp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="☀" android:textColor="#FFD36E" android:textSize="28sp"
+                android:foreground="?attr/selectableItemBackgroundBorderless"/>
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Jasny" android:textColor="#F7F1FF" android:textSize="12sp" android:textStyle="bold"/>
             </LinearLayout>
 
@@ -106,7 +110,8 @@
                 android:background="@drawable/aximo_more_card"
                 android:gravity="center"
                 android:orientation="vertical">
-                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="◐" android:textColor="#8FD7FF" android:textSize="28sp"/>
+                <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="◐" android:textColor="#8FD7FF" android:textSize="28sp"
+                android:foreground="?attr/selectableItemBackgroundBorderless"/>
                 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Auto" android:textColor="#F7F1FF" android:textSize="12sp" android:textStyle="bold"/>
             </LinearLayout>
         </LinearLayout>
@@ -132,7 +137,7 @@
             android:id="@+id/styleGrid"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="9dp"
+            android:layout_marginTop="11dp"
             android:columnCount="2"
             android:useDefaultMargins="false" />
 
@@ -147,8 +152,8 @@
 
         <HorizontalScrollView
             android:layout_width="match_parent"
-            android:layout_height="72dp"
-            android:layout_marginTop="9dp"
+            android:layout_height="76dp"
+            android:layout_marginTop="10dp"
             android:scrollbars="none">
 
             <LinearLayout
@@ -181,8 +186,8 @@
 
         <HorizontalScrollView
             android:layout_width="match_parent"
-            android:layout_height="92dp"
-            android:layout_marginTop="9dp"
+            android:layout_height="98dp"
+            android:layout_marginTop="10dp"
             android:scrollbars="none"
             android:clipToPadding="false">
 
@@ -191,20 +196,34 @@
                 android:layout_height="match_parent"
                 android:orientation="horizontal">
 
-                <TextView android:id="@+id/bgBlack" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Czarne" android:textColor="#F7F1FF" android:textSize="11sp"/>
-                <TextView android:id="@+id/bgDefault" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Domyślne" android:textColor="#F7F1FF" android:textSize="11sp"/>
-                <TextView android:id="@+id/bgMountains" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Góry" android:textColor="#F7F1FF" android:textSize="11sp"/>
-                <TextView android:id="@+id/bgSea" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Ocean" android:textColor="#F7F1FF" android:textSize="11sp"/>
-                <TextView android:id="@+id/bgCity" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Aurora" android:textColor="#F7F1FF" android:textSize="11sp"/>
-                <TextView android:id="@+id/bgAbstract" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Kosmos" android:textColor="#F7F1FF" android:textSize="10sp"/>
-                <TextView android:id="@+id/bgSunset" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Zachód" android:textColor="#F7F1FF" android:textSize="11sp"/>
-                <TextView android:id="@+id/bgForest" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Las" android:textColor="#F7F1FF" android:textSize="11sp"/>
-                <TextView android:id="@+id/bgRain" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Deszcz" android:textColor="#F7F1FF" android:textSize="11sp"/>
-                <TextView android:id="@+id/bgEmber" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Żar" android:textColor="#F7F1FF" android:textSize="11sp"/>
-                <TextView android:id="@+id/bgLavender" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Lawenda" android:textColor="#F7F1FF" android:textSize="10sp"/>
-                <TextView android:id="@+id/bgNeon" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Neon" android:textColor="#F7F1FF" android:textSize="11sp"/>
-                <TextView android:id="@+id/bgMist" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Mgła" android:textColor="#F7F1FF" android:textSize="11sp"/>
-                <TextView android:id="@+id/bgStars" android:layout_width="94dp" android:layout_height="match_parent" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Gwiazdy" android:textColor="#F7F1FF" android:textSize="11sp"/>
+                <TextView android:id="@+id/bgBlack" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Czarne" android:textColor="#F7F1FF" android:textSize="11sp"
+                android:foreground="?attr/selectableItemBackgroundBorderless"/>
+                <TextView android:id="@+id/bgDefault" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Domyślne" android:textColor="#F7F1FF" android:textSize="11sp"
+                android:foreground="?attr/selectableItemBackgroundBorderless"/>
+                <TextView android:id="@+id/bgMountains" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Góry" android:textColor="#F7F1FF" android:textSize="11sp"
+                android:foreground="?attr/selectableItemBackgroundBorderless"/>
+                <TextView android:id="@+id/bgSea" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Ocean" android:textColor="#F7F1FF" android:textSize="11sp"
+                android:foreground="?attr/selectableItemBackgroundBorderless"/>
+                <TextView android:id="@+id/bgCity" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Aurora" android:textColor="#F7F1FF" android:textSize="11sp"
+                android:foreground="?attr/selectableItemBackgroundBorderless"/>
+                <TextView android:id="@+id/bgAbstract" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Kosmos" android:textColor="#F7F1FF" android:textSize="10sp"
+                android:foreground="?attr/selectableItemBackgroundBorderless"/>
+                <TextView android:id="@+id/bgSunset" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Zachód" android:textColor="#F7F1FF" android:textSize="11sp"
+                android:foreground="?attr/selectableItemBackgroundBorderless"/>
+                <TextView android:id="@+id/bgForest" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Las" android:textColor="#F7F1FF" android:textSize="11sp"
+                android:foreground="?attr/selectableItemBackgroundBorderless"/>
+                <TextView android:id="@+id/bgRain" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Deszcz" android:textColor="#F7F1FF" android:textSize="11sp"
+                android:foreground="?attr/selectableItemBackgroundBorderless"/>
+                <TextView android:id="@+id/bgEmber" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Żar" android:textColor="#F7F1FF" android:textSize="11sp"
+                android:foreground="?attr/selectableItemBackgroundBorderless"/>
+                <TextView android:id="@+id/bgLavender" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Lawenda" android:textColor="#F7F1FF" android:textSize="10sp"
+                android:foreground="?attr/selectableItemBackgroundBorderless"/>
+                <TextView android:id="@+id/bgNeon" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Neon" android:textColor="#F7F1FF" android:textSize="11sp"
+                android:foreground="?attr/selectableItemBackgroundBorderless"/>
+                <TextView android:id="@+id/bgMist" android:layout_width="94dp" android:layout_height="match_parent" android:layout_marginEnd="6dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Mgła" android:textColor="#F7F1FF" android:textSize="11sp"
+                android:foreground="?attr/selectableItemBackgroundBorderless"/>
+                <TextView android:id="@+id/bgStars" android:layout_width="94dp" android:layout_height="match_parent" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="Gwiazdy" android:textColor="#F7F1FF" android:textSize="11sp"
+                android:foreground="?attr/selectableItemBackgroundBorderless"/>
             </LinearLayout>
         </HorizontalScrollView>
 
@@ -223,11 +242,16 @@
             android:layout_marginTop="6dp"
             android:columnCount="5"
             android:useDefaultMargins="false">
-            <TextView android:id="@+id/customBg1" android:layout_width="0dp" android:layout_height="58dp" android:layout_columnWeight="1" android:layout_marginEnd="4dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="+ 1" android:textColor="#D4BEFF" android:textSize="11sp" />
-            <TextView android:id="@+id/customBg2" android:layout_width="0dp" android:layout_height="58dp" android:layout_columnWeight="1" android:layout_marginStart="2dp" android:layout_marginEnd="4dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="+ 2" android:textColor="#D4BEFF" android:textSize="11sp" />
-            <TextView android:id="@+id/customBg3" android:layout_width="0dp" android:layout_height="58dp" android:layout_columnWeight="1" android:layout_marginStart="2dp" android:layout_marginEnd="4dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="+ 3" android:textColor="#D4BEFF" android:textSize="11sp" />
-            <TextView android:id="@+id/customBg4" android:layout_width="0dp" android:layout_height="58dp" android:layout_columnWeight="1" android:layout_marginStart="2dp" android:layout_marginEnd="4dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="+ 4" android:textColor="#D4BEFF" android:textSize="11sp" />
-            <TextView android:id="@+id/customBg5" android:layout_width="0dp" android:layout_height="58dp" android:layout_columnWeight="1" android:layout_marginStart="2dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="+ 5" android:textColor="#D4BEFF" android:textSize="11sp" />
+            <TextView android:id="@+id/customBg1" android:layout_width="0dp" android:layout_height="64dp" android:layout_columnWeight="1" android:layout_marginEnd="4dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="+ 1" android:textColor="#D4BEFF" android:textSize="11sp" 
+                android:foreground="?attr/selectableItemBackgroundBorderless"/>
+            <TextView android:id="@+id/customBg2" android:layout_width="0dp" android:layout_height="64dp" android:layout_columnWeight="1" android:layout_marginStart="2dp" android:layout_marginEnd="4dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="+ 2" android:textColor="#D4BEFF" android:textSize="11sp" 
+                android:foreground="?attr/selectableItemBackgroundBorderless"/>
+            <TextView android:id="@+id/customBg3" android:layout_width="0dp" android:layout_height="64dp" android:layout_columnWeight="1" android:layout_marginStart="2dp" android:layout_marginEnd="4dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="+ 3" android:textColor="#D4BEFF" android:textSize="11sp" 
+                android:foreground="?attr/selectableItemBackgroundBorderless"/>
+            <TextView android:id="@+id/customBg4" android:layout_width="0dp" android:layout_height="64dp" android:layout_columnWeight="1" android:layout_marginStart="2dp" android:layout_marginEnd="4dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="+ 4" android:textColor="#D4BEFF" android:textSize="11sp" 
+                android:foreground="?attr/selectableItemBackgroundBorderless"/>
+            <TextView android:id="@+id/customBg5" android:layout_width="0dp" android:layout_height="64dp" android:layout_columnWeight="1" android:layout_marginStart="2dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:text="+ 5" android:textColor="#D4BEFF" android:textSize="11sp" 
+                android:foreground="?attr/selectableItemBackgroundBorderless"/>
         </GridLayout>
 
         <TextView
@@ -250,8 +274,10 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="12dp"
             android:background="@drawable/aximo_more_card"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
             android:orientation="vertical"
             android:padding="14dp">
 
