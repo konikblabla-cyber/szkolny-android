@@ -1,122 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/transparent">
-
-    <ProgressBar
-        android:id="@+id/progressBar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingStart="18dp"
-        android:paddingTop="20dp"
-        android:paddingEnd="18dp"
-        android:paddingBottom="0dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Zadania"
-            android:textColor="#F7F5FF"
-            android:textSize="25sp"
-            android:textStyle="bold"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="3dp"
-            android:text="Twoje zadania i prace domowe"
-            android:textColor="#8F9DBB"
-            android:textSize="12sp"/>
-
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="12dp"
-            android:clipToPadding="false"
-            android:scrollbars="none">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:id="@+id/filterAll"
-                    android:layout_width="wrap_content"
-                    android:layout_height="36dp"
-                    android:background="@drawable/aximo_plan_day_selected"
-                    android:gravity="center"
-                    android:paddingStart="18dp"
-                    android:paddingEnd="18dp"
-                    android:text="Wszystkie"
-                    android:textColor="#FFFFFF"
-                    android:textSize="12sp"
-                    android:textStyle="bold"/>
-
-                <TextView
-                    android:id="@+id/filterTodo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="36dp"
-                    android:layout_marginStart="8dp"
-                    android:background="@drawable/aximo_more_card"
-                    android:gravity="center"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:text="Do zrobienia"
-                    android:textColor="#B8C1D8"
-                    android:textSize="12sp"/>
-
-                <TextView
-                    android:id="@+id/filterDone"
-                    android:layout_width="wrap_content"
-                    android:layout_height="36dp"
-                    android:layout_marginStart="8dp"
-                    android:background="@drawable/aximo_more_card"
-                    android:gravity="center"
-                    android:paddingStart="16dp"
-                    android:paddingEnd="16dp"
-                    android:text="Zrobione"
-                    android:textColor="#B8C1D8"
-                    android:textSize="12sp"/>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent" android:layout_height="match_parent" android:background="@android:color/transparent">
+    <ProgressBar android:id="@+id/progressBar" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center"/>
+    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:paddingStart="18dp" android:paddingTop="20dp" android:paddingEnd="18dp">
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Zadania" android:textColor="#F7F1FF" android:textSize="26sp" android:textStyle="bold"/>
+        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="4dp" android:text="Twoje zadania i prace domowe" android:textColor="#98A4BF" android:textSize="12sp"/>
+        <HorizontalScrollView android:layout_width="match_parent" android:layout_height="52dp" android:layout_marginTop="13dp" android:clipToPadding="false" android:scrollbars="none">
+            <LinearLayout android:layout_width="wrap_content" android:layout_height="match_parent" android:gravity="center_vertical" android:orientation="horizontal">
+                <TextView android:id="@+id/filterAll" android:layout_width="wrap_content" android:layout_height="38dp" android:background="@drawable/aximo_plan_day_selected" android:gravity="center" android:paddingStart="19dp" android:paddingEnd="19dp" android:text="Wszystkie" android:textColor="#FFFFFF" android:textSize="12sp" android:textStyle="bold"/>
+                <TextView android:id="@+id/filterTodo" android:layout_width="wrap_content" android:layout_height="38dp" android:layout_marginStart="8dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:paddingStart="17dp" android:paddingEnd="17dp" android:text="Do zrobienia" android:textColor="#C0C7DA" android:textSize="12sp"/>
+                <TextView android:id="@+id/filterDone" android:layout_width="wrap_content" android:layout_height="38dp" android:layout_marginStart="8dp" android:background="@drawable/aximo_more_card" android:gravity="center" android:paddingStart="17dp" android:paddingEnd="17dp" android:text="Zrobione" android:textColor="#C0C7DA" android:textSize="12sp"/>
             </LinearLayout>
         </HorizontalScrollView>
-
-        <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/noData"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:padding="28dp"
-            android:text="@string/homework_no_data"
-            android:textColor="#EDE9FF"
-            android:textSize="15sp"
-            android:textStyle="bold"
-            android:visibility="gone"
-            app:drawableTopCompat="@drawable/ic_no_homework"
-            tools:visibility="visible"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/list"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            android:clipToPadding="false"
-            android:overScrollMode="never"
-            android:paddingTop="8dp"
-            android:paddingBottom="112dp"
-            android:visibility="gone"
-            tools:listitem="@layout/event_list_item"
-            tools:visibility="visible"/>
+        <androidx.appcompat.widget.AppCompatTextView android:id="@+id/noData" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_gravity="center" android:gravity="center" android:padding="30dp" android:text="@string/homework_no_data" android:textColor="#EDE9FF" android:textSize="15sp" android:textStyle="bold" android:visibility="gone" app:drawableTopCompat="@drawable/ic_no_homework" tools:visibility="visible"/>
+        <androidx.recyclerview.widget.RecyclerView android:id="@+id/list" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:clipToPadding="false" android:overScrollMode="never" android:paddingTop="9dp" android:paddingBottom="112dp" android:visibility="gone" tools:listitem="@layout/event_list_item" tools:visibility="visible"/>
     </LinearLayout>
 </FrameLayout>
