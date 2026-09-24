@@ -79,6 +79,8 @@ object AximoLessonSilence {
 
     const val ACTION_START = "pl.szczodrzynski.edziennik.aximo.SILENCE_START"
     const val ACTION_END = "pl.szczodrzynski.edziennik.aximo.SILENCE_END"
+    const val ACTION_MANUAL_END = "pl.szczodrzynski.edziennik.aximo.MANUAL_SILENCE_END"
+    private const val MANUAL_REQUEST_CODE = 10999
     const val EXTRA_PROFILE = "profile_id"
     const val EXTRA_LESSON_ID = "lesson_id"
     const val EXTRA_WINDOW_END = "window_end"
@@ -229,6 +231,25 @@ object AximoLessonSilence {
             .putLong(ACTIVE_UNTIL, windowEnd)
             .apply()
     }
+    fun muteNowFor(context: Context, durationMinutes: Int) {
+        val prefs = context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)
+        if (prefs.getInt(ACTIVE, 0) != 0) return
+        val alarm = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        onStart(context, System.currentTimeMillis() + durationMinutes * 60_000L)
+        val intent = Intent(context, AximoLessonSilenceReceiver::class.java).setAction(ACTION_MANUAL_END)
+        val pending = PendingIntent.getBroadcast(context, MANUAL_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE)
+        alarm.cancel(pending)
+        val at = System.currentTimeMillis() + durationMinutes * 60_000L
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) alarm.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, at, pending) else alarm.setExact(AlarmManager.RTC_WAKEUP, at, pending)
+    }
+
+    fun manualUnmute(context: Context) {
+        val alarm = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(context, AximoLessonSilenceReceiver::class.java).setAction(ACTION_MANUAL_END)
+        PendingIntent.getBroadcast(context, MANUAL_REQUEST_CODE, intent, PendingIntent.FLAG_NO_CREATE or PendingIntent.FLAG_IMMUTABLE)?.let { alarm.cancel(it); it.cancel() }
+        disableAndRestore(context)
+    }
+
     fun testForDuration(context: Context, durationMs: Long = 10_000L): Boolean {
         onStart(context, System.currentTimeMillis() + durationMs)
         android.os.Handler(android.os.Looper.getMainLooper()).postDelayed(
