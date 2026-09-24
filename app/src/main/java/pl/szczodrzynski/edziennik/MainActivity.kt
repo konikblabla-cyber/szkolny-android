@@ -1088,6 +1088,9 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             ?: navBackStack.firstOrNull { it.first == navTarget }?.second
             ?: Bundle()
         swipeRefreshLayout.isEnabled = false
+        if (swipeRefreshLayout is pl.szczodrzynski.edziennik.ui.aximo.AximoSwipeRefreshLayout) {
+            swipeRefreshLayout.blockRefreshGestures = navTarget == NavTarget.TIMETABLE
+        }
         bottomSheet.close()
         bottomSheet.removeAllContextual()
         drawer.close()
