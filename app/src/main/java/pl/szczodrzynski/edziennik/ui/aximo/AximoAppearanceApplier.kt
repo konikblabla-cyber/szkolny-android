@@ -22,15 +22,30 @@ object AximoAppearanceApplier {
         // The appearance picker contains its own 20 preview cards; never flatten them into the selected style.
         if (view.id == R.id.styleGrid) return
         val drawable = view.background?.mutate()
+        val entryName = runCatching { view.resources.getResourceEntryName(view.id) }.getOrNull().orEmpty()
         if (drawable is GradientDrawable && view.id != R.id.styleGrid) {
             drawable.cornerRadius = roundness * view.resources.displayMetrics.density
             if (softCards) drawable.alpha = 205 else drawable.alpha = 255
+
+            // Apply the selected preset to Aximo surfaces, while deliberately
+            // preserving lesson/notification/subject-specific colored cards.
+            val isAximoSurface = entryName.startsWith("aximo_") &&
+                !entryName.startsWith("aximo_plan_lesson_bg_") &&
+                !entryName.startsWith("aximo_notification_bg_") &&
+                !entryName.contains("subject")
+            if (isAximoSurface) {
+                drawable.setColor(style.surface)
+            }
             view.background = drawable
         }
         val bg = (drawable as? ColorDrawable)?.color
         when {
             bg in ROOT_BACKGROUNDS -> view.setBackgroundColor(style.background)
             bg in SURFACE_BACKGROUNDS -> view.setBackgroundColor(style.surface)
+        }
+        if (isRoot) {
+            // Root is always the selected style's base, not a hard-coded purple.
+            view.setBackgroundColor(style.background)
         }
 
         if (view is TextView) {
