@@ -111,6 +111,13 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
             override fun onStopTrackingTouch(seekBar: SeekBar?) = Unit
         })
 
+        b.wallpaperAnimationEnabled.isChecked = prefs.getBoolean("wallpaper_animation", true)
+        b.wallpaperAnimationEnabled.setOnCheckedChangeListener { _, checked ->
+            prefs.edit().putBoolean("wallpaper_animation", checked).apply()
+            activity.setAppBackground()
+            b.appearanceSaved.text = if (checked) "Animacja tapety włączona ✓" else "Animacja tapety wyłączona ✓"
+        }
+
         b.animationsEnabled.isChecked = prefs.getBoolean("animationsEnabled", true)
         b.animationsEnabled.setOnCheckedChangeListener { _, checked ->
             prefs.edit().putBoolean("animationsEnabled", checked).apply()
