@@ -10,6 +10,7 @@ import android.widget.LinearLayout
 import android.widget.Switch
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import pl.szczodrzynski.edziennik.MainActivity
 import pl.szczodrzynski.edziennik.R
 import pl.szczodrzynski.edziennik.databinding.FragmentAximoSettingsBinding
@@ -102,6 +103,13 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
 
     private fun addNotificationSettings(c: LinearLayout) {
         addSwitch(c, "Powiadomienie o następnej lekcji", "Pokazuj aktualną i następną lekcję.", "notify_next_lesson", true)
+        addChoiceAction(c, "Kiedy przypominać o lekcji", "Ustaw, ile minut przed lekcją ma pojawić się powiadomienie.", "notify_minutes", intArrayOf(1, 5, 10, 15, 20, 30), 10) { value ->
+            val app = requireContext().applicationContext as pl.szczodrzynski.edziennik.App
+            app.config.sync.lessonNotificationMinutes = value
+            if (pl.szczodrzynski.edziennik.App.profileId != 0) viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                AximoLessonNotifications.scheduleTodayAndTomorrow(requireContext(), pl.szczodrzynski.edziennik.App.profileId)
+            }
+        }
         addAction(c, "Uprawnienia powiadomień", "Sprawdź lub nadaj dostęp Androidowi.", null) {
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU &&
                 requireContext().checkSelfPermission(android.Manifest.permission.POST_NOTIFICATIONS) != android.content.pm.PackageManager.PERMISSION_GRANTED) {
@@ -112,6 +120,8 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
 
     private fun addSchoolSettings(c: LinearLayout) {
         addSwitch(c, "Tryb szkolny", "Automatycznie reaguj na godziny lekcji.", "school_mode", true)
+        addChoiceAction(c, "Wycisz przed pierwszą lekcją", "Wybierz, ile minut wcześniej Aximo ma wyciszyć telefon.", "silence_before", intArrayOf(0, 5, 10, 15, 20, 30), 10) { rescheduleSilence() }
+        addChoiceAction(c, "Przywróć dźwięk po ostatniej lekcji", "Wybierz, ile minut po lekcjach Aximo ma przywrócić poprzedni tryb.", "silence_after", intArrayOf(0, 5, 10, 15, 20, 30), 10) { rescheduleSilence() }
         addAction(c, "Zezwól na automatyczne wyciszanie", "Nadaj Aximo dostęp potrzebny do wyciszania telefonu podczas lekcji.", null) {
             if (AximoLessonSilence.hasNotificationPolicyAccess(requireContext()))
                 Toast.makeText(activity, "Dostęp jest już przyznany.", Toast.LENGTH_SHORT).show()
@@ -201,6 +211,24 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
         container.addView(row, lp)
     }
 
+    private fun addChoiceAction(container: LinearLayout, title: String, summary: String, key: String, values: IntArray, default: Int, onChanged: (Int) -> Unit) {
+        addAction(container, title, "${summary} Teraz: ${prefs.getInt(key, default)} min", null) {
+            val current = values.indexOf(prefs.getInt(key, default)).takeIf { it >= 0 } ?: 0
+            AlertDialog.Builder(requireContext()).setTitle(title).setSingleChoiceItems(values.map { "$it min" }.toTypedArray(), current) { dialog, which ->
+                val value = values[which]
+                prefs.edit().putInt(key, value).apply()
+                onChanged(value)
+                dialog.dismiss()
+                Toast.makeText(activity, "$title: $value min", Toast.LENGTH_SHORT).show()
+            }.show()
+        }
+    }
+
+    private fun rescheduleSilence() {
+        if (pl.szczodrzynski.edziennik.App.profileId != 0) viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+            AximoLessonSilence.scheduleTodayAndTomorrow(requireContext(), pl.szczodrzynski.edziennik.App.profileId)
+        }
+    }
     private fun addAction(
         container: LinearLayout,
         title: String,
