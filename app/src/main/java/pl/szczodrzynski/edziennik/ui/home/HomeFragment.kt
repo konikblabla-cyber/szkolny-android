@@ -279,7 +279,10 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
         // Nie nadpisujemy jego kart presetem kolorystycznym, ponieważ tło i karta powitalna
         // są elementami projektu 1:1.
 
-        // Delikatne wejście elementów dashboardu — bardziej „premium”, bez ciężkich animacji.
+        // Animacje są faktycznie sterowane ustawieniem Aximo, a nie tylko zapisywane.
+        val animationsEnabled = requireContext()
+            .getSharedPreferences("aximo_appearance", 0)
+            .getBoolean("animationsEnabled", true)
         val entranceViews = listOf(
             b.homeGreeting,
             b.homeDate,
@@ -289,15 +292,23 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
             b.quickActions,
             b.configHint
         )
-        entranceViews.forEachIndexed { index, view ->
-            view.alpha = 0f
-            view.translationY = dpForHome(12)
-            view.animate()
-                .alpha(1f)
-                .translationY(0f)
-                .setStartDelay((index * 45L).coerceAtMost(260L))
-                .setDuration(260L)
-                .start()
+        if (animationsEnabled) {
+            entranceViews.forEachIndexed { index, view ->
+                view.alpha = 0f
+                view.translationY = dpForHome(12)
+                view.animate()
+                    .alpha(1f)
+                    .translationY(0f)
+                    .setStartDelay((index * 45L).coerceAtMost(260L))
+                    .setDuration(260L)
+                    .start()
+            }
+        } else {
+            entranceViews.forEach { view ->
+                view.animate().cancel()
+                view.alpha = 1f
+                view.translationY = 0f
+            }
         }
 
         listOf(
@@ -322,20 +333,22 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
             }
         }
 
-        // Subtelny „living UI”: dashboard delikatnie pracuje, bez ciężkich efektów.
-        b.nowCard.animate().scaleX(1.008f).scaleY(1.008f).setDuration(1400L).withEndAction {
-            if (isAdded) b.nowCard.animate().scaleX(1f).scaleY(1f).setDuration(1400L).start()
-        }.start()
-        val glowViews = listOf(b.quickPlan, b.quickHomework, b.quickGrades, b.quickTomorrow, b.quickMessages)
-        glowViews.forEachIndexed { index, view ->
-            view.animate()
-                .translationY(-2f)
-                .alpha(0.94f)
-                .setStartDelay(500L + index * 120L)
-                .setDuration(650L)
-                .withEndAction {
-                    view.animate().translationY(0f).alpha(1f).setDuration(650L).start()
-                }.start()
+        // Delikatne efekty „living UI” również respektują przełącznik animacji.
+        if (animationsEnabled) {
+            b.nowCard.animate().scaleX(1.008f).scaleY(1.008f).setDuration(1400L).withEndAction {
+                if (isAdded) b.nowCard.animate().scaleX(1f).scaleY(1f).setDuration(1400L).start()
+            }.start()
+            val glowViews = listOf(b.quickPlan, b.quickHomework, b.quickGrades, b.quickTomorrow, b.quickMessages)
+            glowViews.forEachIndexed { index, view ->
+                view.animate()
+                    .translationY(-2f)
+                    .alpha(0.94f)
+                    .setStartDelay(500L + index * 120L)
+                    .setDuration(650L)
+                    .withEndAction {
+                        view.animate().translationY(0f).alpha(1f).setDuration(650L).start()
+                    }.start()
+            }
         }
 
         countdownHandler.removeCallbacks(countdownRefresh)
@@ -459,6 +472,8 @@ class HomeFragment : BaseFragment<FragmentHomeBinding, MainActivity>(
         b.quickHomework.visibility = if (p.getBoolean("home_homework", true)) View.VISIBLE else View.GONE
         b.quickGrades.visibility = if (p.getBoolean("home_grades", true)) View.VISIBLE else View.GONE
         b.quickMessages.visibility = if (p.getBoolean("home_messages", true)) View.VISIBLE else View.GONE
+        val homeworkVisible = p.getBoolean("home_homework", true) && p.getBoolean("homework_on_home", true)
+        b.quickHomework.visibility = if (homeworkVisible) View.VISIBLE else View.GONE
         b.todaySummaryCard.visibility = if (p.getBoolean("home_attendance", true)) View.VISIBLE else View.GONE
         b.focusStatusCard.visibility = if (p.getBoolean("home_timetable", true)) View.VISIBLE else View.GONE
     }
