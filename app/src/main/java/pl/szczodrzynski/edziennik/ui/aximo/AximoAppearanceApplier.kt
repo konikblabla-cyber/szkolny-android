@@ -29,41 +29,46 @@ object AximoAppearanceApplier {
         softCards: Boolean
     ) {
         if (view.id == R.id.styleGrid) return
-        val drawable = view.background?.mutate()
+        val original = view.background?.mutate()
         val entryName = runCatching { view.resources.getResourceEntryName(view.id) }.getOrNull().orEmpty()
+        val isAximoSurface = entryName.startsWith("aximo_") &&
+            !entryName.startsWith("aximo_plan_lesson_bg_") &&
+            !entryName.startsWith("aximo_notification_bg_") &&
+            !entryName.contains("subject")
 
-        if (drawable is GradientDrawable) {
-            drawable.cornerRadius = roundness * view.resources.displayMetrics.density
-
-            val alpha = if (softCards) {
-                (255 - transparency).coerceIn(70, 255)
-            } else {
-                (255 - transparency).coerceIn(110, 255)
-            }
-            drawable.alpha = alpha
-
-            val isAximoSurface = entryName.startsWith("aximo_") &&
-                !entryName.startsWith("aximo_plan_lesson_bg_") &&
-                !entryName.startsWith("aximo_notification_bg_") &&
-                !entryName.contains("subject")
-
-            if (isAximoSurface) {
-                drawable.setColor(style.surface)
-            }
-            view.background = drawable
+        val alpha = if (softCards) {
+            (255 - transparency).coerceIn(70, 255)
+        } else {
+            (255 - transparency).coerceIn(110, 255)
         }
 
-        val bg = (drawable as? ColorDrawable)?.color
-        when {
-            bg in ROOT_BACKGROUNDS -> view.setBackgroundColor(style.background)
-            bg in SURFACE_BACKGROUNDS -> view.setBackgroundColor(style.surface)
+        when (original) {
+            is GradientDrawable -> {
+                original.cornerRadius = roundness * view.resources.displayMetrics.density
+                original.alpha = alpha
+                if (isAximoSurface) original.setColor(style.surface)
+                view.background = original
+            }
+            is ColorDrawable -> {
+                val bg = original.color
+                if (isAximoSurface || bg in SURFACE_BACKGROUNDS) {
+                    val color = style.surface
+                    view.background = ColorDrawable(
+                        Color.argb(alpha, Color.red(color), Color.green(color), Color.blue(color))
+                    )
+                } else if (bg in ROOT_BACKGROUNDS && !isRoot) {
+                    view.setBackgroundColor(style.background)
+                }
+            }
         }
 
         if (isRoot) {
             val currentBackground = view.background
             val isWallpaper = currentBackground is AximoPhotoWallpaperDrawable ||
                 currentBackground is AximoAnimatedWallpaperDrawable
-            if (!isWallpaper) view.setBackgroundColor(style.background)
+            if (!isWallpaper && currentBackground !is ColorDrawable) {
+                view.setBackgroundColor(style.background)
+            }
         }
 
         if (view is TextView) {
