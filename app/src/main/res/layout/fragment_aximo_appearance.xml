@@ -390,7 +390,7 @@
                 android:id="@+id/surfaceTransparency"
                 android:layout_width="match_parent"
                 android:layout_height="42dp"
-                android:max="65"
+                android:max="70"
                 android:progress="18" />
 
             <TextView
