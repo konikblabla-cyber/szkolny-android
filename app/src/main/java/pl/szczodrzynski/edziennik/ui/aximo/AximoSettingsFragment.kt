@@ -351,9 +351,11 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
 
     private fun cardBackground() = GradientDrawable().apply {
         cornerRadius = dp(20).toFloat()
-        startColor = Color.rgb(31, 25, 55)
-        centerColor = Color.rgb(24, 22, 45)
-        endColor = Color.rgb(18, 18, 35)
+        setColors(intArrayOf(
+            Color.rgb(31, 25, 55),
+            Color.rgb(24, 22, 45),
+            Color.rgb(18, 18, 35)
+        ))
         setStroke(dp(1), Color.rgb(72, 52, 105))
     }
 
