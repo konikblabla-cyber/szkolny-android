@@ -95,6 +95,22 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
         }
         refreshWallpaperSlots()
 
+        val savedTransparency = prefs.getInt("surfaceTransparency", 18).coerceIn(0, 65)
+        b.surfaceTransparency.progress = savedTransparency
+        b.surfaceTransparencyValue.text = "$savedTransparency% przezroczystości"
+        b.surfaceTransparency.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
+            override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
+                val value = progress.coerceIn(0, 65)
+                b.surfaceTransparencyValue.text = "$value% przezroczystości"
+                if (fromUser) {
+                    prefs.edit().putInt("surfaceTransparency", value).apply()
+                    activity.refreshAximoAppearance()
+                }
+            }
+            override fun onStartTrackingTouch(seekBar: SeekBar?) = Unit
+            override fun onStopTrackingTouch(seekBar: SeekBar?) = Unit
+        })
+
         val savedRoundness = prefs.getInt("cardRoundness", 18)
         b.cardRoundness.progress = savedRoundness
         b.cardRoundnessValue.text = "$savedRoundness dp"
