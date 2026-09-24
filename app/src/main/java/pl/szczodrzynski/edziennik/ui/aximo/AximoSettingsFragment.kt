@@ -86,22 +86,18 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
         addSwitch(c, "Karta zadań", "Pokazuj najbliższe prace domowe.", "home_homework", true)
         addSwitch(c, "Karta wiadomości", "Pokazuj najnowsze wiadomości.", "home_messages", true)
         addSwitch(c, "Powitanie i data", "Pokazuj dzień tygodnia oraz powitanie.", "home_greeting", true)
-        addAction(c, "Ustaw wygląd ekranu głównego", "Motywy, tło, kolory i układ kart.", NavTarget.APPEARANCE)
     }
 
     private fun addNavigationSettings(c: LinearLayout) {
         addSwitch(c, "Menu radialne", "Przytrzymaj dolny przycisk, aby otworzyć szybkie menu.", "nav_radial", true)
-        addSwitch(c, "Plan w nawigacji", "Pokazuj Plan w dolnej nawigacji.", "nav_timetable", true)
         addSwitch(c, "Oceny w menu", "Pokazuj Oceny w menu radialnym.", "nav_grades", true)
         addSwitch(c, "Frekwencja w menu", "Pokazuj Frekwencję w menu radialnym.", "nav_attendance", true)
         addSwitch(c, "Wiadomości w menu", "Pokazuj Wiadomości w menu radialnym.", "nav_messages", true)
         addSwitch(c, "Zadania w menu", "Pokazuj Zadania w menu radialnym.", "nav_homework", true)
-        addSwitch(c, "Ustawienia w menu", "Pokazuj Ustawienia w menu radialnym.", "nav_settings", true)
     }
 
     private fun addDiarySettings(c: LinearLayout) {
         addSwitch(c, "Odświeżanie gestem", "Przeciągnięcie w dół odświeża dane.", "diary_swipe_refresh", true)
-        addSwitch(c, "Automatyczne przewijanie do dziś", "Plan lekcji otwieraj od bieżącego dnia.", "diary_scroll_today", true)
     }
 
     private fun addNotificationSettings(c: LinearLayout) {
@@ -112,16 +108,11 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
                 requestPermissions(arrayOf(android.Manifest.permission.POST_NOTIFICATIONS), 47002)
             } else Toast.makeText(activity, "Powiadomienia są już dostępne.", Toast.LENGTH_SHORT).show()
         }
-        addAction(c, "Precyzyjne przypomnienia", "Dostęp Androida potrzebny do punktualnych alarmów.", null) {
-            if (AximoLessonNotifications.canScheduleExactAlarms(requireContext()))
-                Toast.makeText(activity, "Dostęp jest już przyznany.", Toast.LENGTH_SHORT).show()
-            else AximoLessonNotifications.openExactAlarmSettings(activity)
-        }
     }
 
     private fun addSchoolSettings(c: LinearLayout) {
         addSwitch(c, "Tryb szkolny", "Automatycznie reaguj na godziny lekcji.", "school_mode", true)
-        addAction(c, "Dostęp systemowy trybu szkolnego", "Opcjonalny dostęp do specjalnych trybów Androida.", null) {
+        addAction(c, "Zezwól na automatyczne wyciszanie", "Nadaj Aximo dostęp potrzebny do wyciszania telefonu podczas lekcji.", null) {
             if (AximoLessonSilence.hasNotificationPolicyAccess(requireContext()))
                 Toast.makeText(activity, "Dostęp jest już przyznany.", Toast.LENGTH_SHORT).show()
             else AximoLessonSilence.openNotificationPolicyAccessSettings(activity)
@@ -134,8 +125,7 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
 
     private fun addAdvancedSettings(c: LinearLayout) {
         addAction(c, "Profil i konto", "Szkoła, konto oraz synchronizacja.", NavTarget.PROFILE_MANAGER)
-        addAction(c, "Pomoc i wsparcie", "Instrukcja i zgłaszanie problemów.", NavTarget.HELP)
-        addAction(c, "O Aximo", "Wersja aplikacji i informacje.", NavTarget.ABOUT)
+        addAction(c, "Pomoc i informacje", "Pomoc, zgłaszanie problemów i informacje o Aximo.", NavTarget.HELP)
     }
 
     private fun addSwitch(
