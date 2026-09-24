@@ -23,6 +23,7 @@ class AximoSwipeRefreshLayout @JvmOverloads constructor(
 
     private var downX = 0f
     private var downY = 0f
+    private var activeScrollableChild: View? = null
 
     override fun onInterceptTouchEvent(ev: MotionEvent): Boolean {
         if (blockRefreshGestures || !isEnabled) return false
@@ -31,6 +32,7 @@ class AximoSwipeRefreshLayout @JvmOverloads constructor(
             MotionEvent.ACTION_DOWN -> {
                 downX = ev.x
                 downY = ev.y
+                activeScrollableChild = findTouchedScrollable(this, ev.x, ev.y)
                 return super.onInterceptTouchEvent(ev)
             }
 
@@ -47,7 +49,7 @@ class AximoSwipeRefreshLayout @JvmOverloads constructor(
                 // the gesture with that descendant. Refresh becomes possible
                 // only after it reaches the absolute top.
                 if (dy > 0f && kotlin.math.abs(dy) > kotlin.math.abs(dx)) {
-                    if (canTouchedDescendantScrollUp(ev.x, ev.y)) {
+                    if (activeScrollableChild?.canScrollVertically(-1) == true) {
                         return false
                     }
                 }
@@ -59,25 +61,7 @@ class AximoSwipeRefreshLayout @JvmOverloads constructor(
 
     override fun canChildScrollUp(): Boolean {
         if (blockRefreshGestures) return true
-        return findScrollableChild(this)?.canScrollVertically(-1) == true ||
-            super.canChildScrollUp()
-    }
-
-    private fun canTouchedDescendantScrollUp(x: Float, y: Float): Boolean {
-        val target = findTouchedScrollable(this, x, y)
-        return target?.canScrollVertically(-1) == true
-    }
-
-    private fun findScrollableChild(parent: ViewGroup): View? {
-        for (i in 0 until parent.childCount) {
-            val child = parent.getChildAt(i)
-            if (!child.isShown) continue
-            if (child.canScrollVertically(-1)) return child
-            if (child is ViewGroup) {
-                findScrollableChild(child)?.let { return it }
-            }
-        }
-        return null
+        return activeScrollableChild?.canScrollVertically(-1) == true || super.canChildScrollUp()
     }
 
     private fun findTouchedScrollable(parent: ViewGroup, x: Float, y: Float): View? {
