@@ -186,8 +186,8 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         // Let the selected Aximo background show through every screen instead of being covered by NavView.\n        b.navView.setBackgroundColor(android.graphics.Color.TRANSPARENT)\n        b.swipeRefreshLayout.setBackgroundColor(android.graphics.Color.TRANSPARENT)\n        b.fragment.setBackgroundColor(android.graphics.Color.TRANSPARENT)\n
         // Keep the Aximo navigation above NavView/SwipeRefreshLayout so taps
         // on Start, Plan, Notifications and More can never be swallowed.
-        b.aximoBottomNavigation.bringToFront()
-        b.aximoBottomNavigation.post { it.bringToFront() }
+        b.aximoBottomNavigation.elevation = 24f
+        b.aximoBottomNavigation.post { b.aximoBottomNavigation.elevation = 24f }
 
         // Aximo keeps the bottom navigation visible so the main sections are always one tap away.
         // Aximo uses its own modern bottom navigation overlay.\n        // Hide NavLib's legacy bottom bar to avoid two navigation bars at once.\n        b.navView.bottomBar.visibility = View.GONE
@@ -1089,9 +1089,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             ?: navBackStack.firstOrNull { it.first == navTarget }?.second
             ?: Bundle()
         swipeRefreshLayout.isEnabled = false
-        if (swipeRefreshLayout is pl.szczodrzynski.edziennik.ui.aximo.AximoSwipeRefreshLayout) {
-            swipeRefreshLayout.blockRefreshGestures = navTarget == NavTarget.TIMETABLE
-        }
+        (swipeRefreshLayout as? pl.szczodrzynski.edziennik.ui.aximo.AximoSwipeRefreshLayout)?.let { it.blockRefreshGestures = navTarget == NavTarget.TIMETABLE }
         bottomSheet.close()
         bottomSheet.removeAllContextual()
         drawer.close()
@@ -1175,9 +1173,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             // Timetable owns vertical gestures, so it disables the global
             // pull-to-refresh. Restore the user's preference for every other
             // destination after navigation to prevent the setting getting stuck.
-            if (swipeRefreshLayout is pl.szczodrzynski.edziennik.ui.aximo.AximoSwipeRefreshLayout) {
-                swipeRefreshLayout.blockRefreshGestures = navTarget == NavTarget.TIMETABLE
-            }
+            (swipeRefreshLayout as? pl.szczodrzynski.edziennik.ui.aximo.AximoSwipeRefreshLayout)?.let { it.blockRefreshGestures = navTarget == NavTarget.TIMETABLE }
             if (navTarget != NavTarget.TIMETABLE) {
                 swipeRefreshLayout.isEnabled = getSharedPreferences(
                     "aximo_settings",
