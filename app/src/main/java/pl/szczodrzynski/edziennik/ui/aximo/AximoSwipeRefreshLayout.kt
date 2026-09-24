@@ -37,6 +37,10 @@ class AximoSwipeRefreshLayout @JvmOverloads constructor(
             }
 
             MotionEvent.ACTION_MOVE -> {
+                if (activeScrollableChild == null) {
+                    activeScrollableChild = findTouchedScrollable(this, downX, downY)
+                }
+
                 val dx = ev.x - downX
                 val dy = ev.y - downY
 
@@ -54,6 +58,10 @@ class AximoSwipeRefreshLayout @JvmOverloads constructor(
                     }
                 }
             }
+
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
+                activeScrollableChild = null
+            }
         }
 
         return super.onInterceptTouchEvent(ev)
@@ -61,7 +69,10 @@ class AximoSwipeRefreshLayout @JvmOverloads constructor(
 
     override fun canChildScrollUp(): Boolean {
         if (blockRefreshGestures) return true
-        return activeScrollableChild?.canScrollVertically(-1) == true || super.canChildScrollUp()
+        // Only the scroll target that started this gesture can block refresh.
+        // Do not fall back to SwipeRefreshLayout's generic child lookup,
+        // because that can select a different nested list and cause a jump.
+        return activeScrollableChild?.canScrollVertically(-1) == true
     }
 
     private fun findTouchedScrollable(parent: ViewGroup, x: Float, y: Float): View? {
