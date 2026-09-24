@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.gson.JsonParser
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -101,7 +102,9 @@ class LoginPlatformListFragment : Fragment(), CoroutineScope {
             b.reloadButton.isEnabled = false
 
             val platforms = LoginInfo.platformList[mode.name]
-                    ?: run {
+                    ?: if (register.loginType == LoginType.VULCAN) {
+                        loadLocalVulcan()
+                    } else {
                         api.runCatching(activity) {
                             getRealms(register.loginType.name.lowercase())
                         } ?: run {
@@ -118,6 +121,25 @@ class LoginPlatformListFragment : Fragment(), CoroutineScope {
             b.loadingLayout.isVisible = false
             b.list.isVisible = true
             b.reloadButton.isEnabled = true
+        }
+    }
+}
+
+
+    private fun loadLocalVulcan(): List<LoginInfo.Platform> {
+        val json = app.assets.open("vulcan_swinoujscie.json").bufferedReader().use { it.readText() }
+        return JsonParser.parseString(json).asJsonArray.map { item ->
+            val obj = item.asJsonObject
+            LoginInfo.Platform(
+                id = obj.get("id").asInt,
+                name = obj.get("name").asString,
+                description = obj.get("description")?.takeUnless { it.isJsonNull }?.asString,
+                icon = obj.get("icon")?.takeUnless { it.isJsonNull }?.asString.orEmpty(),
+                screenshot = obj.get("screenshot")?.takeUnless { it.isJsonNull }?.asString,
+                formFields = obj.getAsJsonArray("formFields").map { it.asString },
+                data = obj.getAsJsonObject("realmData"),
+                storeKey = null
+            )
         }
     }
 }
