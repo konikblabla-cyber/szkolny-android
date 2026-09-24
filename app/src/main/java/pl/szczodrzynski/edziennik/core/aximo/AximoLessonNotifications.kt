@@ -312,40 +312,80 @@ object AximoGradeMotivationNotifications {
     private const val NOTIFICATION_BASE = 475000
 
     private val OPENERS = listOf(
-        "Brawo! Wpadła nowa ocena.", "🔥 Ale wynik! Nowa ocena już jest.", "⭐ Jest ocena — dobra robota!",
-        "💪 Kolejny krok do celu!", "🚀 Lecimy dalej — właśnie wpadła ocena!", "🎯 Cel coraz bliżej!",
-        "👏 Dobra robota, kolejna ocena na koncie!", "✨ Aximo ma dla Ciebie nową ocenę.", "🏆 Kolejny szkolny punkt dla Ciebie!",
-        "😎 No i pięknie — pojawiła się ocena!", "⚡ Nowa ocena właśnie wskoczyła!", "💜 Spokojnie, każda ocena to kolejny krok.",
-        "🔥 Tak się buduje dobrą średnią!", "🌟 Kolejny wynik do kolekcji!", "🎉 Mamy nową ocenę!",
-        "🧠 Wiedza zamienia się w wynik!", "📈 Twoja średnia właśnie dostała kolejny impuls.", "💫 Mały wynik, duży krok naprzód!",
-        "🥳 Jest! Aximo zauważyło nową ocenę.", "💎 Kolejna ocena została dodana.", "🏅 Dobra robota — wynik już czeka!",
-        "🎮 Kolejny level zaliczony!", "🚀 Jeszcze jeden krok i jesteśmy dalej.", "🔥 Wynik wylądował — sprawdź średnią!",
-        "💪 Nie zatrzymuj tempa!", "🎯 Właśnie pojawił się nowy szkolny wynik.", "🌌 Kolejna gwiazdka na szkolnym niebie!",
-        "👏 Wynik zapisany — czas lecieć dalej.", "✨ Nowa ocena, nowa motywacja!", "🏆 Aximo melduje: pojawiła się ocena!",
-        "⚡ Szybki komunikat: masz nowy wynik!", "💜 Kolejny powód, żeby się nie poddawać.", "📚 Nauka + konsekwencja = kolejny wynik.",
-        "🎉 Nowa ocena właśnie dołączyła do zestawu!", "🔥 Dzieje się — sprawdź, co wpadło!", "🌟 Wynik jest już w dzienniku.",
-        "💥 Kolejna ocena odhaczona!", "🎯 Twoja droga do celu właśnie się zmieniła.", "😄 Jest dobrze — mamy nową ocenę!",
-        "🚀 Wynik gotowy, czas na następny krok.", "💡 Każda ocena daje Ci więcej informacji.", "🏅 Nowy szkolny wynik właśnie wskoczył.",
-        "🌈 Kolejna ocena — kolejna szansa na progres.", "🔥 Nie zwalniamy, kolejny wynik już jest!", "👏 Aximo właśnie znalazło nową ocenę.",
-        "🎊 Małe powiadomienie, duży krok!", "💪 Trzymamy tempo — kolejna ocena!", "⭐ Wynik zapisany. Tak trzymaj!",
-        "🚀 Kolejna misja szkolna zaliczona!", "💜 Nowa ocena jest już na Twoim koncie!"
+        "⭐ Piątka! Brawo!", "🔥 Ale wynik!", "🏆 Świetna robota!", "💪 Kolejny mocny krok!",
+        "🚀 Lecimy dalej!", "🎯 Cel coraz bliżej!", "✨ Aximo ma dla Ciebie dobrą wiadomość!",
+        "👏 Ten wynik naprawdę cieszy!", "🌟 Kolejna bardzo dobra ocena!", "😎 No i pięknie!",
+        "⚡ Mocny wynik właśnie wpadł!", "💜 Dobra robota — działamy dalej!", "🎉 Jest powód do uśmiechu!",
+        "🧠 Wiedza zamienia się w wynik!", "📈 Średnia dostała kolejny impuls!", "💫 Kolejny krok zaliczony!",
+        "🥳 Takie wyniki lubimy!", "💎 Kolejna cenna ocena!", "🏅 Bardzo solidny wynik!",
+        "🎮 Kolejny szkolny level zaliczony!", "🔥 Właśnie zrobiłeś progres!", "🌈 Kolejny powód do satysfakcji!",
+        "📚 Nauka przynosi efekty!", "🚀 Wynik gotowy — czas na następny cel!", "🎯 Plan zaczyna działać!",
+        "💪 Nie zwalniamy!", "🌟 Forma rośnie!", "👏 Warto było się przyłożyć!",
+        "✨ Nowa ocena, nowa okazja do progresu!", "🏆 Aximo melduje dobry wynik!", "⚡ Wynik właśnie wskoczył!",
+        "💜 Spokojnie i konsekwentnie — właśnie tak!", "🎊 Mały alert, duży progres!", "🔥 To może być ważna ocena!",
+        "🌟 Kolejna cegiełka do końcowego wyniku!", "💥 Mocne wejście!", "🎯 Jesteś coraz bliżej swojego celu!",
+        "😄 To jest wynik, z którego można być zadowolonym!", "🚀 Kolejna misja szkolna zaliczona!", "💡 Widać progres!",
+        "🏅 Wynik zapisany — dobra robota!", "🌈 Kolejny krok w dobrą stronę!", "🔥 Tak trzymać!",
+        "👏 Aximo właśnie zauważyło Twój wynik!", "🎉 Kolejna ocena na plus!", "💪 Budujemy średnią krok po kroku!",
+        "⭐ Dzisiaj piątka, jutro kolejny cel!", "🏆 Wynik robi robotę!", "🚀 Lecimy po następny sukces!"
     )
+
     private val CLOSERS = listOf(
-        "Tak trzymaj!", "Nie poddawaj się — lecimy dalej!", "Jeszcze jeden krok do celu.",
-        "Każdy wynik buduje końcową średnią.", "Dzisiaj ta ocena, jutro kolejny sukces.", "Masz to — działamy dalej!",
-        "Krok po kroku będzie coraz lepiej.", "Sprawdź średnią i zaplanuj następny ruch.", "Jedna ocena nie definiuje całego semestru.",
-        "Najważniejsze, żeby iść do przodu.", "Dobry moment, żeby sprawdzić swój cel.", "Wynik już jest — teraz następny krok.",
-        "Nie zatrzymuj się na jednym wyniku.", "Twoja średnia ma jeszcze wiele historii do napisania.", "Każda kolejna ocena może coś zmienić.",
-        "Aximo trzyma kciuki za następny wynik.", "Masz przed sobą kolejne możliwości.", "Działamy dalej bez stresu.",
-        "Liczy się cały progres, nie jedna ocena.", "Spokojnie — wszystko buduje się z czasem.", "Kolejny wynik jest już za Tobą.",
-        "Teraz czas na następny szkolny level.", "Zobacz, jak zmieniła się średnia.", "Nie odpuszczamy!",
-        "Mały krok też jest krokiem.", "Cel nadal jest w grze.", "Dobra robota — pora na kolejny etap.",
-        "Wynik zapisany, motywacja zostaje.", "Jeszcze wiele ocen przed Tobą.", "Trzymaj swoje tempo.",
-        "Każdy progres się liczy.", "Sprawdź, ile brakuje Ci do celu.", "Niech ta ocena będzie kolejną cegiełką.",
-        "Jeden wynik nie przekreśla planu.", "Możesz zrobić kolejny krok już przy następnej okazji.", "Twoja praca ma znaczenie.",
-        "Zbieramy wyniki i lecimy dalej.", "To dopiero kolejny etap.", "Nie patrz tylko na jedną ocenę — patrz na cały progres!",
-        "Średnia to maraton, nie jeden sprint."
+        "Tak trzymaj — konsekwencja naprawdę robi różnicę.",
+        "Jeszcze trochę i kolejny cel będzie w zasięgu.",
+        "Sprawdź średnią — właśnie mogła się zmienić.",
+        "Jedna ocena to tylko fragment całego wyniku, więc lecimy dalej.",
+        "Każdy taki wynik przybliża Cię do końcowej średniej.",
+        "Masz już kolejny krok za sobą — teraz następny.",
+        "Nie zatrzymuj tempa, bo idzie Ci coraz lepiej.",
+        "Jeżeli masz cel na ten przedmiot, Aximo może pomóc go zaplanować.",
+        "To właśnie z takich ocen buduje się mocną średnią.",
+        "Widać progres — warto utrzymać ten kierunek.",
+        "Jeszcze wiele możesz zmienić kolejnymi ocenami.",
+        "Spokojnie, krok po kroku dojdziesz tam, gdzie chcesz.",
+        "Ta ocena może być ważniejsza, niż wygląda na pierwszy rzut oka.",
+        "Dobra robota. Teraz czas sprawdzić, co dalej.",
+        "Cel nadal jest w grze — działamy!",
+        "Niech ten wynik będzie motywacją do kolejnego.",
+        "Każdy kolejny sprawdzian to następna szansa.",
+        "Masz jeszcze sporo możliwości poprawienia średniej.",
+        "Wynik zapisany. Plan na następny krok pozostaje aktualny.",
+        "Nie patrz tylko na jedną ocenę — liczy się cały progres.",
+        "Jeżeli średnia poszła w górę, właśnie zrobiłeś dobrą robotę.",
+        "Nawet mały wzrost średniej jest wart zauważenia.",
+        "Kolejny wynik może jeszcze bardziej zmienić sytuację.",
+        "Trzymaj swoje tempo i nie odpuszczaj.",
+        "To nie koniec — to kolejny etap.",
+        "Masz przed sobą następne okazje do zdobycia lepszego wyniku.",
+        "Dzisiaj ta ocena, później kolejna — tak buduje się wynik końcowy.",
+        "Warto wykorzystać ten moment i zaplanować następny cel.",
+        "Aximo trzyma kciuki za kolejną ocenę.",
+        "Najważniejszy jest progres, nie perfekcja za każdym razem.",
+        "Jedna słabsza ocena nie przekreśla całego przedmiotu.",
+        "Jeżeli nie wyszło idealnie, spokojnie — można to odrobić.",
+        "Głowa do góry. Następna okazja już przed Tobą.",
+        "Każda ocena daje Ci informację, nad czym jeszcze popracować.",
+        "Twoja średnia to maraton, a nie jeden sprint.",
+        "Wynik już jest — teraz możemy myśleć o kolejnym.",
+        "Dobra robota. Nie przestawaj budować swojego progresu.",
+        "Cel jest coraz bardziej konkretny — działamy dalej.",
+        "To może być początek dobrej serii.",
+        "Kolejna dobra ocena i sytuacja może wyglądać jeszcze lepiej."
     )
+
+    private fun reactionFor(grade: Float, average: Float?): String {
+        val avg = average ?: grade
+        return when {
+            grade >= 6f -> "🏆 SZÓSTKA! Najwyższa ocena — właśnie dołożyłeś naprawdę mocny wynik. Średnia z tego przedmiotu: %.2f. Takie oceny robią różnicę!".format(avg)
+            grade >= 5f && avg >= 5f -> "🔥 PIĄTKA! I do tego średnia jest już na poziomie %.2f. Jesteś na bardzo dobrym poziomie — warto utrzymać tę serię!".format(avg)
+            grade >= 5f -> "⭐ PIĄTKA! Bardzo dobry wynik. Średnia z tego przedmiotu wynosi %.2f — jeszcze trochę konsekwencji i możesz wejść jeszcze wyżej!".format(avg)
+            grade >= 4f -> "👍 CZWÓRKA! Jest dobrze. Średnia wynosi %.2f — kolejna dobra ocena może mocno przybliżyć Cię do następnego celu.".format(avg)
+            grade >= 3f -> "💪 TRÓJKA! Spokojnie, to jeszcze nie koniec. Średnia wynosi %.2f — kolejne oceny mogą ją podnieść. Nie poddawaj się!".format(avg)
+            grade >= 2f -> "💜 DWÓJKA. Głowa do góry — jedna ocena nie definiuje całego przedmiotu. Średnia wynosi %.2f, więc nadal masz możliwość ją poprawić.".format(avg)
+            grade >= 1f -> "🚀 JEDYNKA. Spokojnie — odbijamy się. Średnia wynosi %.2f. Następna ocena może rozpocząć poprawę wyniku.".format(avg)
+            else -> "✨ Nowa ocena! Średnia z tego przedmiotu wynosi %.2f. Sprawdź, co możesz zrobić dalej.".format(avg)
+        }
+    }
 
     fun notifyNewGrades(context: Context, profileId: Int) {
         if (!AximoLessonNotifications.hasNotificationPermission(context)) return
@@ -386,7 +426,8 @@ object AximoGradeMotivationNotifications {
             }
 
             val seed = kotlin.math.abs((grade.id xor (grade.id ushr 32)).toInt())
-            val phrase = OPENERS[seed % OPENERS.size] + " " +
+            val phrase = reactionFor(grade.value, average) + "\n" +
+                OPENERS[seed % OPENERS.size] + " " +
                 CLOSERS[(seed / OPENERS.size) % CLOSERS.size]
             val body = "$subject • ocena $gradeText • średnia: $averageText\n$phrase"
 
