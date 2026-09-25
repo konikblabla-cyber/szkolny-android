@@ -123,8 +123,6 @@ class LoginPlatformListFragment : Fragment(), CoroutineScope {
             b.reloadButton.isEnabled = true
         }
     }
-}
-
 
     private fun loadLocalVulcan(): List<LoginInfo.Platform> {
         val json = app.assets.open("vulcan_swinoujscie.json").bufferedReader().use { it.readText() }
