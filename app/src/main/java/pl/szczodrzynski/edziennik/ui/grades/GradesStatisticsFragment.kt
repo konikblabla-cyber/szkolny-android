@@ -30,7 +30,7 @@ class GradesStatisticsFragment : BaseFragment<GradesStatisticsFragmentBinding, M
         val grades: Map<Int, List<String>>,
         val average: Float,
     ) {
-        val key: String get() = "§{year}-§{month}"
+        val key: String get() = "%04d-%02d".format(year, month)
         val title: String get() = SimpleDateFormat("MMM yyyy", Locale("pl")).format(
             Calendar.getInstance().apply { set(year, month - 1, 1) }.time
         ).replaceFirstChar { it.uppercase() }
@@ -131,7 +131,7 @@ class GradesStatisticsFragment : BaseFragment<GradesStatisticsFragmentBinding, M
         buildTable(months)
         b.trendView.setValues(months.map { it.average }, months.map { it.title })
         val avg = filtered.map { app.gradesManager.getGradeValue(it) }.average()
-        b.summaryText.text = "Łącznie: §{filtered.size} ocen • średnia: §{DecimalFormat("0.00").format(avg)}"
+        b.summaryText.text = "Łącznie: ${filtered.size} ocen • średnia: ${DecimalFormat("0.00").format(avg)}"
     }
 
     private fun buildTable(months: List<MonthStats>) {
@@ -139,40 +139,34 @@ class GradesStatisticsFragment : BaseFragment<GradesStatisticsFragmentBinding, M
         val row = android.widget.LinearLayout(activity).apply {
             orientation = android.widget.LinearLayout.HORIZONTAL
             gravity = android.view.Gravity.BOTTOM
-            setPadding(12, 12, 12, 12)
+            setPadding(16, 16, 16, 16)
         }
-        val maxCount = months.maxOfOrNull { month -> month.grades.values.sumOf { list -> list.size } }?.coerceAtLeast(1) ?: 1
-        months.forEach { month ->
-            val count = month.grades.values.sumOf { list -> list.size }
-            val maxBarHeight = (220 * resources.displayMetrics.density).toInt()
-            val barHeight = (maxBarHeight * (count.toFloat() / maxCount)).toInt().coerceAtLeast((36 * resources.displayMetrics.density).toInt())
+        months.forEachIndexed { index, month ->
+            val maxBarHeight = (260 * resources.displayMetrics.density).toInt()
+            val minBarHeight = (30 * resources.displayMetrics.density).toInt()
+            val barHeight = (maxBarHeight * ((month.average - 1f) / 5f)).toInt().coerceIn(minBarHeight, maxBarHeight)
+            val grades = month.grades.values.flatten().sortedWith(compareByDescending<String> { it.firstOrNull()?.digitToIntOrNull() ?: 0 }.thenBy { it })
             val column = android.widget.LinearLayout(activity).apply {
                 orientation = android.widget.LinearLayout.VERTICAL
                 gravity = android.view.Gravity.BOTTOM or android.view.Gravity.CENTER_HORIZONTAL
-                setPadding(10, 0, 10, 0)
+                setPadding(8, 0, 8, 0)
                 setOnClickListener { showMonth(month, allGrades.filter { monthKey(it.addedDate) == month.key }) }
-                setOnLongClickListener {
-                    showMonth(month, allGrades.filter { monthKey(it.addedDate) == month.key })
-                    true
-                }
+                setOnLongClickListener { showMonth(month, allGrades.filter { monthKey(it.addedDate) == month.key }); true }
             }
             column.addView(TextView(activity).apply {
                 text = DecimalFormat("0.00").format(month.average)
-                textSize = 13f
+                textSize = 14f
                 gravity = android.view.Gravity.CENTER
                 setPadding(0, 0, 0, 6)
             })
-            val labels = month.grades.entries.sortedByDescending { it.key }.flatMap { pair ->
-                if (pair.value.isEmpty()) emptyList() else listOf(pair.key.toString() + "×" + pair.value.size)
-            }
             column.addView(TextView(activity).apply {
-                text = labels.joinToString("\n")
+                text = grades.joinToString(", ")
                 textSize = 12f
                 gravity = android.view.Gravity.CENTER
-                setPadding(8, 8, 8, 8)
+                setPadding(10, 10, 10, 10)
                 minHeight = barHeight
                 background = android.graphics.drawable.GradientDrawable().apply {
-                    cornerRadius = 18f
+                    cornerRadius = 22f
                     setColor(com.google.android.material.color.MaterialColors.getColor(this@GradesStatisticsFragment.requireView(), com.google.android.material.R.attr.colorPrimaryContainer))
                 }
             })
@@ -201,7 +195,7 @@ class GradesStatisticsFragment : BaseFragment<GradesStatisticsFragmentBinding, M
             .setMessage(
                 "Oceny: ${if (values.isBlank()) "brak" else values}\\n" +
                     "Liczba ocen: §{source.size}\\n" +
-                    "Średnia miesięczna: §{if (source.isEmpty()) "—" else DecimalFormat("0.00").format(average)}"
+                    "Średnia miesięczna: ${if (source.isEmpty()) "—" else DecimalFormat("0.00").format(average)}"
             )
             .setPositiveButton("OK", null)
             .show()
