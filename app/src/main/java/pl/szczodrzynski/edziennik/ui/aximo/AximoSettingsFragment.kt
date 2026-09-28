@@ -18,6 +18,7 @@ import pl.szczodrzynski.edziennik.ui.base.fragment.BaseFragment
 import pl.szczodrzynski.edziennik.core.aximo.AximoLessonSilence
 import pl.szczodrzynski.edziennik.core.aximo.AximoLessonNotifications
 import pl.szczodrzynski.edziennik.data.enums.NavTarget
+import pl.szczodrzynski.edziennik.data.enums.NotificationType
 import kotlinx.coroutines.Dispatchers
 import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
@@ -105,7 +106,11 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
         addSwitch(c, "Powiadomienia", "Główne włączanie i wyłączanie powiadomień Aximo.", "notifications_enabled", true)
         addSwitch(c, "Pokazuj dane w powiadomieniach", "Wyłącz, jeśli nie chcesz widzieć ocen, przedmiotów, sal ani innych szczegółów.", "notify_data_enabled", true)
         addSwitch(c, "Powiadomienie o następnej lekcji", "Pokazuj aktualną i następną lekcję.", "notify_next_lesson", true)
-        addSwitch(c, "Powiadomienia o ocenach", "Włącz lub wyłącz osobne powiadomienia o nowych ocenach.", "notify_grades", true)
+        addSwitch(c, "Powiadomienia o ocenach", "Włącz lub wyłącz powiadomienia o nowych ocenach.", "notify_grades", true)
+        addNotificationTypeSwitch(c, "Powiadomienia o wiadomościach", "Nowe wiadomości od nauczycieli i szkoły.", NotificationType.MESSAGE)
+        addNotificationTypeSwitch(c, "Powiadomienia o zadaniach", "Nowe prace domowe i zadania.", NotificationType.HOMEWORK)
+        addNotificationTypeSwitch(c, "Powiadomienia o frekwencji", "Nowe wpisy dotyczące obecności i nieobecności.", NotificationType.ATTENDANCE)
+        addNotificationTypeSwitch(c, "Zmiany planu lekcji", "Informacje o zmianach i zastępstwach.", NotificationType.TIMETABLE_LESSON_CHANGE)
         addSwitch(c, "Pokazuj dane ocen", "Jeśli wyłączysz, powiadomienie nie pokaże oceny, przedmiotu ani średniej.", "notify_grade_data", true)
         addSwitch(c, "Pokazuj dane lekcji", "Jeśli wyłączysz, powiadomienie nie pokaże sali, następnej lekcji ani liczby zadań.", "notify_lesson_data", true)
         addChoiceAction(c, "Kiedy przypominać o lekcji", "Ustaw, ile minut przed lekcją ma pojawić się powiadomienie.", "notify_minutes", intArrayOf(1, 5, 10, 15, 20, 30), 10) { value ->
@@ -270,7 +275,9 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
                     }
                 }
                 "notify_grades" -> {
-                    // New grade notifications are filtered at the source.
+                    val disabled = app.profile.config.sync.notificationFilter.toMutableSet()
+                    if (checked) disabled.remove(NotificationType.GRADE) else disabled.add(NotificationType.GRADE)
+                    app.profile.config.sync.notificationFilter = disabled
                     if (!checked) androidx.core.app.NotificationManagerCompat.from(requireContext()).cancelAll()
                 }
                 "notify_next_lesson" -> {
@@ -287,6 +294,46 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
         val lp = LinearLayout.LayoutParams(-1, -2)
         lp.topMargin = dp(8)
         container.addView(row, lp)
+    }
+
+    private fun addNotificationTypeSwitch(
+        container: LinearLayout,
+        title: String,
+        summary: String,
+        type: NotificationType
+    ) {
+        val row = LinearLayout(requireContext()).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding(dp(16), dp(13), dp(10), dp(13))
+            background = cardBackground()
+            isClickable = true
+        }
+        val textBox = LinearLayout(requireContext()).apply { orientation = LinearLayout.VERTICAL }
+        textBox.addView(TextView(requireContext()).apply {
+            text = title
+            textSize = 15f
+            setTextColor(Color.WHITE)
+        })
+        textBox.addView(TextView(requireContext()).apply {
+            text = summary
+            textSize = 12f
+            setTextColor(Color.rgb(127, 138, 168))
+            setPadding(0, dp(3), 0, 0)
+        })
+        row.addView(textBox, LinearLayout.LayoutParams(0, -2, 1f))
+        val sw = Switch(requireContext()).apply {
+            isChecked = type !in app.profile.config.sync.notificationFilter
+            buttonTintListCompat()
+        }
+        row.addView(sw, LinearLayout.LayoutParams(-2, -2))
+        row.setOnClickListener { sw.isChecked = !sw.isChecked }
+        sw.setOnCheckedChangeListener { _, checked ->
+            val disabled = app.profile.config.sync.notificationFilter.toMutableSet()
+            if (checked) disabled.remove(type) else disabled.add(type)
+            app.profile.config.sync.notificationFilter = disabled
+        }
+        container.addView(row, LinearLayout.LayoutParams(-1, -2).apply { topMargin = dp(8) })
     }
 
     private fun addChoiceAction(container: LinearLayout, title: String, summary: String, key: String, values: IntArray, default: Int, onChanged: (Int) -> Unit) {
