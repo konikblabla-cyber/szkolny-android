@@ -295,6 +295,10 @@ class AttendanceSummaryFragment : BaseFragment<AttendanceSummaryFragmentBinding,
         else
             presenceCountSum.toFloat() / totalCountSum.toFloat() * 100f
 
+        val lateCount = attendance.count {
+            it.isCounted && (it.baseType == Attendance.TYPE_BELATED || it.baseType == Attendance.TYPE_BELATED_EXCUSED)
+        }
+
         launch {
             b.attendanceBar.setAttendanceData(typeCountMap.map { manager.getAttendanceColor(it.key) to it.value })
             b.attendanceBar.isInvisible = typeCountMap.isEmpty()
@@ -331,11 +335,17 @@ class AttendanceSummaryFragment : BaseFragment<AttendanceSummaryFragmentBinding,
             if (percentage == 0f) {
                 b.percentage.isInvisible = true
                 b.percentageCircle.isInvisible = true
+                b.lateSummary.text = if (lateCount == 0) "Spóźnienia: brak ✓" else "Spóźnienia: $lateCount"
             }
             else {
                 b.percentage.isVisible = true
                 b.percentageCircle.isVisible = true
                 b.percentage.setText(R.string.attendance_period_summary_format, percentage)
+                b.lateSummary.text = if (lateCount == 0) {
+                    "Spóźnienia: brak ✓"
+                } else {
+                    "Spóźnienia: $lateCount"
+                }
 
                 val df = DecimalFormat("0.##")
                 b.percentageCircle.setProgressTextAdapter { value ->
