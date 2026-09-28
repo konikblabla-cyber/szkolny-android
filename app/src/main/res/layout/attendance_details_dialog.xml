@@ -246,6 +246,15 @@
             </LinearLayout>
 
             <com.google.android.material.button.MaterialButton
+                android:id="@+id/excuseButton"
+                style="?materialButtonOutlinedStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dp"
+                android:text="Poproś o usprawiedliwienie" />
+
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/notesButton"
                 style="?materialButtonOutlinedStyle"
                 android:layout_width="wrap_content"
