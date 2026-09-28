@@ -20,6 +20,7 @@ import pl.szczodrzynski.edziennik.ui.debug.DebugFragment
 import pl.szczodrzynski.edziennik.ui.debug.LabFragment
 import pl.szczodrzynski.edziennik.ui.feedback.FeedbackFragment
 import pl.szczodrzynski.edziennik.ui.grades.GradesListFragment
+import pl.szczodrzynski.edziennik.ui.grades.GradesStatisticsFragment
 import pl.szczodrzynski.edziennik.ui.grades.editor.GradesEditorFragment
 import pl.szczodrzynski.edziennik.ui.home.HomeFragment
 import pl.szczodrzynski.edziennik.ui.aximo.AximoMoreFragment
@@ -289,6 +290,13 @@ enum class NavTarget(
         nameRes = R.string.menu_debug,
         icon = CommunityMaterial.Icon.cmd_android_debug_bridge,
         devModeOnly = true,
+    ),
+    GRADES_STATISTICS(
+        id = 502,
+        fragmentClass = GradesStatisticsFragment::class.java,
+        nameRes = R.string.menu_grades_statistics,
+        titleRes = R.string.menu_grades_statistics,
+        icon = CommunityMaterial.Icon.cmd_chart_box_outline,
     ),
     GRADES_EDITOR(
         id = 501,
