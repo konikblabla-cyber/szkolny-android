@@ -137,16 +137,15 @@ class GradesStatisticsFragment : BaseFragment<GradesStatisticsFragmentBinding, M
     private fun buildTable(months: List<MonthStats>) {
         b.chartContainer.removeAllViews()
 
-        val header = TextView(activity).apply {
+        val headerRow = android.widget.TableRow(activity)
+        headerRow.addView(TextView(activity).apply {
             text = "Ocena"
             textSize = 12f
             setPadding(12, 12, 12, 12)
-        }
-        b.chartContainer.addView(header, tableLp(72))
-
+        }, tableLp(72))
         months.forEach { month ->
-            val cell = TextView(activity).apply {
-                text = "§{month.title}\\n§{DecimalFormat("0.00").format(month.average)}"
+            headerRow.addView(TextView(activity).apply {
+                text = "§{month.title}\n§{DecimalFormat("0.00").format(month.average)}"
                 textSize = 12f
                 gravity = android.view.Gravity.CENTER
                 setPadding(8, 8, 8, 8)
@@ -155,22 +154,22 @@ class GradesStatisticsFragment : BaseFragment<GradesStatisticsFragmentBinding, M
                     showMonth(month, allGrades.filter { monthKey(it.addedDate) == month.key })
                     true
                 }
-            }
-            b.chartContainer.addView(cell, tableLp(92))
+            }, tableLp(92))
         }
+        b.chartContainer.addView(headerRow)
 
         (6 downTo 1).forEach { gradeValue ->
-            val label = TextView(activity).apply {
+            val row = android.widget.TableRow(activity)
+            row.addView(TextView(activity).apply {
                 text = gradeValue.toString()
                 textSize = 14f
                 gravity = android.view.Gravity.CENTER
                 setPadding(8, 12, 8, 12)
-            }
-            b.chartContainer.addView(label, tableLp(72))
+            }, tableLp(72))
 
             months.forEach { month ->
                 val values = month.grades[gradeValue].orEmpty()
-                val cell = TextView(activity).apply {
+                row.addView(TextView(activity).apply {
                     text = if (values.isEmpty()) "—" else values.joinToString(", ")
                     textSize = 13f
                     gravity = android.view.Gravity.CENTER
@@ -179,9 +178,9 @@ class GradesStatisticsFragment : BaseFragment<GradesStatisticsFragmentBinding, M
                     setOnClickListener {
                         showMonth(month, allGrades.filter { monthKey(it.addedDate) == month.key })
                     }
-                }
-                b.chartContainer.addView(cell, tableLp(92))
+                }, tableLp(92))
             }
+            b.chartContainer.addView(row)
         }
     }
 
@@ -198,7 +197,7 @@ class GradesStatisticsFragment : BaseFragment<GradesStatisticsFragmentBinding, M
         androidx.appcompat.app.AlertDialog.Builder(activity)
             .setTitle(month.title)
             .setMessage(
-                "Oceny: §{if (values.isBlank()) "brak" else values}\\n" +
+                "Oceny: ${if (values.isBlank()) "brak" else values}\\n" +
                     "Liczba ocen: §{source.size}\\n" +
                     "Średnia miesięczna: §{if (source.isEmpty()) "—" else DecimalFormat("0.00").format(average)}"
             )
