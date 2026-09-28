@@ -102,6 +102,8 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
     }
 
     private fun addNotificationSettings(c: LinearLayout) {
+        addSwitch(c, "Powiadomienia", "Główne włączanie i wyłączanie powiadomień Aximo.", "notifications_enabled", true)
+        addSwitch(c, "Pokazuj dane w powiadomieniach", "Wyłącz, jeśli nie chcesz widzieć ocen, przedmiotów, sal ani innych szczegółów.", "notify_data_enabled", true)
         addSwitch(c, "Powiadomienie o następnej lekcji", "Pokazuj aktualną i następną lekcję.", "notify_next_lesson", true)
         addSwitch(c, "Powiadomienia o ocenach", "Włącz lub wyłącz osobne powiadomienia o nowych ocenach.", "notify_grades", true)
         addSwitch(c, "Pokazuj dane ocen", "Jeśli wyłączysz, powiadomienie nie pokaże oceny, przedmiotu ani średniej.", "notify_grade_data", true)
@@ -255,8 +257,21 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
                         }
                     }
                 }
+                "notifications_enabled" -> {
+                    val app = requireContext().applicationContext as pl.szczodrzynski.edziennik.App
+                    app.config.sync.lessonNotificationsEnabled = checked
+                    if (!checked) {
+                        AximoLessonNotifications.cancelAll(requireContext())
+                        androidx.core.app.NotificationManagerCompat.from(requireContext()).cancelAll()
+                    } else if (pl.szczodrzynski.edziennik.App.profileId != 0) {
+                        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
+                            AximoLessonNotifications.scheduleTodayAndTomorrow(requireContext(), pl.szczodrzynski.edziennik.App.profileId)
+                        }
+                    }
+                }
                 "notify_grades" -> {
                     // New grade notifications are filtered at the source.
+                    if (!checked) androidx.core.app.NotificationManagerCompat.from(requireContext()).cancelAll()
                 }
                 "notify_next_lesson" -> {
                     val app = requireContext().applicationContext as pl.szczodrzynski.edziennik.App
