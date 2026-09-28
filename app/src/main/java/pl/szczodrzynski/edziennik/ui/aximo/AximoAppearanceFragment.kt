@@ -147,6 +147,7 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
             if (!checked) prefs.edit().putInt("animationStyle", 0).apply()
             b.appearanceSaved.text = if (checked) "Animacje włączone ✓" else "Animacje wyłączone ✓"
             refreshAnimationStyle()
+            activity.refreshAximoAppearance()
         }
         listOf(b.animationNone, b.animationSoft, b.animationSmooth, b.animationDynamic).forEachIndexed { index, view ->
             view.setOnClickListener {
