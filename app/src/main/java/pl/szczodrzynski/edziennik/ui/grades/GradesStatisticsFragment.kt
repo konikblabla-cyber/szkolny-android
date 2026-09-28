@@ -111,7 +111,10 @@ class GradesStatisticsFragment : BaseFragment<GradesStatisticsFragmentBinding, M
 
         if (filtered.isEmpty()) {
             b.chartContainer.removeAllViews()
-            b.summaryText.text = "Brak ocen w wybranym zakresie."
+            val distribution = (6 downTo 1).map { grade ->
+            "$grade: ${filtered.count { app.gradesManager.getGradeValue(it).toInt().coerceIn(1, 6) == grade }}"
+        }.joinToString("  •  ")
+        b.summaryText.text = "Twoja średnia: ${DecimalFormat("0.00").format(avg)}\\nOceny: $gradeText\\n$distribution"
             return
         }
 
