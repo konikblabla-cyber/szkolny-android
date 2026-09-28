@@ -122,7 +122,7 @@ class GradesStatisticsFragment : BaseFragment<GradesStatisticsFragmentBinding, M
                 val year = parts[0].toInt()
                 val month = parts[1].toInt()
                 val byGrade = (1..6).associateWith { value ->
-                    grades.filter { app.gradesManager.getGradeValue(it) == value.toFloat() }
+                    grades.filter { app.gradesManager.getGradeValue(it).toInt().coerceIn(1, 6) == value }
                         .map { it.name }
                 }
                 MonthStats(year, month, byGrade, grades.map { app.gradesManager.getGradeValue(it) }.average().toFloat())
