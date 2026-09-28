@@ -6,6 +6,7 @@ import android.graphics.drawable.GradientDrawable
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import android.content.res.Configuration
 import pl.szczodrzynski.edziennik.R
 
 /**
@@ -28,7 +29,7 @@ object AximoAppearanceApplier {
         val softCards = prefs.getBoolean("softCards", false)
         val animationsEnabled = prefs.getBoolean("animationsEnabled", true)
         val animationStyle = prefs.getInt("animationStyle", 2).coerceIn(0, 3)
-        val light = prefs.getString("theme", "dark") == "light"
+        val theme = prefs.getString("theme", "dark") ?: "dark"\n        val light = when (theme) {\n            "light" -> true\n            "auto" -> (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) != Configuration.UI_MODE_NIGHT_YES\n            else -> false\n        }
 
         val effectiveBackground = if (light) 0xFFF7F7FB.toInt() else style.background
         val effectiveSurface = if (light) 0xFFFFFFFF.toInt() else style.surface
