@@ -136,54 +136,56 @@ class GradesStatisticsFragment : BaseFragment<GradesStatisticsFragmentBinding, M
 
     private fun buildTable(months: List<MonthStats>) {
         b.chartContainer.removeAllViews()
-
-        val headerRow = android.widget.TableRow(activity)
-        headerRow.addView(TextView(activity).apply {
-            text = "Ocena"
-            textSize = 12f
+        val row = android.widget.LinearLayout(activity).apply {
+            orientation = android.widget.LinearLayout.HORIZONTAL
+            gravity = android.view.Gravity.BOTTOM
             setPadding(12, 12, 12, 12)
-        }, tableLp(72))
+        }
+        val maxCount = months.maxOfOrNull { month -> month.grades.values.sumOf { list -> list.size } }?.coerceAtLeast(1) ?: 1
         months.forEach { month ->
-            headerRow.addView(TextView(activity).apply {
-                text = "§{month.title}\n§{DecimalFormat("0.00").format(month.average)}"
-                textSize = 12f
-                gravity = android.view.Gravity.CENTER
-                setPadding(8, 8, 8, 8)
+            val count = month.grades.values.sumOf { list -> list.size }
+            val maxBarHeight = (220 * resources.displayMetrics.density).toInt()
+            val barHeight = (maxBarHeight * (count.toFloat() / maxCount)).toInt().coerceAtLeast((36 * resources.displayMetrics.density).toInt())
+            val column = android.widget.LinearLayout(activity).apply {
+                orientation = android.widget.LinearLayout.VERTICAL
+                gravity = android.view.Gravity.BOTTOM or android.view.Gravity.CENTER_HORIZONTAL
+                setPadding(10, 0, 10, 0)
                 setOnClickListener { showMonth(month, allGrades.filter { monthKey(it.addedDate) == month.key }) }
                 setOnLongClickListener {
                     showMonth(month, allGrades.filter { monthKey(it.addedDate) == month.key })
                     true
                 }
-            }, tableLp(92))
-        }
-        b.chartContainer.addView(headerRow)
-
-        (6 downTo 1).forEach { gradeValue ->
-            val row = android.widget.TableRow(activity)
-            row.addView(TextView(activity).apply {
-                text = gradeValue.toString()
-                textSize = 14f
-                gravity = android.view.Gravity.CENTER
-                setPadding(8, 12, 8, 12)
-            }, tableLp(72))
-
-            months.forEach { month ->
-                val values = month.grades[gradeValue].orEmpty()
-                row.addView(TextView(activity).apply {
-                    text = if (values.isEmpty()) "—" else values.joinToString(", ")
-                    textSize = 13f
-                    gravity = android.view.Gravity.CENTER
-                    setPadding(6, 12, 6, 12)
-                    isSingleLine = false
-                    setOnClickListener {
-                        showMonth(month, allGrades.filter { monthKey(it.addedDate) == month.key })
-                    }
-                }, tableLp(92))
             }
-            b.chartContainer.addView(row)
+            column.addView(TextView(activity).apply {
+                text = DecimalFormat("0.00").format(month.average)
+                textSize = 13f
+                gravity = android.view.Gravity.CENTER
+                setPadding(0, 0, 0, 6)
+            })
+            val labels = month.grades.entries.sortedByDescending { it.key }.flatMap { pair ->
+                if (pair.value.isEmpty()) emptyList() else listOf(pair.key.toString() + "×" + pair.value.size)
+            }
+            column.addView(TextView(activity).apply {
+                text = labels.joinToString("\n")
+                textSize = 12f
+                gravity = android.view.Gravity.CENTER
+                setPadding(8, 8, 8, 8)
+                minHeight = barHeight
+                background = android.graphics.drawable.GradientDrawable().apply {
+                    cornerRadius = 18f
+                    setColor(com.google.android.material.color.MaterialColors.getColor(this@GradesStatisticsFragment.requireView(), com.google.android.material.R.attr.colorPrimaryContainer))
+                }
+            })
+            column.addView(TextView(activity).apply {
+                text = month.title
+                textSize = 12f
+                gravity = android.view.Gravity.CENTER
+                setPadding(0, 8, 0, 0)
+            })
+            row.addView(column, android.widget.LinearLayout.LayoutParams((120 * resources.displayMetrics.density).toInt(), android.view.ViewGroup.LayoutParams.WRAP_CONTENT))
         }
+        b.chartContainer.addView(row)
     }
-
     private fun tableLp(widthDp: Int): android.widget.TableRow.LayoutParams =
         android.widget.TableRow.LayoutParams(
             (widthDp * resources.displayMetrics.density).toInt(),
