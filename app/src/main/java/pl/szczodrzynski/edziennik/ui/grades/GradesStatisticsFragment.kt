@@ -131,7 +131,11 @@ class GradesStatisticsFragment : BaseFragment<GradesStatisticsFragmentBinding, M
         buildTable(months)
         b.trendView.setValues(months.map { it.average }, months.map { it.title })
         val avg = filtered.map { app.gradesManager.getGradeValue(it) }.average()
-        b.summaryText.text = "Łącznie: ${filtered.size} ocen • średnia: ${DecimalFormat("0.00").format(avg)}"
+        val gradeText = filtered
+            .map { it.name }
+            .sortedWith(compareByDescending<String> { it.firstOrNull()?.digitToIntOrNull() ?: 0 })
+            .joinToString(", ")
+        b.summaryText.text = "Twoja średnia: ${DecimalFormat("0.00").format(avg)}\\nOceny: $gradeText"
     }
 
     private fun buildTable(months: List<MonthStats>) {
