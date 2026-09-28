@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import com.google.gson.JsonObject
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -102,11 +103,30 @@ class LoginPlatformListFragment : Fragment(), CoroutineScope {
 
             val platforms = LoginInfo.platformList[mode.name]
                     ?: run {
-                        api.runCatching(activity) {
-                            getRealms(register.loginType.name.lowercase())
-                        } ?: run {
-                            nav.navigateUp()
-                            return@launch
+                        if (loginType == LoginType.VULCAN && loginMode == LoginMode.VULCAN_WEB) {
+                            listOf(
+                                LoginInfo.Platform(
+                                    id = 10,
+                                    name = "EduVULCAN — Świnoujście",
+                                    description = "Logowanie przez adres e-mail i hasło",
+                                    icon = "https://szkolny-eu.github.io/FSLogin/realms/vulcan/vulcan.net.pl.png",
+                                    screenshot = "https://szkolny-eu.github.io/FSLogin/realms/vulcan/vulcan.net.pl_ss.png",
+                                    formFields = listOf("email", "password"),
+                                    data = JsonObject().apply {
+                                        addProperty("type", "Cufs")
+                                        addProperty("host", "vulcan.net.pl")
+                                        addProperty("symbol", "swinoujscie")
+                                    },
+                                    storeKey = null
+                                )
+                            )
+                        } else {
+                            api.runCatching(activity) {
+                                getRealms(register.loginType.name.lowercase())
+                            } ?: run {
+                                nav.navigateUp()
+                                return@launch
+                            }
                         }
                     }
             LoginInfo.platformList[mode.name] = platforms
