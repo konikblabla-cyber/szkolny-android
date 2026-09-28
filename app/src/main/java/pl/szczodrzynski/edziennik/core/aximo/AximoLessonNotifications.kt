@@ -261,7 +261,9 @@ object AximoLessonNotifications {
             app.db.eventDao().getAllNow(profileId).count { it.isHomework && !it.isDone && it.date >= today }
         } catch (_: Exception) { 0 }
 
-        val showData = context.getSharedPreferences("aximo_settings", Context.MODE_PRIVATE).getBoolean("notify_lesson_data", true)
+        val settingsPrefs = context.getSharedPreferences("aximo_settings", Context.MODE_PRIVATE)
+        val showData = settingsPrefs.getBoolean("notify_data_enabled", true) &&
+            settingsPrefs.getBoolean("notify_lesson_data", true)
         val text = if (showData) "Sala: $room • $nextText • Zadania domowe: $homeworkCount" else "Masz przypomnienie o lekcji. Otwórz Aximo, aby zobaczyć szczegóły."
 
         val nextIntent = Intent(context, MainActivity::class.java)
@@ -394,7 +396,9 @@ object AximoGradeMotivationNotifications {
         if (!AximoLessonNotifications.hasNotificationPermission(context)) return
         val app = context.applicationContext as App
         if (!context.getSharedPreferences("aximo_settings", Context.MODE_PRIVATE).getBoolean("notify_grades", true)) return
-        val showData = context.getSharedPreferences("aximo_settings", Context.MODE_PRIVATE).getBoolean("notify_grade_data", true)
+        val settingsPrefs = context.getSharedPreferences("aximo_settings", Context.MODE_PRIVATE)
+        val showData = settingsPrefs.getBoolean("notify_data_enabled", true) &&
+            settingsPrefs.getBoolean("notify_grade_data", true)
         val pending = try { app.db.gradeDao().getNotNotifiedNow(profileId) } catch (_: Exception) { emptyList() }
         if (pending.isEmpty()) return
         val all = try { app.db.gradeDao().getAllNow(profileId) } catch (_: Exception) { emptyList() }
