@@ -103,7 +103,7 @@ class LoginPlatformListFragment : Fragment(), CoroutineScope {
 
             val platforms = LoginInfo.platformList[mode.name]
                     ?: run {
-                        if (loginType == LoginType.VULCAN && loginMode == LoginMode.VULCAN_WEB) {
+                        if (register.loginType == LoginType.VULCAN && mode.loginMode == LoginMode.VULCAN_WEB) {
                             listOf(
                                 LoginInfo.Platform(
                                     id = 10,
