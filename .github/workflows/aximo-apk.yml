@@ -3,16 +3,16 @@ name: Build Aximo APK
 on:
   workflow_dispatch:
   push:
-    branches: ["feature/modern-diary-ui"]
+    branches: ["develop"]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout restored Aximo branch
+      - name: Checkout Aximo develop branch
         uses: actions/checkout@v4
         with:
-          ref: feature/modern-diary-ui
+          ref: develop
 
       - name: Setup JDK 17
         uses: actions/setup-java@v4
