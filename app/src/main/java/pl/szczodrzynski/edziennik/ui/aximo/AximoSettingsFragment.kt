@@ -103,6 +103,9 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
 
     private fun addNotificationSettings(c: LinearLayout) {
         addSwitch(c, "Powiadomienie o następnej lekcji", "Pokazuj aktualną i następną lekcję.", "notify_next_lesson", true)
+        addSwitch(c, "Powiadomienia o ocenach", "Włącz lub wyłącz osobne powiadomienia o nowych ocenach.", "notify_grades", true)
+        addSwitch(c, "Pokazuj dane ocen", "Jeśli wyłączysz, powiadomienie nie pokaże oceny, przedmiotu ani średniej.", "notify_grade_data", true)
+        addSwitch(c, "Pokazuj dane lekcji", "Jeśli wyłączysz, powiadomienie nie pokaże sali, następnej lekcji ani liczby zadań.", "notify_lesson_data", true)
         addChoiceAction(c, "Kiedy przypominać o lekcji", "Ustaw, ile minut przed lekcją ma pojawić się powiadomienie.", "notify_minutes", intArrayOf(1, 5, 10, 15, 20, 30), 10) { value ->
             val app = requireContext().applicationContext as pl.szczodrzynski.edziennik.App
             app.config.sync.lessonNotificationMinutes = value
@@ -250,6 +253,12 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
                         viewLifecycleOwner.lifecycleScope.launch(Dispatchers.IO) {
                             AximoLessonSilence.scheduleTodayAndTomorrow(requireContext(), pl.szczodrzynski.edziennik.App.profileId)
                         }
+                    }
+                }
+                "notify_grades" -> {
+                    if (!checked) {
+                        val app = requireContext().applicationContext as pl.szczodrzynski.edziennik.App
+                        androidx.core.app.NotificationManagerCompat.from(requireContext()).cancelAll()
                     }
                 }
                 "notify_next_lesson" -> {
