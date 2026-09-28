@@ -190,6 +190,16 @@ object AximoLessonNotifications {
         } catch (_: Exception) {}
     }
 
+    private fun rebuildPersistentIntent(context: Context, profileId: Int): PendingIntent {
+        val intent = Intent(context, AximoLessonSilenceReceiver::class.java)
+            .setAction(ACTION_NOTIFY)
+            .putExtra(AximoLessonSilence.EXTRA_PROFILE, profileId)
+            .putExtra(EXTRA_PERSISTENT, true)
+        return PendingIntent.getBroadcast(
+            context, PERSISTENT_REQUEST_CODE + 1, intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+    }
     fun testNotification(context: Context) {
         ensureChannel(context)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
@@ -218,6 +228,7 @@ object AximoLessonNotifications {
         ) return
 
         val app = context.applicationContext as App
+        val settingsPrefs = context.getSharedPreferences("aximo_settings", Context.MODE_PRIVATE)
         val now = System.currentTimeMillis()
         val today = Date.getToday()
         val candidates = mutableListOf<Pair<Long, pl.szczodrzynski.edziennik.data.db.full.LessonFull>>()
@@ -318,16 +329,6 @@ object AximoLessonNotifications {
 }
 
 
-    private fun rebuildPersistentIntent(context: Context, profileId: Int): PendingIntent {
-        val intent = Intent(context, AximoLessonSilenceReceiver::class.java)
-            .setAction(ACTION_NOTIFY)
-            .putExtra(AximoLessonSilence.EXTRA_PROFILE, profileId)
-            .putExtra(EXTRA_PERSISTENT, true)
-        return PendingIntent.getBroadcast(
-            context, PERSISTENT_REQUEST_CODE + 1, intent,
-            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
-        )
-    }
 
 /**
  * Instant Aximo reactions for newly received grades.
@@ -420,7 +421,6 @@ object AximoGradeMotivationNotifications {
         val settingsPrefs = context.getSharedPreferences("aximo_settings", Context.MODE_PRIVATE)
         if (!settingsPrefs.getBoolean("notifications_enabled", true)) return
         if (!settingsPrefs.getBoolean("notify_grades", true)) return
-        val settingsPrefs = context.getSharedPreferences("aximo_settings", Context.MODE_PRIVATE)
         val showData = settingsPrefs.getBoolean("notify_data_enabled", true) &&
             settingsPrefs.getBoolean("notify_grade_data", true)
         val pending = try { app.db.gradeDao().getNotNotifiedNow(profileId) } catch (_: Exception) { emptyList() }
