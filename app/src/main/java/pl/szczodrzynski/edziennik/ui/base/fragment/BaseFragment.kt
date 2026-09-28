@@ -20,6 +20,7 @@ import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import pl.szczodrzynski.edziennik.App
 import pl.szczodrzynski.edziennik.MainActivity
+import pl.szczodrzynski.edziennik.ui.aximo.AximoAppearanceApplier
 import pl.szczodrzynski.edziennik.data.enums.FeatureType
 import pl.szczodrzynski.edziennik.data.enums.MetadataType
 import pl.szczodrzynski.edziennik.ext.registerSafe
@@ -117,6 +118,14 @@ abstract class BaseFragment<B : ViewBinding, A : AppCompatActivity>(
             if (!isAdded)
                 return@startCoroutineTimer
             onViewReady(inState)
+            // Re-apply Aximo appearance after each fragment is inflated so theme,
+            // accent, card shape/transparency and animations affect every screen.
+            (activity as? MainActivity)?.let { mainActivity ->
+                AximoAppearanceApplier.apply(mainActivity.b.root, mainActivity)
+                b.root?.let { fragmentRoot ->
+                    AximoAppearanceApplier.apply(fragmentRoot, mainActivity)
+                }
+            }
             (activity as? MainActivity)?.gainAttention()
             (activity as? MainActivity)?.gainAttentionFAB()
         }
