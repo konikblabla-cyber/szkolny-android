@@ -146,6 +146,7 @@ class GradesStatisticsFragment : BaseFragment<GradesStatisticsFragmentBinding, M
             val minBarHeight = (30 * resources.displayMetrics.density).toInt()
             val barHeight = (maxBarHeight * ((month.average - 1f) / 5f)).toInt().coerceIn(minBarHeight, maxBarHeight)
             val grades = month.grades.values.flatten().sortedWith(compareByDescending<String> { it.firstOrNull()?.digitToIntOrNull() ?: 0 }.thenBy { it })
+            val best = months.maxByOrNull { it.average }
             val column = android.widget.LinearLayout(activity).apply {
                 orientation = android.widget.LinearLayout.VERTICAL
                 gravity = android.view.Gravity.BOTTOM or android.view.Gravity.CENTER_HORIZONTAL
@@ -154,7 +155,7 @@ class GradesStatisticsFragment : BaseFragment<GradesStatisticsFragmentBinding, M
                 setOnLongClickListener { showMonth(month, allGrades.filter { monthKey(it.addedDate) == month.key }); true }
             }
             column.addView(TextView(activity).apply {
-                text = DecimalFormat("0.00").format(month.average)
+                text = DecimalFormat("0.00").format(month.average) + if (best?.key == month.key) "  ★" else ""
                 textSize = 14f
                 gravity = android.view.Gravity.CENTER
                 setPadding(0, 0, 0, 6)
@@ -176,7 +177,9 @@ class GradesStatisticsFragment : BaseFragment<GradesStatisticsFragmentBinding, M
                 gravity = android.view.Gravity.CENTER
                 setPadding(0, 8, 0, 0)
             })
-            row.addView(column, android.widget.LinearLayout.LayoutParams((120 * resources.displayMetrics.density).toInt(), android.view.ViewGroup.LayoutParams.WRAP_CONTENT))
+            column.alpha = 0f
+            column.animate().alpha(1f).setDuration(250L + index * 60L).start()
+            row.addView(column, android.widget.LinearLayout.LayoutParams((128 * resources.displayMetrics.density).toInt(), android.view.ViewGroup.LayoutParams.WRAP_CONTENT))
         }
         b.chartContainer.addView(row)
     }
