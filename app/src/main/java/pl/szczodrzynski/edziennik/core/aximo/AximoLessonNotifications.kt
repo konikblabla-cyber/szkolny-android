@@ -162,8 +162,17 @@ object AximoLessonNotifications {
                 }
         }
         prefs.edit().putStringSet(SCHEDULED_REQUEST_CODES, newCodes).apply()
-        // Keep one live school-day notification refreshed in the status bar.
-        schedulePersistentRefresh(context, profileId, 1_000L)
+        // Start the pinned school-day notification 20 minutes before the first lesson.
+        val firstLessonStart = try {
+            app.db.timetableDao().getAllForDateNow(profileId, today)
+                .filter { it.type != Lesson.TYPE_CANCELLED && it.type != Lesson.TYPE_NO_LESSONS }
+                .mapNotNull { lesson -> lesson.displayStartTime?.let { today.getAsCalendar(it).timeInMillis } }
+                .minOrNull()
+        } catch (_: Exception) { null }
+        val persistentDelay = firstLessonStart?.let {
+            (it - 20L * MINUTE - System.currentTimeMillis()).coerceAtLeast(1_000L)
+        } ?: 1_000L
+        schedulePersistentRefresh(context, profileId, persistentDelay)
     }
 
     private fun schedulePersistentRefresh(context: Context, profileId: Int, delayMs: Long) {
