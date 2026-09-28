@@ -4,9 +4,12 @@
 
 package pl.szczodrzynski.edziennik.ui.grades
 
+import android.graphics.Typeface
 import android.os.Bundle
 import android.widget.EditText
 import android.widget.LinearLayout
+import android.widget.ScrollView
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
@@ -23,6 +26,7 @@ import pl.szczodrzynski.edziennik.core.manager.GradesManager
 import pl.szczodrzynski.edziennik.core.manager.GradesManager.Companion.UNIVERSITY_AVERAGE_MODE_ECTS
 import pl.szczodrzynski.edziennik.core.manager.GradesManager.Companion.UNIVERSITY_AVERAGE_MODE_SIMPLE
 import pl.szczodrzynski.edziennik.data.db.entity.Grade
+import pl.szczodrzynski.edziennik.data.db.entity.Lesson
 import pl.szczodrzynski.edziennik.data.db.entity.Grade.Companion.TYPE_NO_GRADE
 import pl.szczodrzynski.edziennik.data.db.full.GradeFull
 import pl.szczodrzynski.edziennik.data.enums.FeatureType
@@ -40,6 +44,9 @@ import pl.szczodrzynski.edziennik.ui.grades.models.GradesSemester
 import pl.szczodrzynski.edziennik.ui.grades.models.GradesStats
 import pl.szczodrzynski.edziennik.ui.grades.models.GradesSubject
 import pl.szczodrzynski.edziennik.utils.TextInputDropDown
+import pl.szczodrzynski.edziennik.utils.models.Date
+import java.util.Calendar
+import java.util.Locale
 import pl.szczodrzynski.navlib.bottomsheet.items.BottomSheetPrimaryItem
 import kotlin.math.max
 
@@ -57,6 +64,13 @@ class GradesListFragment : BaseFragment<GradesListFragmentBinding, MainActivity>
             .withOnClickListener {
                 activity.bottomSheet.close()
                 showGoalCalculator()
+            },
+        BottomSheetPrimaryItem(true)
+            .withTitle("📊 Statystyki ocen")
+            .withIcon(CommunityMaterial.Icon.cmd_chart_box_outline)
+            .withOnClickListener {
+                activity.bottomSheet.close()
+                showGradeStatistics()
             },
         BottomSheetPrimaryItem(true)
             .withTitle(R.string.menu_grades_config)
@@ -168,6 +182,94 @@ class GradesListFragment : BaseFragment<GradesListFragmentBinding, MainActivity>
                     "averageOtherSemester" to otherSemester?.averages?.normalAvg,
                     "finalOtherSemester" to otherSemester?.finalGrade?.value
             ))
+        }
+    }
+
+    private fun showGradeStatistics() {
+        val now = Calendar.getInstance()
+        val months = (0..11).map { offset ->
+            (now.clone() as Calendar).apply { add(Calendar.MONTH, -offset) }
+        }
+        val labels = months.map {
+            String.format(Locale.getDefault(), "%tB %tY", it, it)
+                .replaceFirstChar { ch -> ch.titlecase(Locale.getDefault()) }
+        }.toTypedArray()
+
+        AlertDialog.Builder(activity)
+            .setTitle("📊 Statystyki ocen")
+            .setSingleChoiceItems(labels, 0) { dialog, which ->
+                dialog.dismiss()
+                loadGradeStatistics(months[which])
+            }
+            .setNegativeButton("Anuluj", null)
+            .show()
+    }
+
+    private fun loadGradeStatistics(month: Calendar) {
+        val year = month.get(Calendar.YEAR)
+        val monthNumber = month.get(Calendar.MONTH) + 1
+        val lastDay = month.getActualMaximum(Calendar.DAY_OF_MONTH)
+        val from = Date(year, monthNumber, 1)
+        val to = Date(year, monthNumber, lastDay)
+
+        viewLifecycleOwner.lifecycleScope.launch {
+            val lessons = withContext(Dispatchers.IO) {
+                app.db.timetableDao().getBetweenDatesNow(from, to).filter { it.profileId == App.profileId }
+            }
+            val monthGrades = latestGrades.filter { grade ->
+                if (grade.type != Grade.TYPE_NORMAL || grade.value !in 1f..6f) false else {
+                    val cal = Calendar.getInstance().apply { timeInMillis = grade.addedDate }
+                    cal.get(Calendar.YEAR) == year && cal.get(Calendar.MONTH) == month.get(Calendar.MONTH)
+                }
+            }
+            val counts = IntArray(6)
+            monthGrades.forEach { grade ->
+                val value = manager.getGradeValue(grade).toInt().coerceIn(1, 6)
+                counts[value - 1]++
+            }
+            val total = counts.sum()
+            val average = if (total > 0) monthGrades.sumOf { manager.getGradeValue(it).toDouble() } / total else 0.0
+            val weightedTotal = monthGrades.sumOf { manager.getGradeValue(it).toDouble() * manager.getGradeWeight(dontCountEnabled, dontCountGrades, it).toDouble() }
+            val weights = monthGrades.sumOf { manager.getGradeWeight(dontCountEnabled, dontCountGrades, it).toDouble() }
+            val weightedAverage = if (weights > 0.0) weightedTotal / weights else average
+            val studyMinutes = lessons.filter {
+                !it.isCancelled && it.type != Lesson.TYPE_NO_LESSONS && it.displayStartTime != null && it.endTime != null
+            }.sumOf { (it.endTime!!.getInSeconds() - it.displayStartTime!!.getInSeconds()).coerceAtLeast(0L) / 60L }
+            val lessonCount = lessons.count { !it.isCancelled && it.type != Lesson.TYPE_NO_LESSONS }
+            val bySubject = monthGrades.groupBy { it.subjectLongName ?: "Inny przedmiot" }.mapValues { (_, grades) ->
+                grades.sumOf { manager.getGradeValue(it).toDouble() } / grades.size
+            }.entries.sortedByDescending { it.value }.take(5)
+
+            val body = LinearLayout(activity).apply { orientation = LinearLayout.VERTICAL; setPadding(28, 8, 28, 8) }
+            fun addText(value: String, size: Float = 16f, bold: Boolean = false, top: Int = 10) {
+                body.addView(TextView(activity).apply {
+                    text = value
+                    textSize = size
+                    if (bold) setTypeface(typeface, Typeface.BOLD)
+                    setPadding(0, top, 0, 0)
+                })
+            }
+            addText(String.format(Locale.getDefault(), "%tB %tY", month, month).replaceFirstChar { it.titlecase(Locale.getDefault()) }, 20f, true, 0)
+            addText("Łącznie ocen: " + total, 16f, true)
+            addText("Średnia z ocen: " + String.format(Locale.getDefault(), "%.2f", average))
+            addText("Średnia z uwzględnieniem wag: " + String.format(Locale.getDefault(), "%.2f", weightedAverage))
+            addText("Rozkład ocen", 18f, true, 18)
+            arrayOf("1 — jedynek", "2 — dwójek", "3 — trójek", "4 — czwórek", "5 — piątek", "6 — szóstek").forEachIndexed { index, name -> addText(name + ": " + counts[index], 16f, false, 4) }
+            addText("Czas nauki wg planu", 18f, true, 18)
+            addText("🏫 " + (studyMinutes / 60) + " godz. " + (studyMinutes % 60) + " min. lekcji", 16f, false, 4)
+            addText("Lekcji w miesiącu: " + lessonCount, 16f, false, 4)
+            if (bySubject.isNotEmpty()) {
+                addText("Średnie przedmiotów", 18f, true, 18)
+                bySubject.forEach { addText(it.key + ": " + String.format(Locale.getDefault(), "%.2f", it.value), 15f, false, 4) }
+            }
+            if (total == 0) addText("Brak ocen w wybranym miesiącu.", 15f, false, 18)
+
+            AlertDialog.Builder(activity)
+                .setTitle("📊 Statystyki ocen")
+                .setView(ScrollView(activity).apply { addView(body) })
+                .setPositiveButton("Zmień miesiąc") { _, _ -> showGradeStatistics() }
+                .setNegativeButton("Zamknij", null)
+                .show()
         }
     }
 
