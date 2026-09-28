@@ -256,10 +256,7 @@ class AximoSettingsFragment : BaseFragment<FragmentAximoSettingsBinding, MainAct
                     }
                 }
                 "notify_grades" -> {
-                    if (!checked) {
-                        val app = requireContext().applicationContext as pl.szczodrzynski.edziennik.App
-                        androidx.core.app.NotificationManagerCompat.from(requireContext()).cancelAll()
-                    }
+                    // New grade notifications are filtered at the source.
                 }
                 "notify_next_lesson" -> {
                     val app = requireContext().applicationContext as pl.szczodrzynski.edziennik.App
