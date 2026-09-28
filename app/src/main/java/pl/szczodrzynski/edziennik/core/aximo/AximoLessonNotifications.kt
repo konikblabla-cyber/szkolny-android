@@ -420,14 +420,18 @@ object AximoGradeMotivationNotifications {
             val average = averages[grade.subjectId]
             val averageText = average?.let { String.format(java.util.Locale.getDefault(), "%.2f", it) } ?: "—"
 
-            val title = when {
-                grade.value >= 6f -> "🏆 Szóstka! Ale wynik!"
-                grade.value >= 5f -> "⭐ Piątka! Brawo!"
-                grade.value >= 4f -> "👍 Czwórka! Jest dobrze!"
-                grade.value >= 3f -> "💪 Trójka — nie poddawaj się!"
-                grade.value >= 2f -> "💜 Dwójka — głowa do góry!"
-                grade.value >= 1f -> "🚀 Jedynka? Odbijamy się!"
-                else -> "✨ Nowa ocena!"
+            val title = if (!showData) {
+                "Aximo • Nowa ocena"
+            } else {
+                when {
+                    grade.value >= 6f -> "🏆 Szóstka! Ale wynik!"
+                    grade.value >= 5f -> "⭐ Piątka! Brawo!"
+                    grade.value >= 4f -> "👍 Czwórka! Jest dobrze!"
+                    grade.value >= 3f -> "💪 Trójka — nie poddawaj się!"
+                    grade.value >= 2f -> "💜 Dwójka — głowa do góry!"
+                    grade.value >= 1f -> "🚀 Jedynka? Odbijamy się!"
+                    else -> "✨ Nowa ocena!"
+                }
             }
 
             val seed = kotlin.math.abs((grade.id xor (grade.id ushr 32)).toInt())
