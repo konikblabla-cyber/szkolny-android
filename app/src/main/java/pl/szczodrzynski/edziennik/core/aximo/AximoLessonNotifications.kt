@@ -28,6 +28,7 @@ object AximoLessonNotifications {
     private const val ACTION_NEXT = "pl.szczodrzynski.edziennik.aximo.OPEN_NEXT_LESSON"
     private const val REQUEST_BASE = 470000
     private const val PERSISTENT_REQUEST_CODE = 479999
+    private const val PERSISTENT_REFRESH_MS = 60_000L
     const val EXTRA_PERSISTENT = "aximoPersistentNotification"
     private const val MINUTE = 60_000L
     private const val EXTRA_LESSON_ID = "aximoLessonId"
@@ -286,6 +287,7 @@ object AximoLessonNotifications {
             .setStyle(NotificationCompat.BigTextStyle().bigText(text))
             .setContentIntent(openNext)
             .setOngoing(true)
+            .setDeleteIntent(rebuildPersistentIntent(context, profileId))
             .addAction(
                 R.drawable.ic_aximo_launcher,
                 "Otwórz plan",
@@ -303,9 +305,21 @@ object AximoLessonNotifications {
         // One fixed notification is intentionally updated instead of creating a new
         // notification for every lesson. This keeps the current lesson/next lesson visible.
         NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, notification)
-        schedulePersistentRefresh(context, profileId, 60_000L)
+        schedulePersistentRefresh(context, profileId, PERSISTENT_REFRESH_MS)
     }
 }
+
+
+    private fun rebuildPersistentIntent(context: Context, profileId: Int): PendingIntent {
+        val intent = Intent(context, AximoLessonSilenceReceiver::class.java)
+            .setAction(ACTION_NOTIFY)
+            .putExtra(AximoLessonSilence.EXTRA_PROFILE, profileId)
+            .putExtra(EXTRA_PERSISTENT, true)
+        return PendingIntent.getBroadcast(
+            context, PERSISTENT_REQUEST_CODE + 1, intent,
+            PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+        )
+    }
 
 /**
  * Instant Aximo reactions for newly received grades.
