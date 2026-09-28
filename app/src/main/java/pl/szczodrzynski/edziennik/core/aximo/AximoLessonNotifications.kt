@@ -262,7 +262,6 @@ object AximoLessonNotifications {
             app.db.eventDao().getAllNow(profileId).count { it.isHomework && !it.isDone && it.date >= today }
         } catch (_: Exception) { 0 }
 
-        val settingsPrefs = context.getSharedPreferences("aximo_settings", Context.MODE_PRIVATE)
         val showData = settingsPrefs.getBoolean("notify_data_enabled", true) &&
             settingsPrefs.getBoolean("notify_lesson_data", true)
         val text = if (showData) "Sala: $room • $nextText • Zadania domowe: $homeworkCount" else "Masz przypomnienie o lekcji. Otwórz Aximo, aby zobaczyć szczegóły."
@@ -409,7 +408,9 @@ object AximoGradeMotivationNotifications {
     fun notifyNewGrades(context: Context, profileId: Int) {
         if (!AximoLessonNotifications.hasNotificationPermission(context)) return
         val app = context.applicationContext as App
-        if (!context.getSharedPreferences("aximo_settings", Context.MODE_PRIVATE).getBoolean("notify_grades", true)) return
+        val settingsPrefs = context.getSharedPreferences("aximo_settings", Context.MODE_PRIVATE)
+        if (!settingsPrefs.getBoolean("notifications_enabled", true)) return
+        if (!settingsPrefs.getBoolean("notify_grades", true)) return
         val settingsPrefs = context.getSharedPreferences("aximo_settings", Context.MODE_PRIVATE)
         val showData = settingsPrefs.getBoolean("notify_data_enabled", true) &&
             settingsPrefs.getBoolean("notify_grade_data", true)
