@@ -261,7 +261,8 @@ object AximoLessonNotifications {
             app.db.eventDao().getAllNow(profileId).count { it.isHomework && !it.isDone && it.date >= today }
         } catch (_: Exception) { 0 }
 
-        val text = "Sala: $room • $nextText • Zadania domowe: $homeworkCount"
+        val showData = context.getSharedPreferences("aximo_settings", Context.MODE_PRIVATE).getBoolean("notify_lesson_data", true)
+        val text = if (showData) "Sala: $room • $nextText • Zadania domowe: $homeworkCount" else "Masz przypomnienie o lekcji. Otwórz Aximo, aby zobaczyć szczegóły."
 
         val nextIntent = Intent(context, MainActivity::class.java)
             .setAction(ACTION_NEXT)
@@ -392,6 +393,8 @@ object AximoGradeMotivationNotifications {
     fun notifyNewGrades(context: Context, profileId: Int) {
         if (!AximoLessonNotifications.hasNotificationPermission(context)) return
         val app = context.applicationContext as App
+        if (!context.getSharedPreferences("aximo_settings", Context.MODE_PRIVATE).getBoolean("notify_grades", true)) return
+        val showData = context.getSharedPreferences("aximo_settings", Context.MODE_PRIVATE).getBoolean("notify_grade_data", true)
         val pending = try { app.db.gradeDao().getNotNotifiedNow(profileId) } catch (_: Exception) { emptyList() }
         if (pending.isEmpty()) return
         val all = try { app.db.gradeDao().getAllNow(profileId) } catch (_: Exception) { emptyList() }
@@ -431,7 +434,7 @@ object AximoGradeMotivationNotifications {
             val phrase = reactionFor(grade.value, average) + "\n" +
                 OPENERS[seed % OPENERS.size] + " " +
                 CLOSERS[(seed / OPENERS.size) % CLOSERS.size]
-            val body = "$subject • ocena $gradeText • średnia: $averageText\n$phrase"
+            val body = if (showData) "$subject • ocena $gradeText • średnia: $averageText\n$phrase" else "Masz nową ocenę. Otwórz Aximo, aby zobaczyć szczegóły."
 
             val openGrades = Intent(context, MainActivity::class.java)
                 .putExtra("fragmentId", NavTarget.GRADES.toString())
@@ -446,7 +449,7 @@ object AximoGradeMotivationNotifications {
             val notification = androidx.core.app.NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_aximo_launcher)
                 .setContentTitle(title)
-                .setContentText("$subject • $gradeText • średnia $averageText")
+                .setContentText(if (showData) "$subject • $gradeText • średnia $averageText" else "Masz nową ocenę.")
                 .setStyle(androidx.core.app.NotificationCompat.BigTextStyle().bigText(body))
                 .setContentIntent(openPending)
                 .setAutoCancel(true)
