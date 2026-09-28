@@ -135,7 +135,10 @@ class GradesStatisticsFragment : BaseFragment<GradesStatisticsFragmentBinding, M
             .map { it.name }
             .sortedWith(compareByDescending<String> { it.firstOrNull()?.digitToIntOrNull() ?: 0 })
             .joinToString(", ")
-        b.summaryText.text = "Twoja średnia: ${DecimalFormat("0.00").format(avg)}\\nOceny: $gradeText"
+        val distribution = (6 downTo 1).joinToString("   ") { grade ->
+            "$grade: ${filtered.count { app.gradesManager.getGradeValue(it).toInt().coerceIn(1, 6) == grade }}"
+        }
+        b.summaryText.text = "Twoja średnia: ${DecimalFormat("0.00").format(avg)}\\nOceny: $gradeText\\n$distribution"
     }
 
     private fun buildTable(months: List<MonthStats>) {
