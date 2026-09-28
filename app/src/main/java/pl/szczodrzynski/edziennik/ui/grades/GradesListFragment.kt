@@ -52,6 +52,13 @@ class GradesListFragment : BaseFragment<GradesListFragmentBinding, MainActivity>
     override fun getSyncParams() = FeatureType.GRADES to null
     override fun getBottomSheetItems() = listOf(
         BottomSheetPrimaryItem(true)
+            .withTitle(R.string.menu_grades_statistics)
+            .withIcon(CommunityMaterial.Icon.cmd_chart_box_outline)
+            .withOnClickListener {
+                activity.bottomSheet.close()
+                activity.navigate(navTarget = NavTarget.GRADES_STATISTICS)
+            },
+        BottomSheetPrimaryItem(true)
             .withTitle("🎯 Kalkulator celu")
             .withIcon(CommunityMaterial.Icon.cmd_calculator)
             .withOnClickListener {
