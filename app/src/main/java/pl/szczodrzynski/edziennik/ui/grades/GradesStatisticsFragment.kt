@@ -111,10 +111,7 @@ class GradesStatisticsFragment : BaseFragment<GradesStatisticsFragmentBinding, M
 
         if (filtered.isEmpty()) {
             b.chartContainer.removeAllViews()
-            val distribution = (6 downTo 1).map { grade ->
-            "$grade: ${filtered.count { app.gradesManager.getGradeValue(it).toInt().coerceIn(1, 6) == grade }}"
-        }.joinToString("  •  ")
-        b.summaryText.text = "Twoja średnia: ${DecimalFormat("0.00").format(avg)}\\nOceny: $gradeText\\n$distribution"
+            b.summaryText.text = "Brak ocen w wybranym zakresie."
             return
         }
 
@@ -207,7 +204,7 @@ class GradesStatisticsFragment : BaseFragment<GradesStatisticsFragmentBinding, M
             .setTitle(month.title)
             .setMessage(
                 "Oceny: ${if (values.isBlank()) "brak" else values}\\n" +
-                    "Liczba ocen: §{source.size}\\n" +
+                    "Liczba ocen: ${source.size}\\n" +
                     "Średnia miesięczna: ${if (source.isEmpty()) "—" else DecimalFormat("0.00").format(average)}"
             )
             .setPositiveButton("OK", null)
