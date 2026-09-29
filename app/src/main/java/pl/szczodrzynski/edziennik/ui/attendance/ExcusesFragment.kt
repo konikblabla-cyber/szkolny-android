@@ -9,6 +9,7 @@ import pl.szczodrzynski.edziennik.MainActivity
 import pl.szczodrzynski.edziennik.data.db.entity.Attendance
 import pl.szczodrzynski.edziennik.data.db.full.AttendanceFull
 import pl.szczodrzynski.edziennik.databinding.AttendanceListFragmentBinding
+import pl.szczodrzynski.edziennik.ui.attendance.models.AttendanceMonth
 import pl.szczodrzynski.edziennik.ui.base.fragment.BaseFragment
 
 class ExcusesFragment : BaseFragment<AttendanceListFragmentBinding, MainActivity>(
@@ -22,16 +23,35 @@ class ExcusesFragment : BaseFragment<AttendanceListFragmentBinding, MainActivity
         app.db.attendanceDao().getAll(App.profileId).observe(this@ExcusesFragment, Observer { all ->
             if (!isAdded) return@Observer
 
-            val items = all
-                .filter {
-                    it.baseType == Attendance.TYPE_ABSENT ||
-                    it.baseType == Attendance.TYPE_BELATED
-                }
+            val excuses = all.filter {
+                it.baseType == Attendance.TYPE_ABSENT ||
+                it.baseType == Attendance.TYPE_BELATED ||
+                it.baseType == Attendance.TYPE_ABSENT_EXCUSED ||
+                it.baseType == Attendance.TYPE_BELATED_EXCUSED
+            }
+
+            val items = excuses
+                .groupBy { it.date.year to it.date.month }
+                .entries
                 .sortedWith(
-                    compareByDescending<AttendanceFull> { it.date.year }
-                        .thenByDescending { it.date.month }
-                        .thenByDescending { it.date.day }
+                    compareByDescending<Map.Entry<Pair<Int, Int>, List<AttendanceFull>>> { it.key.first }
+                        .thenByDescending { it.key.second }
                 )
+                .map { (key, monthItems) ->
+                    AttendanceMonth(
+                        year = key.first,
+                        month = key.second,
+                        items = monthItems.sortedWith(
+                            compareByDescending<AttendanceFull> { it.date.day }
+                                .thenByDescending { it.startTime?.hour ?: -1 }
+                                .thenByDescending { it.startTime?.minute ?: -1 }
+                        ).toMutableList()
+                    ).also { month ->
+                        month.typeCountMap = month.items
+                            .groupBy { it.typeObject }
+                            .mapValues { it.value.size }
+                    }
+                }
 
             adapter.items = items.toMutableList()
             if (b.list.adapter == null) {
