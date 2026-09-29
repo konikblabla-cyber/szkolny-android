@@ -146,47 +146,89 @@ class GradesStatisticsFragment : BaseFragment<GradesStatisticsFragmentBinding, M
         val row = android.widget.LinearLayout(activity).apply {
             orientation = android.widget.LinearLayout.HORIZONTAL
             gravity = android.view.Gravity.BOTTOM
-            setPadding(16, 16, 16, 16)
+            setPadding(12, 12, 12, 12)
         }
+
         months.forEachIndexed { index, month ->
-            val maxBarHeight = (260 * resources.displayMetrics.density).toInt()
-            val minBarHeight = (30 * resources.displayMetrics.density).toInt()
-            val barHeight = (maxBarHeight * ((month.average - 1f) / 5f)).toInt().coerceIn(minBarHeight, maxBarHeight)
-            val grades = month.grades.values.flatten().sortedWith(compareByDescending<String> { it.firstOrNull()?.digitToIntOrNull() ?: 0 }.thenBy { it })
+            val maxBarHeight = (300 * resources.displayMetrics.density).toInt()
+            val minBarHeight = (90 * resources.displayMetrics.density).toInt()
+            val barHeight = (maxBarHeight * ((month.average - 1f) / 5f))
+                .toInt().coerceIn(minBarHeight, maxBarHeight)
+            val monthGrades = filtered.filter { monthKey(it.addedDate) == month.key }
             val best = months.maxByOrNull { it.average }
+
             val column = android.widget.LinearLayout(activity).apply {
                 orientation = android.widget.LinearLayout.VERTICAL
                 gravity = android.view.Gravity.BOTTOM or android.view.Gravity.CENTER_HORIZONTAL
-                setPadding(8, 0, 8, 0)
-                setOnClickListener { showMonth(month, filtered.filter { monthKey(it.addedDate) == month.key }) }
-                setOnLongClickListener { showMonth(month, allGrades.filter { monthKey(it.addedDate) == month.key }); true }
+                setPadding(6, 0, 6, 0)
+                setOnClickListener { showMonth(month, monthGrades) }
+                setOnLongClickListener {
+                    showMonth(month, allGrades.filter { monthKey(it.addedDate) == month.key })
+                    true
+                }
             }
+
             column.addView(TextView(activity).apply {
-                text = DecimalFormat("0.00").format(month.average) + if (best?.key == month.key) "  ★" else ""
+                text = DecimalFormat("0.00").format(month.average) +
+                    if (best?.key == month.key) "  ★" else ""
                 textSize = 14f
                 gravity = android.view.Gravity.CENTER
                 setPadding(0, 0, 0, 6)
             })
-            column.addView(TextView(activity).apply {
-                text = grades.joinToString(", ")
-                textSize = 12f
-                gravity = android.view.Gravity.CENTER
-                setPadding(10, 10, 10, 10)
-                minHeight = barHeight
+
+            val gradesBox = android.widget.LinearLayout(activity).apply {
+                orientation = android.widget.LinearLayout.VERTICAL
+                gravity = android.view.Gravity.BOTTOM
+                setPadding(8, 8, 8, 8)
+                minimumHeight = barHeight
                 background = android.graphics.drawable.GradientDrawable().apply {
                     cornerRadius = 22f
-                    setColor(com.google.android.material.color.MaterialColors.getColor(this@GradesStatisticsFragment.requireView(), com.google.android.material.R.attr.colorPrimaryContainer))
+                    setColor(
+                        com.google.android.material.color.MaterialColors.getColor(
+                            this@GradesStatisticsFragment.requireView(),
+                            com.google.android.material.R.attr.colorPrimaryContainer
+                        )
+                    )
                 }
-            })
+            }
+
+            // Jedna kolumna na miesiąc: 6 na górze, potem 5, 4, 3, 2, 1.
+            // Jeżeli były trzy trójki, w polu 3 pokazujemy dokładnie: 3, 3, 3.
+            for (grade in 6 downTo 1) {
+                val values = month.grades[grade].orEmpty()
+                gradesBox.addView(TextView(activity).apply {
+                    text = if (values.isEmpty()) "" else values.joinToString(", ")
+                    textSize = 12f
+                    gravity = android.view.Gravity.CENTER
+                    setPadding(4, 4, 4, 4)
+                    minHeight = (30 * resources.displayMetrics.density).toInt()
+                })
+            }
+
+            column.addView(
+                gradesBox,
+                android.widget.LinearLayout.LayoutParams(
+                    (138 * resources.displayMetrics.density).toInt(),
+                    barHeight
+                )
+            )
+
             column.addView(TextView(activity).apply {
                 text = month.title
                 textSize = 12f
                 gravity = android.view.Gravity.CENTER
                 setPadding(0, 8, 0, 0)
             })
+
             column.alpha = 0f
             column.animate().alpha(1f).setDuration(250L + index * 60L).start()
-            row.addView(column, android.widget.LinearLayout.LayoutParams((128 * resources.displayMetrics.density).toInt(), android.view.ViewGroup.LayoutParams.WRAP_CONTENT))
+            row.addView(
+                column,
+                android.widget.LinearLayout.LayoutParams(
+                    (150 * resources.displayMetrics.density).toInt(),
+                    android.view.ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+            )
         }
         b.chartContainer.addView(row)
     }
