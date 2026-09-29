@@ -29,7 +29,12 @@ object AximoAppearanceApplier {
         val softCards = prefs.getBoolean("softCards", false)
         val animationsEnabled = prefs.getBoolean("animationsEnabled", true)
         val animationStyle = prefs.getInt("animationStyle", 2).coerceIn(0, 3)
-        val theme = prefs.getString("theme", "dark") ?: "dark"\n        val light = when (theme) {\n            "light" -> true\n            "auto" -> (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) != Configuration.UI_MODE_NIGHT_YES\n            else -> false\n        }
+        val theme = prefs.getString("theme", "dark") ?: "dark"
+        val light = when (theme) {
+            "light" -> true
+            "auto" -> (context.resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK) != Configuration.UI_MODE_NIGHT_YES
+            else -> false
+        }
 
         val effectiveBackground = if (light) 0xFFF7F7FB.toInt() else style.background
         val effectiveSurface = if (light) 0xFFFFFFFF.toInt() else style.surface
