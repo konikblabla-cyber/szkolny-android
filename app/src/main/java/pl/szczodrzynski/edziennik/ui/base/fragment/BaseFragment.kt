@@ -123,6 +123,8 @@ abstract class BaseFragment<B : ViewBinding, A : AppCompatActivity>(
             (activity as? MainActivity)?.let { mainActivity ->
                 AximoAppearanceApplier.apply(mainActivity.b.root, mainActivity)
                 b.root?.let { fragmentRoot ->
+                    // Fragment backgrounds must never cover the global Aximo wallpaper.
+                    fragmentRoot.setBackgroundColor(android.graphics.Color.TRANSPARENT)
                     AximoAppearanceApplier.apply(fragmentRoot, mainActivity)
                 }
             }
