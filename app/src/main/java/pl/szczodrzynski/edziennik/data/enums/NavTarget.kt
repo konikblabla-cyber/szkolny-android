@@ -304,9 +304,12 @@ enum class NavTarget(
     GRADES_STATISTICS(
         id = 502,
         fragmentClass = GradesStatisticsFragment::class.java,
+        location = NavTargetLocation.DRAWER_MORE,
         nameRes = R.string.menu_grades_statistics,
         titleRes = R.string.menu_grades_statistics,
         icon = CommunityMaterial.Icon.cmd_chart_box_outline,
+        popTo = HOME,
+        featureType = FeatureType.GRADES,
     ),
     GRADES_EDITOR(
         id = 501,
