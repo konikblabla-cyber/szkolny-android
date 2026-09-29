@@ -128,7 +128,7 @@ class GradesStatisticsFragment : BaseFragment<GradesStatisticsFragmentBinding, M
                 MonthStats(year, month, byGrade, grades.map { app.gradesManager.getGradeValue(it) }.average().toFloat())
             }
 
-        buildTable(months)
+        buildTable(months, filtered)
         b.trendView.setValues(months.map { it.average }, months.map { it.title })
         val avg = filtered.map { app.gradesManager.getGradeValue(it) }.average()
         val gradeText = filtered
@@ -141,7 +141,7 @@ class GradesStatisticsFragment : BaseFragment<GradesStatisticsFragmentBinding, M
         b.summaryText.text = "Twoja średnia: ${DecimalFormat("0.00").format(avg)}\nOceny: $gradeText\n$distribution"
     }
 
-    private fun buildTable(months: List<MonthStats>) {
+    private fun buildTable(months: List<MonthStats>, filtered: List<GradeFull>) {
         b.chartContainer.removeAllViews()
         val row = android.widget.LinearLayout(activity).apply {
             orientation = android.widget.LinearLayout.HORIZONTAL
