@@ -1305,6 +1305,24 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             val background = prefs.getString("background", "default") ?: "default"
             val style = AximoAppearanceStyle.fromOrdinal(prefs.getInt("style", AximoAppearanceStyle.AXIMO.ordinal))
 
+            // Restore a user-selected wallpaper after app restart. Previously the
+            // path lived only in app.config.ui.appBackground, so custom wallpapers
+            // disappeared after restarting the app.
+            if (background.startsWith("custom_")) {
+                val savedPath = prefs.getString(background, null)
+                if (!savedPath.isNullOrBlank() && File(savedPath).exists()) {
+                    app.config.ui.appBackground = savedPath
+                    val drawable = runCatching {
+                        if (savedPath.endsWith(".gif", true)) GifDrawable(savedPath)
+                        else BitmapDrawable.createFromPath(savedPath)
+                    }.getOrNull()
+                    if (drawable != null) {
+                        b.root.background = drawable
+                        return
+                    }
+                }
+            }
+
             // Aximo supports a true global black canvas. It bypasses wallpapers so every screen uses the same background.
             if (background == "black") {
                 b.root.setBackgroundColor(android.graphics.Color.BLACK)
