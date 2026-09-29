@@ -423,19 +423,32 @@ object AximoGradeMotivationNotifications {
         if (!settingsPrefs.getBoolean("notify_grades", true)) return
         val showData = settingsPrefs.getBoolean("notify_data_enabled", true) &&
             settingsPrefs.getBoolean("notify_grade_data", true)
+
         val pending = try { app.db.gradeDao().getNotNotifiedNow(profileId) } catch (_: Exception) { emptyList() }
         if (pending.isEmpty()) return
         val all = try { app.db.gradeDao().getAllNow(profileId) } catch (_: Exception) { emptyList() }
 
-        val averages = all
-            .filter { it.type == Grade.TYPE_NORMAL && it.value in 1f..6f && it.subjectId != 0L }
-            .groupBy { it.subjectId }
-            .mapValues { (_, grades) ->
-                val weightedSum = grades.sumOf { (it.value * it.weight.coerceAtLeast(0f)).toDouble() }
-                val weightSum = grades.sumOf { it.weight.coerceAtLeast(0f).toDouble() }
-                if (weightSum > 0.0) (weightedSum / weightSum).toFloat()
-                else grades.map { it.value }.average().toFloat()
+        fun calculateAverage(grades: List<Grade>): Float? {
+            val valid = grades.filter {
+                it.type == Grade.TYPE_NORMAL &&
+                    it.value in 1f..6f &&
+                    it.subjectId != 0L
             }
+            if (valid.isEmpty()) return null
+            val weightedSum = valid.sumOf { (it.value * it.weight.coerceAtLeast(0f)).toDouble() }
+            val weightSum = valid.sumOf { it.weight.coerceAtLeast(0f).toDouble() }
+            return if (weightSum > 0.0) (weightedSum / weightSum).toFloat()
+            else valid.map { it.value }.average().toFloat()
+        }
+
+        // Start from the state before this sync, then add new grades one by one.
+        // This makes the displayed average change accurate even when several grades arrive together.
+        val pendingIds = pending.map { it.id }.toSet()
+        val gradesBySubject = all
+            .filter { it.id !in pendingIds }
+            .groupBy { it.subjectId }
+            .mapValues { (_, grades) -> grades.toMutableList() }
+            .toMutableMap()
 
         val manager = androidx.core.app.NotificationManagerCompat.from(context)
         pending.sortedBy { it.addedDate }.forEach { grade ->
@@ -445,8 +458,19 @@ object AximoGradeMotivationNotifications {
                 else String.format(java.util.Locale.getDefault(), "%.1f", grade.value)
             } else grade.name.ifBlank { "nowa" }
             val subject = grade.subjectLongName?.takeIf { it.isNotBlank() } ?: "przedmiot"
-            val average = averages[grade.subjectId]
+
+            val subjectGrades = gradesBySubject[grade.subjectId] ?: mutableListOf()
+            val previousAverage = if (numeric) calculateAverage(subjectGrades) else null
+            if (numeric) subjectGrades.add(grade)
+            gradesBySubject[grade.subjectId] = subjectGrades
+            val average = calculateAverage(subjectGrades)
             val averageText = average?.let { String.format(java.util.Locale.getDefault(), "%.2f", it) } ?: "—"
+
+            val averageChangeText = if (previousAverage != null && average != null) {
+                val delta = average - previousAverage
+                val sign = if (delta >= 0f) "+" else ""
+                " • zmiana średniej: " + sign + String.format(java.util.Locale.getDefault(), "%.2f", delta)
+            } else ""
 
             val title = if (!showData) {
                 "Aximo • Nowa ocena"
@@ -466,7 +490,7 @@ object AximoGradeMotivationNotifications {
             val phrase = reactionFor(grade.value, average) + "\n" +
                 OPENERS[seed % OPENERS.size] + " " +
                 CLOSERS[(seed / OPENERS.size) % CLOSERS.size]
-            val body = if (showData) "$subject • ocena $gradeText • średnia: $averageText\n$phrase" else "Masz nową ocenę. Otwórz Aximo, aby zobaczyć szczegóły."
+            val body = if (showData) "$subject • ocena $gradeText • średnia: $averageText$averageChangeText\n$phrase" else "Masz nową ocenę. Otwórz Aximo, aby zobaczyć szczegóły."
 
             val openGrades = Intent(context, MainActivity::class.java)
                 .putExtra("fragmentId", NavTarget.GRADES.toString())
@@ -481,7 +505,7 @@ object AximoGradeMotivationNotifications {
             val notification = androidx.core.app.NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.drawable.ic_aximo_launcher)
                 .setContentTitle(title)
-                .setContentText(if (showData) "$subject • $gradeText • średnia $averageText" else "Masz nową ocenę.")
+                .setContentText(if (showData) "$subject • $gradeText • średnia $averageText$averageChangeText" else "Masz nową ocenę.")
                 .setStyle(androidx.core.app.NotificationCompat.BigTextStyle().bigText(body))
                 .setContentIntent(openPending)
                 .setAutoCancel(true)
