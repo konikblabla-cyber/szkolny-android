@@ -44,7 +44,7 @@ object AximoAppearanceApplier {
             else blend(style.text, style.background, .55f)
 
         applyView(
-            root = root,
+            view = root,
             style = style,
             accent = accent,
             isRoot = true,
