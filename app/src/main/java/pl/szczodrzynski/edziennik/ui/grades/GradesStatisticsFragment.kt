@@ -138,7 +138,7 @@ class GradesStatisticsFragment : BaseFragment<GradesStatisticsFragmentBinding, M
         val distribution = (6 downTo 1).joinToString("   ") { grade ->
             "$grade: ${filtered.count { app.gradesManager.getGradeValue(it).toInt().coerceIn(1, 6) == grade }}"
         }
-        b.summaryText.text = "Twoja średnia: ${DecimalFormat("0.00").format(avg)}\\nOceny: $gradeText\\n$distribution"
+        b.summaryText.text = "Twoja średnia: ${DecimalFormat("0.00").format(avg)}\nOceny: $gradeText\n$distribution"
     }
 
     private fun buildTable(months: List<MonthStats>) {
@@ -158,7 +158,7 @@ class GradesStatisticsFragment : BaseFragment<GradesStatisticsFragmentBinding, M
                 orientation = android.widget.LinearLayout.VERTICAL
                 gravity = android.view.Gravity.BOTTOM or android.view.Gravity.CENTER_HORIZONTAL
                 setPadding(8, 0, 8, 0)
-                setOnClickListener { showMonth(month, allGrades.filter { monthKey(it.addedDate) == month.key }) }
+                setOnClickListener { showMonth(month, filtered.filter { monthKey(it.addedDate) == month.key }) }
                 setOnLongClickListener { showMonth(month, allGrades.filter { monthKey(it.addedDate) == month.key }); true }
             }
             column.addView(TextView(activity).apply {
@@ -203,8 +203,8 @@ class GradesStatisticsFragment : BaseFragment<GradesStatisticsFragmentBinding, M
         androidx.appcompat.app.AlertDialog.Builder(activity)
             .setTitle(month.title)
             .setMessage(
-                "Oceny: ${if (values.isBlank()) "brak" else values}\\n" +
-                    "Liczba ocen: ${source.size}\\n" +
+                "Oceny: ${if (values.isBlank()) "brak" else values}\n" +
+                    "Liczba ocen: ${source.size}\n" +
                     "Średnia miesięczna: ${if (source.isEmpty()) "—" else DecimalFormat("0.00").format(average)}"
             )
             .setPositiveButton("OK", null)
