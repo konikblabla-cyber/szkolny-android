@@ -60,7 +60,7 @@ class AttendanceDetailsDialog(
         b.excuseButton.setOnClickListener {
             val teacher = app.db.teacherDao().getByIdNow(attendance.profileId, attendance.teacherId)
             if (teacher?.loginId == null) {
-                activity.snackbar("Nie znaleziono odbiorcy dla usprawiedliwienia.")
+                android.widget.Toast.makeText(activity, "Nie znaleziono odbiorcy dla usprawiedliwienia.", android.widget.Toast.LENGTH_SHORT).show()
                 return@setOnClickListener
             }
             val input = EditText(activity).apply {
@@ -75,7 +75,7 @@ class AttendanceDetailsDialog(
                 .setPositiveButton("Wyślij") { _, _ ->
                     val reason = input.text.toString().trim()
                     if (reason.length < 3) {
-                        activity.snackbar("Podaj powód usprawiedliwienia.")
+                        android.widget.Toast.makeText(activity, "Podaj powód usprawiedliwienia.", android.widget.Toast.LENGTH_SHORT).show()
                         return@setPositiveButton
                     }
                     val isLate = attendance.baseType == Attendance.TYPE_BELATED
@@ -83,7 +83,7 @@ class AttendanceDetailsDialog(
                     val body = "Proszę o usprawiedliwienie " + (if (isLate) "spóźnienia" else "nieobecności") +
                             " z dnia " + attendance.date.formattedString + " z przedmiotu " + attendance.subjectLongName + ".\\n\\nPowód: " + reason
                     EdziennikTask.messageSend(App.profileId, setOf(teacher), subject, body).enqueue(activity)
-                    activity.snackbar("Wysłano prośbę o usprawiedliwienie.")
+                    android.widget.Toast.makeText(activity, "Wysłano prośbę o usprawiedliwienie.", android.widget.Toast.LENGTH_SHORT).show()
                 }
                 .setNegativeButton("Anuluj", null)
                 .show()
