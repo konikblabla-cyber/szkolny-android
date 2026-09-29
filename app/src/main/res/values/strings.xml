@@ -686,8 +686,7 @@
     <string name="menu_announcements">Tablica ogłoszeń</string>
     <string name="menu_attendance">Frekwencja</string>
     <string name="menu_attendance_statistics">Statystyki frekwencji</string>
-    <string name="menu_grades_statistics">Statystyki ocen</string>
-    <string name="menu_excuses">Usprawiedliwienia</string>
+        <string name="menu_excuses">Usprawiedliwienia</string>
     <string name="menu_attendance_config">Ustawienia frekwencji</string>
     <string name="menu_debug">Debugowanie</string>
     <string name="menu_feedback">Pomoc i opinie</string>
