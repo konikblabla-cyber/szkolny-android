@@ -45,8 +45,9 @@ class ExcusesFragment : BaseFragment<AttendanceListFragmentBinding, MainActivity
                         ).toMutableList()
                     ).also { month ->
                         month.typeCountMap = month.items
-                            .groupBy { it.typeObject }
-                            .mapValues { it.value.size }
+                            .mapNotNull { it.typeObject }
+                            .groupingBy { it }
+                            .eachCount()
                     }
                 }
 
