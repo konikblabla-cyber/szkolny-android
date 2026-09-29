@@ -160,6 +160,7 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
                     else -> "Animacje: dynamiczne ✓"
                 }
                 refreshAnimationStyle()
+                activity.refreshAximoAppearance()
             }
         }
         refreshAnimationStyle()
@@ -201,6 +202,10 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
                         3 -> animate().scaleX(0.94f).scaleY(0.94f).alpha(0.82f).setDuration(85).withEndAction { animate().scaleX(1f).scaleY(1f).alpha(1f).setDuration(150).start() }.start()
                     }
                     saveStyle(index)
+                    // The style picker must immediately update the whole visible UI.
+                    applyCurrentAppearance()
+                    updatePreview(index)
+                    activity.refreshAximoAppearance()
                 }
             }
             val lp = GridLayout.LayoutParams().apply {
@@ -284,8 +289,20 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
     }
 
     private fun saveBackground(value: String) {
-        prefs.edit().putString("background", value).apply()
-        if (value != "custom") app.config.ui.appBackground = null
+        prefs.edit()
+            .putString("background", value)
+            .apply()
+
+        // Background presets are resolved by MainActivity.setAppBackground().
+        // Do not leave a stale custom path active after selecting a preset.
+        if (!value.startsWith("custom_")) {
+            app.config.ui.appBackground = null
+        } else {
+            prefs.getString(value, null)?.let { path ->
+                if (File(path).exists()) app.config.ui.appBackground = path
+            }
+        }
+
         setBackground(value)
         activity.setAppBackground()
         applyCurrentAppearance()
