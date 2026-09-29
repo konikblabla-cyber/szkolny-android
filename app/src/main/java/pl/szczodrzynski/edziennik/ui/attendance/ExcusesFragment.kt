@@ -33,10 +33,7 @@ class ExcusesFragment : BaseFragment<AttendanceListFragmentBinding, MainActivity
             val items = excuses
                 .groupBy { it.date.year to it.date.month }
                 .entries
-                .sortedWith(
-                    compareByDescending<Map.Entry<Pair<Int, Int>, List<AttendanceFull>>> { it.key.first }
-                        .thenByDescending { it.key.second }
-                )
+                .sortedByDescending { it.key.first * 100 + it.key.second }
                 .map { (key, monthItems) ->
                     AttendanceMonth(
                         year = key.first,
