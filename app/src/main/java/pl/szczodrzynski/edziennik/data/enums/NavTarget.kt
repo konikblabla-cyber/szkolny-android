@@ -15,6 +15,7 @@ import pl.szczodrzynski.edziennik.R
 import pl.szczodrzynski.edziennik.ui.agenda.AgendaFragment
 import pl.szczodrzynski.edziennik.ui.announcements.AnnouncementsFragment
 import pl.szczodrzynski.edziennik.ui.attendance.AttendanceFragment
+import pl.szczodrzynski.edziennik.ui.attendance.ExcusesFragment
 import pl.szczodrzynski.edziennik.ui.behaviour.BehaviourFragment
 import pl.szczodrzynski.edziennik.ui.debug.DebugFragment
 import pl.szczodrzynski.edziennik.ui.debug.LabFragment
@@ -137,6 +138,15 @@ enum class NavTarget(
         icon = CommunityMaterial.Icon.cmd_calendar_remove_outline,
         popTo = HOME,
         badgeType = MetadataType.ATTENDANCE,
+        featureType = FeatureType.ATTENDANCE,
+    ),
+    EXCUSES(
+        id = 19,
+        fragmentClass = ExcusesFragment::class.java,
+        location = NavTargetLocation.DRAWER_MORE,
+        nameRes = R.string.menu_excuses,
+        icon = CommunityMaterial.Icon.cmd_calendar_check_outline,
+        popTo = HOME,
         featureType = FeatureType.ATTENDANCE,
     ),
     ANNOUNCEMENTS(
