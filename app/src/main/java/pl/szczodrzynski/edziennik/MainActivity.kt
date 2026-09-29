@@ -1173,6 +1173,9 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         transaction.replace(R.id.fragment, fragment)
         transaction.runOnCommit {
             supportFragmentManager.findFragmentById(R.id.fragment)?.view?.let {
+                // The activity owns the wallpaper. Fragment roots must stay transparent
+                // so the selected Aximo wallpaper is visible behind every screen.
+                it.setBackgroundColor(android.graphics.Color.TRANSPARENT)
                 AximoAppearanceApplier.apply(it, this@MainActivity)
             }
             // Timetable owns vertical gestures, so it disables the global
