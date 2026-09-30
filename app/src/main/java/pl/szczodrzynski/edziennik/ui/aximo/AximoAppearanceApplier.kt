@@ -76,7 +76,8 @@ object AximoAppearanceApplier {
         surface: Int,
         surfaceAlt: Int,
         text: Int,
-        muted: Int
+        muted: Int,
+        applyRootBackground: Boolean = false
     ) {
         if (view.id == R.id.styleGrid) return
 
@@ -170,7 +171,7 @@ object AximoAppearanceApplier {
                 applyView(
                     view.getChildAt(i), style, accent, false, roundness,
                     transparency, softCards, animationsEnabled, animationStyle,
-                    background, surface, surfaceAlt, text, muted
+                    background, surface, surfaceAlt, text, muted, false
                 )
             }
         }
