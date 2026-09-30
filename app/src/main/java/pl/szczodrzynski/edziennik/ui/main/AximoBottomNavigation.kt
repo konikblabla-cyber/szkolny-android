@@ -55,9 +55,12 @@ class AximoBottomNavigation @JvmOverloads constructor(
     private val settingsPrefs by lazy { context.getSharedPreferences("aximo_settings", Context.MODE_PRIVATE) }
 
     private val appearance: AximoAppearanceStyle
-        get() = AximoAppearanceStyle.fromOrdinal(
-            (context.applicationContext as App).config.ui.aximoAppearanceStyle
-        )
+        get() {
+            val prefs = context.getSharedPreferences("aximo_appearance", Context.MODE_PRIVATE)
+            return AximoAppearanceStyle.fromOrdinal(
+                prefs.getInt("style", AximoAppearanceStyle.AXIMO.ordinal)
+            )
+        }
 
     init {
         clipChildren = false
