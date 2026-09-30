@@ -32,7 +32,7 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
                 FileOutputStream(file).use { output -> input.copyTo(output) }
             }
             prefs.edit().putString("custom_" + selectedWallpaperSlot, file.absolutePath).apply()
-            prefs.edit().putString("background", "custom_$" + selectedWallpaperSlot).apply()
+            prefs.edit().putString("background", "custom_" + selectedWallpaperSlot).apply()
             app.config.ui.appBackground = file.absolutePath
             b.appearanceSaved.text = "Własna tapeta " + (selectedWallpaperSlot + 1) + " zapisana ✓"
             refreshWallpaperSlots()
