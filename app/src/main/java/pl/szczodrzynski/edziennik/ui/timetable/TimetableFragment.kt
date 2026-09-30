@@ -363,18 +363,13 @@ class TimetableFragment : PagerFragment<FragmentTimetableV2Binding, MainActivity
 
     override fun onResume() {
         super.onResume()
-        // The timetable has its own NestedScrollView. The global SwipeRefreshLayout
-        // must not steal vertical gestures from it (otherwise scrolling to the top
-        // can trigger an unwanted refresh instead of moving the timetable).
-        activity.swipeRefreshLayout.isEnabled = false
-        b.aximoPlanScroll.setOnTouchListener { view, event ->
-            when (event.actionMasked) {
-                android.view.MotionEvent.ACTION_DOWN,
-                android.view.MotionEvent.ACTION_MOVE -> view.parent?.requestDisallowInterceptTouchEvent(true)
-                android.view.MotionEvent.ACTION_UP,
-                android.view.MotionEvent.ACTION_CANCEL -> view.parent?.requestDisallowInterceptTouchEvent(false)
-            }
-            false
+        // The timetable keeps normal vertical scrolling. AximoSwipeRefreshLayout
+        // decides itself when a downward gesture may refresh: only at the top.
+        (activity.swipeRefreshLayout as? pl.szczodrzynski.edziennik.ui.aximo.AximoSwipeRefreshLayout)?.let {
+            it.blockRefreshGestures = false
+            it.isEnabled = requireContext().getSharedPreferences(
+                "aximo_settings", Context.MODE_PRIVATE
+            ).getBoolean("diary_swipe_refresh", true)
         }
         ContextCompat.registerReceiver(
             activity,
