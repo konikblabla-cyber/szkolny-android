@@ -27,11 +27,11 @@ class AximoAppearanceFragment : BaseFragment<FragmentAximoAppearanceBinding, Mai
     private val imagePicker = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
         uri ?: return@registerForActivityResult
         try {
-            val file = File(requireContext().filesDir, "aximo_custom_background_$" + selectedWallpaperSlot + ".jpg")
+            val mime = requireContext().contentResolver.getType(uri).orEmpty().lowercase()\n            val extension = if (mime == "image/gif") "gif" else "img"\n            val file = File(requireContext().filesDir, "aximo_custom_background_" + selectedWallpaperSlot + "." + extension)
             requireContext().contentResolver.openInputStream(uri)?.use { input ->
                 FileOutputStream(file).use { output -> input.copyTo(output) }
             }
-            prefs.edit().putString("custom_$" + selectedWallpaperSlot, file.absolutePath).apply()
+            prefs.edit().putString("custom_" + selectedWallpaperSlot, file.absolutePath).apply()
             prefs.edit().putString("background", "custom_$" + selectedWallpaperSlot).apply()
             app.config.ui.appBackground = file.absolutePath
             b.appearanceSaved.text = "Własna tapeta " + (selectedWallpaperSlot + 1) + " zapisana ✓"
