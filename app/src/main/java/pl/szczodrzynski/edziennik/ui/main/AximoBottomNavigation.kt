@@ -42,6 +42,8 @@ class AximoBottomNavigation @JvmOverloads constructor(
         Item(NavTarget.ATTENDANCE, "Frekwencja"),
         Item(NavTarget.TIMETABLE, "Plan"),
         Item(NavTarget.MESSAGES, "Wiadomości"),
+        Item(NavTarget.GRADES_STATISTICS, "Statystyki"),
+        Item(NavTarget.EXCUSES, "Usprawiedliwienia"),
         Item(NavTarget.SETTINGS, "Ustawienia"),
     )
 
@@ -180,7 +182,7 @@ class AximoBottomNavigation @JvmOverloads constructor(
             val enabled = item.target != NavTarget.TIMETABLE || settingsPrefs.getBoolean("nav_timetable", true)
             bar.getChildAt(index).visibility = if (enabled) View.VISIBLE else View.GONE
         }
-        val radialKeys = listOf("nav_grades", "nav_homework", "nav_attendance", "nav_timetable", "nav_messages", "nav_settings")
+        val radialKeys = listOf("nav_grades", "nav_homework", "nav_attendance", "nav_timetable", "nav_messages", "nav_statistics", "nav_excuses", "nav_settings")
         menuItems.forEachIndexed { index, _ ->
             val enabled = radialKeys.getOrNull(index)?.let { settingsPrefs.getBoolean(it, true) } ?: true
             menuViews[index].alpha = if (enabled) 1f else 0f
@@ -227,7 +229,7 @@ class AximoBottomNavigation @JvmOverloads constructor(
         val cy = height - dp(36).toFloat()
         val radius = dp(108).toFloat()
         menuViews.forEachIndexed { i, view ->
-            val angle = Math.toRadians(205.0 + i * 24.0)
+            val angle = Math.toRadians(205.0 + i * 20.0)
             view.x = (cx + cos(angle) * radius - view.width / 2f).toFloat()
             view.y = (cy + sin(angle) * radius - view.height / 2f).toFloat()
         }
@@ -238,7 +240,7 @@ class AximoBottomNavigation @JvmOverloads constructor(
         if (!settingsPrefs.getBoolean("nav_radial", true)) return
         open = true
         menuViews.forEachIndexed { i, view ->
-            val key = listOf("nav_grades", "nav_homework", "nav_attendance", "nav_timetable", "nav_messages", "nav_settings").getOrNull(i)
+            val key = listOf("nav_grades", "nav_homework", "nav_attendance", "nav_timetable", "nav_messages", "nav_statistics", "nav_excuses", "nav_settings").getOrNull(i)
             if (key != null && !settingsPrefs.getBoolean(key, true)) return@forEachIndexed
             view.visibility = View.VISIBLE
             view.animate().alpha(1f).scaleX(1f).scaleY(1f)
