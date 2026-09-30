@@ -1095,7 +1095,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             ?: navBackStack.firstOrNull { it.first == navTarget }?.second
             ?: Bundle()
         swipeRefreshLayout.isEnabled = false
-        (swipeRefreshLayout as? pl.szczodrzynski.edziennik.ui.aximo.AximoSwipeRefreshLayout)?.let { it.blockRefreshGestures = navTarget == NavTarget.TIMETABLE }
+        (swipeRefreshLayout as? pl.szczodrzynski.edziennik.ui.aximo.AximoSwipeRefreshLayout)?.let { it.blockRefreshGestures = false }
         bottomSheet.close()
         bottomSheet.removeAllContextual()
         drawer.close()
@@ -1182,7 +1182,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
             // Timetable owns vertical gestures, so it disables the global
             // pull-to-refresh. Restore the user's preference for every other
             // destination after navigation to prevent the setting getting stuck.
-            (swipeRefreshLayout as? pl.szczodrzynski.edziennik.ui.aximo.AximoSwipeRefreshLayout)?.let { it.blockRefreshGestures = navTarget == NavTarget.TIMETABLE }
+            (swipeRefreshLayout as? pl.szczodrzynski.edziennik.ui.aximo.AximoSwipeRefreshLayout)?.let { it.blockRefreshGestures = false }
             if (navTarget != NavTarget.TIMETABLE) {
                 swipeRefreshLayout.isEnabled = getSharedPreferences(
                     "aximo_settings",
