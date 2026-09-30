@@ -57,7 +57,8 @@ object AximoAppearanceApplier {
             surface = effectiveSurface,
             surfaceAlt = effectiveSurfaceAlt,
             text = effectiveText,
-            muted = effectiveMuted
+            muted = effectiveMuted,
+            applyRootBackground = applyRootBackground
         )
     }
 
