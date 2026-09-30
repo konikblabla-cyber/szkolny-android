@@ -1177,7 +1177,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
                 // The activity owns the wallpaper. Fragment roots must stay transparent
                 // so the selected Aximo wallpaper is visible behind every screen.
                 it.setBackgroundColor(android.graphics.Color.TRANSPARENT)
-                AximoAppearanceApplier.apply(it, this@MainActivity)
+                AximoAppearanceApplier.apply(it, this@MainActivity, applyRootBackground = false)
             }
             // Timetable owns vertical gestures, so it disables the global
             // pull-to-refresh. Restore the user's preference for every other
@@ -1277,7 +1277,7 @@ class MainActivity : AppCompatActivity(), CoroutineScope {
         b.root.post {
             AximoAppearanceApplier.apply(b.root, this)
             supportFragmentManager.findFragmentById(R.id.fragment)?.view?.let {
-                AximoAppearanceApplier.apply(it, this)
+                AximoAppearanceApplier.apply(it, this, applyRootBackground = false)
             }
         }
         b.aximoBottomNavigation.postInvalidate()
