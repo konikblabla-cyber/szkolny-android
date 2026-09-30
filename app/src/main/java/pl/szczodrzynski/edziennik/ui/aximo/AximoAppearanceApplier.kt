@@ -18,7 +18,7 @@ import pl.szczodrzynski.edziennik.R
  * Appearance changes therefore appeared to do nothing except wallpaper.
  */
 object AximoAppearanceApplier {
-    fun apply(root: View, context: android.content.Context) {
+    fun apply(root: View, context: android.content.Context, applyRootBackground: Boolean = true) {
         val prefs = context.getSharedPreferences("aximo_appearance", 0)
         val style = AximoAppearanceStyle.fromOrdinal(
             prefs.getInt("style", AximoAppearanceStyle.AXIMO.ordinal)
@@ -127,7 +127,7 @@ object AximoAppearanceApplier {
             }
         }
 
-        if (isRoot && !isWallpaper) {
+        if (isRoot && applyRootBackground && !isWallpaper) {
             // setAppBackground() normally supplies the wallpaper. If there is no
             // wallpaper, the selected style still controls the whole canvas.
             if (view.background !is AximoPhotoWallpaperDrawable &&
