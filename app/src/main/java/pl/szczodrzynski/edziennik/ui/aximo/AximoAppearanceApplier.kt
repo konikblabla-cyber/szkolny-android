@@ -77,7 +77,7 @@ object AximoAppearanceApplier {
         surfaceAlt: Int,
         text: Int,
         muted: Int,
-        applyRootBackground: Boolean = false
+        applyRootBackground: Boolean
     ) {
         if (view.id == R.id.styleGrid) return
 
